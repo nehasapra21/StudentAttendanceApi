@@ -38,6 +38,41 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [HttpPost("LoginSuperAdmin")]
+        public async Task<IActionResult> LoginSuperAdmin(MasterAdminDto masterAdminDto)
+        {
+            logger.LogInformation("MasterAdminController : LoginSuperAdmin : Started");
+            try
+            {
+                var masterAdmin =await _masterAdminManager.LoginSuperAdmin(masterAdminDto.FullName, masterAdminDto.Password);
+                if (masterAdmin != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = masterAdmin,
+                        message = "SuperAdmin Login successfully",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "SuperAdmin doesn't exists",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"MasterAdminController : LoginSuperAdmin ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+            }
+        }
+
         [HttpPost("SaveMasterAdmin")]
         public async Task<ActionResult> SaveMasterAdmin([FromBody] MasterAdminDto masterAdminDto)
         {

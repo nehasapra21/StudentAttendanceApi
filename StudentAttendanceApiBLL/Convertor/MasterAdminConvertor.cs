@@ -15,6 +15,7 @@ namespace StudentAttendanceApiBLL
             masterAdmin.Id = masterAdminDto.Id;
             masterAdmin.MasterAdminGuidId = masterAdminDto.MasterAdminGuidId;
             masterAdmin.FullName = masterAdminDto.FullName;
+            masterAdmin.Token = masterAdminDto.Token;
             masterAdmin.FullAddress = masterAdminDto.FullAddress;
             masterAdmin.Status = masterAdminDto.Status;
             masterAdmin.Age = masterAdminDto.Age;

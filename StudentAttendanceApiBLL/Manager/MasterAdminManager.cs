@@ -47,6 +47,12 @@ namespace StudentAttendanceApiBLL.Manager
 
             return await _masterAdminRepository.SaveMasterAdmin(masterAdmin);
         }
+        public async Task<MasterAdmin> LoginSuperAdmin(string name,string password)
+        {
+            _logger.LogInformation($"MasterAdminManager : Bll : LoginSuperAdmin : Started");
+
+            return await _masterAdminRepository.LoginSuperAdmin(name,password);
+        }
 
         #endregion
     }

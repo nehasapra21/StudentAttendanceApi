@@ -11,5 +11,6 @@ namespace StudentAttendanceApiDAL.IRepository
     {
        public Task<List<MasterAdmin>> GetAllMasterAdmin();
         Task<MasterAdmin> SaveMasterAdmin(MasterAdmin masterAdmin);
+        Task<MasterAdmin> LoginSuperAdmin(string name, string password);
     }
 }
