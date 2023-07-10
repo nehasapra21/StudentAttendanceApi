@@ -53,6 +53,7 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
+                    panchayat.PanchayatGuidId = Guid.NewGuid();
                     appDbContext.Panchayat.Add(panchayat);
                 }
                 await appDbContext.SaveChangesAsync();
@@ -63,6 +64,17 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 logger.LogError(ex, $"PanchayatRepository : SavePanchayat ", ex);
             }
+            return panchayat;
+        }
+
+        public async Task<Panchayat> GetPanchayatByDistrictAndVidhanSabhaId(int districtId,int vidhanSabhaId)
+        {
+            logger.LogInformation($"VidhanSabhaRepository : GetPanchayatByDistrictAndVidhanSabhaId : Started");
+
+            var panchayat = await appDbContext.Panchayat.AsNoTracking().FirstOrDefaultAsync(x => x.DistrictId == districtId && x.VidhanSabhaId== vidhanSabhaId);
+
+            logger.LogInformation($"VidhanSabhaRepository : GetPanchayatByDistrictAndVidhanSabhaId : End");
+
             return panchayat;
         }
 

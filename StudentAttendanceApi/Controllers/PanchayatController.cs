@@ -59,5 +59,20 @@ namespace StudentAttendanceApi.Controllers
                 return StatusCode(StatusCodes.Status501NotImplemented, "error");
             }
         }
+
+        [HttpGet("GetPanchayatByDistrictAndVidhanSabhaId")]
+        public async Task<ActionResult> GetPanchayatByDistrictAndVidhanSabhaId(int districtId, int vidhanSabhaId)
+        {
+            logger.LogInformation("VidhanSabhaController : GetPanchayatByDistrictAndVidhanSabhaId : Started");
+            try
+            {
+                return Ok(await _panchayatManager.GetPanchayatByDistrictAndVidhanSabhaId(districtId, vidhanSabhaId));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VidhanSabhaController : GetPanchayatByDistrictAndVidhanSabhaId ", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, "error");
+            }
+        }
     }
 }

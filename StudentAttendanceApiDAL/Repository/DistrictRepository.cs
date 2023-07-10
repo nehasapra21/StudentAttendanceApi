@@ -53,6 +53,7 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
+                    district.DistrictGuidId = Guid.NewGuid();
                     appDbContext.District.Add(district);
                 }
                 await appDbContext.SaveChangesAsync();

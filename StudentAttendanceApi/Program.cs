@@ -14,12 +14,11 @@ builder.Services.AddTransient<IMasterAdminRepository, MasterAdminRepository>();
 builder.Services.AddTransient<IVidhanSabhaRepository, VidhanSabhaRepository>();
 builder.Services.AddTransient<IVidhanSabhaManager, VidhanSabhaManager>();
 builder.Services.AddTransient<IVillageRepository, VillageRepository>();
-//builder.Services.AddTransient<IVillageManager, VillageManager>();
-builder.Services.AddTransient<IDistrictRepository, DistrictRepository>();
-//builder.Services.AddTransient<IDistrictManager, DistrictManager>();
+builder.Services.AddTransient<IVillageManager, VillageManager>();
+builder.Services.AddTransient<IDistrictRepository, DistrictRepository>(); builder.Services.AddTransient<IDistrictManager, DistrictManager>();
 
 builder.Services.AddTransient<IPanchayatRepository, PanchayatRepository>();
-//builder.Services.AddTransient<IPanchayatManager, PanchayatManager>();
+builder.Services.AddTransient<IPanchayatManager, PanchayatManager>();
 
 // Add services to the container.
 

@@ -53,6 +53,7 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
+                    vidhanSabha.VidhanSabhaGuidId = Guid.NewGuid();
                     appDbContext.VidhanSabha.Add(vidhanSabha);
                 }
                 await appDbContext.SaveChangesAsync();
@@ -63,6 +64,17 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 logger.LogError(ex, $"VidhanSabhaRepository : SaveVidhanSabha ", ex);
             }
+            return vidhanSabha;
+        }
+
+        public async Task<VidhanSabha> GetVidhanSabhaByDistrictId(int districtId)
+        {
+            logger.LogInformation($"VidhanSabhaRepository : GetVidhanSabhaByDistrictId : Started");
+
+            var vidhanSabha = await appDbContext.VidhanSabha.AsNoTracking().FirstOrDefaultAsync(x => x.DistrictId == districtId);
+
+            logger.LogInformation($"VidhanSabhaRepository : GetVidhanSabhaByDistrictId : End");
+
             return vidhanSabha;
         }
     }

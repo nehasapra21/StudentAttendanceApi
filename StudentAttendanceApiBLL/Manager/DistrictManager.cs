@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace StudentAttendanceApiBLL.Manager
 {
-    public class DistrictManager
+    public class DistrictManager:IDistrictManager
     {
         #region | Properties |
 
@@ -35,10 +35,17 @@ namespace StudentAttendanceApiBLL.Manager
 
         public async Task<List<District>> GetAllDistrict()
         {
-            _logger.LogInformation($"MasterAdminManager : Bll : GetAllDistrict : Started");
+            _logger.LogInformation($"DitrictManager : Bll : GetAllDistrict : Started");
             var district = await _districtRepository.GetAllDistrict();
-            _logger.LogInformation($"MasterAdminManager : Bll : GetAllDistrict : End");
+            _logger.LogInformation($"DitrictManager : Bll : GetAllDistrict : End");
             return district;
+        }
+
+        public async Task<District> SaveDistrict(District district)
+        {
+            _logger.LogInformation($"DitrictManager : Bll : district : Started");
+
+            return await _districtRepository.SaveDistrict(district);
         }
         #endregion
     }

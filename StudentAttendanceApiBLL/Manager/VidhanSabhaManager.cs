@@ -48,6 +48,14 @@ namespace StudentAttendanceApiBLL.Manager
             return await _vidhanRepository.SaveVidhanSabha(vidhanSabha);
         }
 
+        public async Task<VidhanSabha> GetVidhanSabhaByDistrictId(int districtId)
+        {
+            _logger.LogInformation($"VidhanSabhaManager : Bll : GetVidhanSabhaByDistrictId : Started");
+
+            return await _vidhanRepository.GetVidhanSabhaByDistrictId(districtId);
+        }
+
+
         #endregion
 
     }

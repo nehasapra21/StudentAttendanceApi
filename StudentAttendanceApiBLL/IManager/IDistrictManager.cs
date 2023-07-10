@@ -9,7 +9,7 @@ namespace StudentAttendanceApiBLL.IManager
 {
     public interface IDistrictManager
     {
-        Task<List<DistrictDto>> GetAllDistrict();
+        Task<List<District>> GetAllDistrict();
         Task<District> SaveDistrict(District district);
     }
 

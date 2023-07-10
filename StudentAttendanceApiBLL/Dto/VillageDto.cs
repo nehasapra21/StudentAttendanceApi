@@ -12,7 +12,7 @@ namespace StudentAttendanceApiBLL
     public class VillageDto
     {
         public int Id { get; set; }
-        public int VillageGuidId { get; set; }
+        public Guid VillageGuidId { get; set; }
         public string? Name { get; set; }
         public bool? Status { get; set; }
 

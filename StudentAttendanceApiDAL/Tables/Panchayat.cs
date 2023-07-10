@@ -14,7 +14,7 @@ namespace StudentAttendanceApiDAL.Tables
     {
         [Key]
         public int Id { get; set; }
-        public int PanchayatGuidId { get; set; }
+        public Guid PanchayatGuidId { get; set; }
         public string? Name { get; set; }
         public bool? Status { get; set; }
 

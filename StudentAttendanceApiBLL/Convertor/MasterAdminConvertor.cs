@@ -14,8 +14,21 @@ namespace StudentAttendanceApiBLL
             MasterAdmin masterAdmin = new MasterAdmin();
             masterAdmin.Id = masterAdminDto.Id;
             masterAdmin.MasterAdminGuidId = masterAdminDto.MasterAdminGuidId;
+            masterAdmin.FullName = masterAdminDto.FullName;
             masterAdmin.FullAddress = masterAdminDto.FullAddress;
             masterAdmin.Status = masterAdminDto.Status;
+            masterAdmin.Age = masterAdminDto.Age;
+            masterAdmin.Gender = masterAdminDto.Gender;
+            masterAdmin.DateOfBirth = masterAdminDto.DateOfBirth;
+            masterAdmin.PhoneNumber = masterAdminDto.PhoneNumber;
+            masterAdmin.WhatsApp = masterAdminDto.WhatsApp;
+            masterAdmin.Email = masterAdminDto.Email;
+            masterAdmin.Contact = masterAdminDto.Contact;
+            masterAdmin.RoleId = masterAdminDto.RoleId;
+            masterAdmin.Picture = masterAdminDto.Picture;
+            masterAdmin.LastLoginTime = masterAdminDto.LastLoginTime;
+            masterAdmin.Password = masterAdminDto.Password;
+            masterAdmin.Type = masterAdminDto.Type;
             masterAdmin.CreatedBy = masterAdminDto.CreatedBy;
             masterAdmin.CreatedOn = masterAdminDto.CreatedOn;
 

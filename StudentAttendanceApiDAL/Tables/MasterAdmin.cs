@@ -8,7 +8,7 @@ namespace StudentAttendanceApiDAL.Tables
     {
         [Key]
         public int Id { get; set; }
-        public int MasterAdminGuidId { get; set; }
+        public Guid MasterAdminGuidId { get; set; }
         public string? FullName { get; set; }
         public string? Password { get; set; }
         public int Age { get; set; }

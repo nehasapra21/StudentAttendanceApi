@@ -48,6 +48,12 @@ namespace StudentAttendanceApiBLL.Manager
             return await _villageRepository.SaveVillage(village);
         }
 
+        public async Task<Village> GetVillageByDistrictVidhanSabhaAndPanchId(int districtId, int vidhanSabhaId, int panchayatId)
+        {
+            _logger.LogInformation($"VillageManager : Bll : GetVillageByDistrictVidhanSabhaAndPanchId : Started");
+
+            return await _villageRepository.GetVillageByDistrictVidhanSabhaAndPanchId(districtId, vidhanSabhaId, panchayatId);
+        }
         #endregion
     }
 }

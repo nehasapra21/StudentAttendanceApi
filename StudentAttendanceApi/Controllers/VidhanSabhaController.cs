@@ -59,5 +59,21 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [HttpGet("GetVidhanSabhaByDistrictId")]
+        public async Task<ActionResult> GetVidhanSabhaByDistrictId(int districtId)
+        {
+            logger.LogInformation("VidhanSabhaController : GetVidhanSabhaByDistrictId : Started");
+            try
+            {
+                return Ok(await _vidhanSabhaManager.GetVidhanSabhaByDistrictId(districtId));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VidhanSabhaController : GetUserById ", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, "error");
+            }
+        }
+
+    
     }
 }

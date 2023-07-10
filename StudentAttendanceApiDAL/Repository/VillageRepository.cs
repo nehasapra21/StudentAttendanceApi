@@ -54,6 +54,7 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
+                    village.VillageGuidId= Guid.NewGuid();
                     appDbContext.Village.Add(village);
                 }
                 await appDbContext.SaveChangesAsync();
@@ -66,5 +67,17 @@ namespace StudentAttendanceApiDAL.Repository
             }
             return village;
         }
+
+        public async Task<Village> GetVillageByDistrictVidhanSabhaAndPanchId(int districtId, int vidhanSabhaId, int panchayatId)
+        {
+            logger.LogInformation($"VillageRepository : GetVillageByDistrictVidhanSabhaAndPanchId : Started");
+
+            var village = await appDbContext.Village.AsNoTracking().FirstOrDefaultAsync(x => x.DistrictId == districtId && x.VidhanSabhaId == vidhanSabhaId && x.PanchayatId==panchayatId);
+
+            logger.LogInformation($"VillageRepository : GetVillageByDistrictVidhanSabhaAndPanchId : End");
+
+            return village;
+        }
+
     }
 }

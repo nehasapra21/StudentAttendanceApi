@@ -54,6 +54,7 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
+                    masterAdmin.MasterAdminGuidId = Guid.NewGuid();
                     appDbContext.MasterAdmin.Add(masterAdmin);
                 }
                 await appDbContext.SaveChangesAsync();
