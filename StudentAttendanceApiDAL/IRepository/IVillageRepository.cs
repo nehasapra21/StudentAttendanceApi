@@ -11,5 +11,6 @@ namespace StudentAttendanceApiDAL.IRepository
     {
         Task<List<Village>> GetAllVillage();
         Task<Village> SaveVillage(Village village);
+        Task<Village> GetVillageByDistrictVidhanSabhaAndPanchId(int districtId, int vidhanSabhaId, int panchayatId);
     }
 }

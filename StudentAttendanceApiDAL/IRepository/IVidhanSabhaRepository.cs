@@ -11,5 +11,6 @@ namespace StudentAttendanceApiDAL.IRepository
     {
         Task<List<VidhanSabha>> GetAllVidhanSabha();
         Task<VidhanSabha> SaveVidhanSabha(VidhanSabha vidhanSabha);
+        Task<VidhanSabha> GetVidhanSabhaByDistrictId(int districtId);
     }
 }
