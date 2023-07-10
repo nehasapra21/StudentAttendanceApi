@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "15LHvxiEXHPsGrJp/W3V6pSM002v1LXFV8O+Mwyu6/4=",
+  "Source": "StudentAttendanceApi",
+  "BasePath": "_content/StudentAttendanceApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "StudentAttendanceApi\\wwwroot",
+      "Source": "StudentAttendanceApi",
+      "ContentRoot": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApi\\wwwroot\\",
+      "BasePath": "_content/StudentAttendanceApi",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

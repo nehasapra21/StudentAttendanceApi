@@ -1,0 +1,126 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiBLL\\StudentAttendanceApiBLL.csproj": {}
+  },
+  "projects": {
+    "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiBLL\\StudentAttendanceApiBLL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiBLL\\StudentAttendanceApiBLL.csproj",
+        "projectName": "StudentAttendanceApiBLL",
+        "projectPath": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiBLL\\StudentAttendanceApiBLL.csproj",
+        "packagesPath": "C:\\Users\\Nishant\\.nuget\\packages\\",
+        "outputPath": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiBLL\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Nishant\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://rogue-wan.pkgs.visualstudio.com/_packaging/Onguard-Packages/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj": {
+                "projectPath": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj",
+        "projectName": "StudentAttendanceApiDAL",
+        "projectPath": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj",
+        "packagesPath": "C:\\Users\\Nishant\\.nuget\\packages\\",
+        "outputPath": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Nishant\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://rogue-wan.pkgs.visualstudio.com/_packaging/Onguard-Packages/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.DataProtection.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.19, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

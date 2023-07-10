@@ -1,0 +1,15 @@
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\bin\Debug\net6.0\StudentAttendanceApiBLL.deps.json
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\bin\Debug\net6.0\StudentAttendanceApiBLL.dll
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\bin\Debug\net6.0\StudentAttendanceApiBLL.pdb
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\obj\Debug\net6.0\StudentAttendanceApiBLL.csproj.AssemblyReference.cache
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\obj\Debug\net6.0\StudentAttendanceApiBLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\obj\Debug\net6.0\StudentAttendanceApiBLL.AssemblyInfoInputs.cache
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\obj\Debug\net6.0\StudentAttendanceApiBLL.AssemblyInfo.cs
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\obj\Debug\net6.0\StudentAttendanceApiBLL.csproj.CoreCompileInputs.cache
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\obj\Debug\net6.0\StudentAttendanceApiBLL.dll
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\obj\Debug\net6.0\refint\StudentAttendanceApiBLL.dll
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\obj\Debug\net6.0\StudentAttendanceApiBLL.pdb
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\obj\Debug\net6.0\ref\StudentAttendanceApiBLL.dll
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\bin\Debug\net6.0\StudentAttendanceApiDAL.dll
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\bin\Debug\net6.0\StudentAttendanceApiDAL.pdb
+C:\Neha\StudentAttendance\StudentAttendanceApi\StudentAttendanceApiBLL\obj\Debug\net6.0\StudentAttendanceApiBLL.csproj.CopyComplete
