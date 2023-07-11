@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 
 namespace StudentAttendanceApiBLL.Manager
 {
-    public class MasterAdminManager:IMasterAdminManager
+    public class RegionalAdminManager:IRegionalAdminManager
     {
         #region | Properties |
 
         private readonly ILogger _logger;
-        private readonly IMasterAdminRepository _masterAdminRepository;
+        private readonly IRegionalAdminRepository _masterAdminRepository;
 
         #endregion
 
         #region | Controller |
 
-        public MasterAdminManager(IMasterAdminRepository masterAdminRepository,
-                                ILogger<MasterAdminManager> logger)
+        public RegionalAdminManager(IRegionalAdminRepository masterAdminRepository,
+                                ILogger<RegionalAdminManager> logger)
         {
             _masterAdminRepository = masterAdminRepository;
             _logger = logger;
@@ -33,27 +33,22 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async Task<List<MasterAdmin>> GetAllMasterAdmin()
+        public async Task<List<RegionalAdmin>> GetAllRegionalAdmin()
         {
             _logger.LogInformation($"MasterAdminManager : Bll : GetAllMasterAdmin : Started");
-            var masterAdmins = await _masterAdminRepository.GetAllMasterAdmin();
+            var masterAdmins = await _masterAdminRepository.GetAllRegionalAdmin();
             _logger.LogInformation($"MasterAdminManager : Bll : GetAllMasterAdmin : End");
             return masterAdmins;
         }
 
-        public async Task<MasterAdmin> SaveMasterAdmin(MasterAdmin masterAdmin)
+        public async Task<RegionalAdmin> SaveRegionalAdmin(RegionalAdmin regionalAdmin)
         {
             _logger.LogInformation($"MasterAdminManager : Bll : SaveMasterAdmin : Started");
-
-            return await _masterAdminRepository.SaveMasterAdmin(masterAdmin);
+            string pass = EncryptionUtility.GetHashPassword(regionalAdmin.Password);
+            regionalAdmin.Password = pass;
+            return await _masterAdminRepository.SaveRegionalAdmin(regionalAdmin);
         }
-        public async Task<MasterAdmin> LoginSuperAdmin(string name,string password)
-        {
-            _logger.LogInformation($"MasterAdminManager : Bll : LoginSuperAdmin : Started");
-
-            return await _masterAdminRepository.LoginSuperAdmin(name,password);
-        }
-
+        
         #endregion
     }
 }

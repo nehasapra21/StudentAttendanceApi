@@ -19,7 +19,8 @@ namespace StudentAttendanceApiDAL.Model
 
         // This maps to the table that stores keys.
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
-        public DbSet<MasterAdmin> MasterAdmin { get; set; }
+        public DbSet<RegionalAdmin> RegionalAdmin { get; set; }
+        public DbSet<Users> Users { get; set; }
         public DbSet<District> District { get; set; }
         public DbSet<VidhanSabha> VidhanSabha { get; set; }
         public DbSet<Panchayat> Panchayat { get; set; }

@@ -1,18 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace StudentAttendanceApiDAL.Tables
+namespace StudentAttendanceApiBLL
 {
-    [Table("MasterAdmin")]
-    public class MasterAdmin
+    public class RegionalAdminDto
     {
-        [Key]
         public int Id { get; set; }
-        public Guid MasterAdminGuidId { get; set; }
+        public Guid RegionalAdminGuidId { get; set; }
         public string? FullName { get; set; }
         public string? Password { get; set; }
         public string? Token { get; set; }
-        public int? Age { get; set; }
+        public int Age { get; set; }
         public string? Gender { get; set; }
         public string? Contact { get; set; }
         public bool? Status { get; set; }

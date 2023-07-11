@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace StudentAttendanceApiBLL
 {
-    public static class MasterAdminConvertor
+    public static class RegionalAdminConvertor
     {
-        public static MasterAdmin ConvertMasterAdminDtoToMasterAdmin(MasterAdminDto masterAdminDto)
+        public static RegionalAdmin ConvertMasterAdminDtoToMasterAdmin(RegionalAdminDto masterAdminDto)
         {
-            MasterAdmin masterAdmin = new MasterAdmin();
+            RegionalAdmin masterAdmin = new RegionalAdmin();
             masterAdmin.Id = masterAdminDto.Id;
-            masterAdmin.MasterAdminGuidId = masterAdminDto.MasterAdminGuidId;
+            masterAdmin.RegionalAdminGuidId = masterAdminDto.RegionalAdminGuidId;
             masterAdmin.FullName = masterAdminDto.FullName;
             masterAdmin.Token = masterAdminDto.Token;
             masterAdmin.FullAddress = masterAdminDto.FullAddress;

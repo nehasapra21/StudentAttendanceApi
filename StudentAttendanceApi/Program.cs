@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,8 +41,13 @@ builder.Services.AddAuthentication(au =>
     };
 });
 
-builder.Services.AddTransient<IMasterAdminRepository, MasterAdminRepository>();
-builder.Services.AddTransient<IMasterAdminManager, MasterAdminManager>();
+
+///register services
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUserManager, UserManager>();
+
+builder.Services.AddTransient<IRegionalAdminRepository, RegionalAdminRepository>();
+builder.Services.AddTransient<IRegionalAdminManager, RegionalAdminManager>();
 builder.Services.AddTransient<IVidhanSabhaRepository, VidhanSabhaRepository>();
 builder.Services.AddTransient<IVidhanSabhaManager, VidhanSabhaManager>();
 builder.Services.AddTransient<IVillageRepository, VillageRepository>();
@@ -58,9 +64,37 @@ builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer(); 
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbDatabase")));
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "StudentAttendance Api", Version = "v2.0" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                       {
+                            new OpenApiSecurityScheme
+                                   {
+                                    Reference = new OpenApiReference
+                                      {
+                                           Type=ReferenceType.SecurityScheme,
+                                            Id="Bearer"
+                                     }
+                         },
+                             new string[]{}
+                            }
+                       });
+});
 
 var app = builder.Build();
 
