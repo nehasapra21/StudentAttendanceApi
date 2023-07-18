@@ -58,7 +58,7 @@ builder.Services.AddAuthentication(au =>
         RequireExpirationTime=true, 
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-
+        //helo
     };
 });
 
