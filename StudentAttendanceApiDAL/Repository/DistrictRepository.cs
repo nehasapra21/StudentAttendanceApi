@@ -53,6 +53,7 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
+                    district.CreatedOn = DateTime.Now;
                     district.DistrictGuidId = Guid.NewGuid();
                     appDbContext.District.Add(district);
                 }
@@ -66,5 +67,24 @@ namespace StudentAttendanceApiDAL.Repository
             }
             return district;
         }
+
+        public async Task<string> CheckDistrictName(string name)
+        {
+            logger.LogInformation($"UserRepository : CheckDistrictName : Started");
+
+            District district = new District();
+            try
+            {
+                district = appDbContext.District.AsNoTracking().FirstOrDefaultAsync(x => x.Name == name).Result;
+
+                logger.LogInformation($"UserRepository : CheckDistrictName : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : CheckDistrictName", ex);
+            }
+            return district == null ? null : district.Name;
+        }
+
     }
 }

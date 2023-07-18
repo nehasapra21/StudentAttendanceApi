@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StudentAttendanceApiBLL;
+using StudentAttendanceApiBLL.Dto;
 using StudentAttendanceApiBLL.IManager;
 using StudentAttendanceApiBLL.Manager;
 using StudentAttendanceApiDAL.IRepository;
@@ -10,6 +12,7 @@ using StudentAttendanceApiDAL.Tables;
 
 namespace StudentAttendanceApi.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class RegionalAdminController : ControllerBase
@@ -24,6 +27,7 @@ namespace StudentAttendanceApi.Controllers
             this._masterAdminManager = masterAdminManager;
         }
 
+        [Authorize]
         [HttpGet("GetAllRegionalAdmin")]
         public async Task<IActionResult> GetAllRegionalAdmin()
         {
@@ -39,8 +43,44 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [HttpPost("LoginRegionalAdmin")]
+        public async Task<IActionResult> LoginRegionalAdmin(LoginDto loginDto)
+        {
+            logger.LogInformation("UserController : LoginRegionalAdmin : Started");
+            try
+            {
+                var masterAdmin = await _masterAdminManager.LoginRegionalAdmin(loginDto.Name, loginDto.Password);
+                if (masterAdmin != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = masterAdmin,
+                        message = "Regional admin Login successfully",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "Regional admin doesn't exists",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : LoginSuperAdmin ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+            }
+        }
+
+        [Authorize]
         [HttpPost("SaveRegionalAdmin")]
-        public async Task<IActionResult> SaveRegionalAdmin(RegionalAdminDto regionalAdminDto)
+        public async Task<IActionResult> SaveRegionalAdmin([FromForm] RegionalAdminDto regionalAdminDto)
         {
             logger.LogInformation("RegionalAdminController : SaveRegionalAdmin : Started");
             try

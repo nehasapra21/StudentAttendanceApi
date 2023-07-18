@@ -55,6 +55,13 @@ namespace StudentAttendanceApiBLL.Manager
             return await _panchayatRepository.GetPanchayatByDistrictAndVidhanSabhaId(districtId, vidhanSabhaId);
         }
 
+        public async Task<string> CheckPanchayatName(string name)
+        {
+            _logger.LogInformation($"VillageManager : Bll : CheckPanchayatName : Started");
+
+            return await _panchayatRepository.CheckPanchayatName(name);
+        }
+
 
         #endregion
     }

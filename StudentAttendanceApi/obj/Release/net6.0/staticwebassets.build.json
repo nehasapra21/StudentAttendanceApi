@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "Hash": "PkAxZtWzkWT2QnLHr5ALHfsL6VNKgLqZkotWR/PWf8A=",
+  "Source": "StudentAttendanceApi",
+  "BasePath": "_content/StudentAttendanceApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "StudentAttendanceApi\\wwwroot",
+      "Source": "StudentAttendanceApi",
+      "ContentRoot": "D:\\Neha\\StudentAttendanceApi\\StudentAttendanceApi\\wwwroot\\",
+      "BasePath": "_content/StudentAttendanceApi",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\Neha\\StudentAttendanceApi\\StudentAttendanceApi\\wwwroot\\UploadProfileImage\\cc667a02-a1ba-4121-9670-8402c89e66ad_test.jpg\\test.jpg",
+      "SourceId": "StudentAttendanceApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Neha\\StudentAttendanceApi\\StudentAttendanceApi\\wwwroot\\",
+      "BasePath": "_content/StudentAttendanceApi",
+      "RelativePath": "UploadProfileImage/cc667a02-a1ba-4121-9670-8402c89e66ad_test.jpg/test.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\UploadProfileImage\\cc667a02-a1ba-4121-9670-8402c89e66ad_test.jpg\\test.jpg"
+    }
+  ]
+}

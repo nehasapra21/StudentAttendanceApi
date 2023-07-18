@@ -47,6 +47,31 @@ namespace StudentAttendanceApiDAL.Repository
             return masterAdmins;
         }
 
+        public async Task<RegionalAdmin> LoginRegionalAdmin(string userName, string password)
+        {
+            logger.LogInformation($"UserRepository : LoginRegionalAdmin : Started");
+
+            RegionalAdmin regionalAdmin = new RegionalAdmin();
+            try
+            {
+                regionalAdmin = await appDbContext.RegionalAdmin.AsNoTracking().FirstOrDefaultAsync(x => x.FullName == userName && x.Password == password);
+                if (regionalAdmin != null)
+                {
+                    ///Generate token for user
+                    #region JWT
+                    regionalAdmin.Token = CommonUtility.GenerateToken(configuration, regionalAdmin.Email, regionalAdmin.FullName);
+                    #endregion
+                }
+
+                logger.LogInformation($"UserRepository : LoginRegionalAdmin : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : LoginRegionalAdmin ", ex);
+            }
+            return regionalAdmin;
+        }
+
 
         public async Task<RegionalAdmin> SaveRegionalAdmin(RegionalAdmin regionalAdmin)
         {
@@ -72,6 +97,7 @@ namespace StudentAttendanceApiDAL.Repository
             catch (Exception ex)
             {
                 logger.LogError(ex, $"MasterAdminRepository : SaveRegionalAdmin ", ex);
+                throw ex;
             }
             return regionalAdmin;
         }

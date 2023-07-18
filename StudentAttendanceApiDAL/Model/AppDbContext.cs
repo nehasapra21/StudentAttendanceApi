@@ -21,6 +21,10 @@ namespace StudentAttendanceApiDAL.Model
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
         public DbSet<RegionalAdmin> RegionalAdmin { get; set; }
         public DbSet<Users> Users { get; set; }
+        public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<Center> Center { get; set; }
+        public DbSet<Student> Student { get; set; }
+        public DbSet<Holidays> Holidays { get; set; }
         public DbSet<District> District { get; set; }
         public DbSet<VidhanSabha> VidhanSabha { get; set; }
         public DbSet<Panchayat> Panchayat { get; set; }

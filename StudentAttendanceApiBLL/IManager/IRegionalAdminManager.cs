@@ -9,7 +9,8 @@ namespace StudentAttendanceApiBLL.IManager
 {
     public interface IRegionalAdminManager
     {
-        Task<List<RegionalAdmin>> GetAllRegionalAdmin();
+        Task<RegionalAdmin> LoginRegionalAdmin(string name, string password);
         Task<RegionalAdmin> SaveRegionalAdmin(RegionalAdmin masterAdmin);
+        Task<List<RegionalAdmin>> GetAllRegionalAdmin();
     }
 }

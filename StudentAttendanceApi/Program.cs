@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,25 @@ builder.Services.Configure<AppSettings>(appsettingSection);
 
 var appsetting = appsettingSection.Get<AppSettings>();
 var key = Encoding.ASCII.GetBytes(appsetting.Key);
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(... )
+//    .AddRoles<IdentityRole>();
+
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy(AllDevops.ToString(), policy => policy.RequireRole(RoleDevOpsName));
+//    options.AddPolicy(AdminAndDevops.ToString(), policy => policy.RequireRole(RoleAdminName,
+//                                                                   RoleDevOpsName));
+//    options.AddPolicy(AdminSupportConsultant.ToString(), policy => policy.RequireRole(RoleAdminName,
+//                                                                    RoleSupportName,
+//                                                                    RoleConsultantName));
+//    options.AddPolicy(AdminSupportConsultantDevops.ToString(), policy => policy.RequireRole(RoleAdminName,
+//                                                                   RoleSupportName,
+//                                                                   RoleConsultantName,
+//                                                                   RoleDevOpsName));
+//    options.AddPolicy(All.ToString(), policy => policy.RequireRole(RoleDevOpsName, RoleAdminName,
+//                   RoleSupportName, RoleConsultantName, RoleViewerName));
+//});
 
 builder.Services.AddAuthentication(au =>
 {
@@ -35,6 +55,7 @@ builder.Services.AddAuthentication(au =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:key"])),
         ValidateIssuer = true,
         ValidateAudience = true,
+        RequireExpirationTime=true, 
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
 
@@ -45,7 +66,12 @@ builder.Services.AddAuthentication(au =>
 ///register services
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserManager, UserManager>();
-
+builder.Services.AddTransient<ICenterRepository, CenterRepository>();
+builder.Services.AddTransient<ICenterManager, CenterManager>();
+builder.Services.AddTransient<ITeacherRepository, TeacherRepository>();
+builder.Services.AddTransient<ITeacherManager, TeacherManager>();
+builder.Services.AddTransient<IStudentRepository, StudentRepository>();
+builder.Services.AddTransient<IStudentManager, StudentManager>();
 builder.Services.AddTransient<IRegionalAdminRepository, RegionalAdminRepository>();
 builder.Services.AddTransient<IRegionalAdminManager, RegionalAdminManager>();
 builder.Services.AddTransient<IVidhanSabhaRepository, VidhanSabhaRepository>();
@@ -57,20 +83,23 @@ builder.Services.AddTransient<IDistrictRepository, DistrictRepository>(); builde
 builder.Services.AddTransient<IPanchayatRepository, PanchayatRepository>();
 builder.Services.AddTransient<IPanchayatManager, PanchayatManager>();
 
+builder.Services.AddTransient<IHolidaysRepository, HolidaysRepository>();
+builder.Services.AddTransient<IHolidaysManager, HolidaysManager>();
 // Add services to the container.
 
 builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer(); 
+builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbDatabase")));
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "StudentAttendance Api", Version = "v2.0" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "StudentAttendance Api", Version = "v1.0" });
+    c.EnableAnnotations();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -97,7 +126,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -118,9 +146,15 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();

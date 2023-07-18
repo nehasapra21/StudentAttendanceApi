@@ -11,6 +11,7 @@ using StudentAttendanceApiDAL.Tables;
 
 namespace StudentAttendanceApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class VidhanSabhaController : ControllerBase
@@ -24,13 +25,22 @@ namespace StudentAttendanceApi.Controllers
             this._vidhanSabhaManager = vidhanSabhaManager;
         }
 
+        [Authorize]
         [HttpGet("GetAllVidhanSabha")]
         public async Task<IActionResult> GetAllVidhanSabha()
         {
             logger.LogInformation("VidhanSabhaController : GetAllVidhanSabha : Started");
             try
             {
-                return Ok(await _vidhanSabhaManager.GetAllVidhanSabha());
+                var vidhanSabha = await _vidhanSabhaManager.GetAllVidhanSabha();
+                if (vidhanSabha != null)
+                {
+                    return Ok(vidhanSabha);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
@@ -39,18 +49,34 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("SaveVidhanSabha")]
-        public async Task<ActionResult> SaveVidhanSabha([FromBody] VidhanSabhaDto vidhanSabhaDto)
+        public async Task<ActionResult> SaveVidhanSabha([FromForm] VidhanSabhaDto vidhanSabhaDto)
         {
             logger.LogInformation("VidhanSabhaController : SaveVidhanSabha : Started");
             try
             {
                 VidhanSabha vidhanSabha = VidhanSabhaConvertor.ConvertVidhanSabhaDtoToVidhanSabha(vidhanSabhaDto);
                 var vidhanSabhaVal = await _vidhanSabhaManager.SaveVidhanSabha(vidhanSabha);
-                logger.LogInformation("VidhanSabhaController : SaveVidhanSabha : End");
-                if (vidhanSabhaVal == null)
-                    return BadRequest(new { message = "panchayatVal" });
-                return new OkObjectResult(vidhanSabhaVal);
+                if (vidhanSabhaVal != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = vidhanSabhaVal,
+                        message = "VidanSabha save successfully",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "VidanSabha doesn't save",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
 
             }
             catch (Exception ex)
@@ -60,13 +86,22 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("GetVidhanSabhaByDistrictId")]
         public async Task<ActionResult> GetVidhanSabhaByDistrictId(int districtId)
         {
             logger.LogInformation("VidhanSabhaController : GetVidhanSabhaByDistrictId : Started");
             try
             {
-                return Ok(await _vidhanSabhaManager.GetVidhanSabhaByDistrictId(districtId));
+                var vidhansabaha = await _vidhanSabhaManager.GetVidhanSabhaByDistrictId(districtId);
+                if (vidhansabaha != null)
+                {
+                    return Ok(vidhansabaha);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
@@ -75,6 +110,40 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-    
+        [Authorize]
+        [HttpPost("CheckVidhanSabhaName")]
+        public async Task<IActionResult> CheckVidhanSabhaName(string name)
+        {
+            logger.LogInformation("UserController : CheckVidhanSabhaName : Started");
+            try
+            {
+                var mobileNo = await _vidhanSabhaManager.CheckVidhanSabhaName(name);
+                if (mobileNo != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = false,
+                        message = "VidhanSabha name already exists",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = true,
+                        error = "VidhanSabha name doesn't exists",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : CheckVidhanSabhaName ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+            }
+        }
+
     }
 }

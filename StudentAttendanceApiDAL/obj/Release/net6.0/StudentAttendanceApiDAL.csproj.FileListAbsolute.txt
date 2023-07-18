@@ -1,0 +1,12 @@
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\bin\Release\net6.0\StudentAttendanceApiDAL.deps.json
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\bin\Release\net6.0\StudentAttendanceApiDAL.dll
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\bin\Release\net6.0\StudentAttendanceApiDAL.pdb
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\obj\Release\net6.0\StudentAttendanceApiDAL.csproj.AssemblyReference.cache
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\obj\Release\net6.0\StudentAttendanceApiDAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\obj\Release\net6.0\StudentAttendanceApiDAL.AssemblyInfoInputs.cache
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\obj\Release\net6.0\StudentAttendanceApiDAL.AssemblyInfo.cs
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\obj\Release\net6.0\StudentAttendanceApiDAL.csproj.CoreCompileInputs.cache
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\obj\Release\net6.0\StudentAttendanceApiDAL.dll
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\obj\Release\net6.0\refint\StudentAttendanceApiDAL.dll
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\obj\Release\net6.0\StudentAttendanceApiDAL.pdb
+D:\Neha\StudentAttendanceApi\StudentAttendanceApiDAL\obj\Release\net6.0\ref\StudentAttendanceApiDAL.dll

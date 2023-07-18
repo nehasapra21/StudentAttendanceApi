@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using StudentAttendanceApiBLL.IManager;
+using StudentAttendanceApiDAL;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Repository;
 using StudentAttendanceApiDAL.Tables;
@@ -33,22 +34,85 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async Task<Users> LoginSuperAdmin(string name, string password)
+        public async Task<Users> LoginUser(string name, string password)
         {
             _logger.LogInformation($"UserManager : Bll : LoginSuperAdmin : Started");
 
             string pass = EncryptionUtility.GetHashPassword(password);
 
-            return await _userRepository.LoginSuperAdmin(name, pass);
+            return await _userRepository.LoginUser(name, pass);
+        }
+
+        public async Task<Users> SaveLogin(Users user)
+        {
+            _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
+           
+            if (user.Id == 0)
+            {
+                user.EnrolmentRollId = user.Name.Substring(0, 2) + "-" + user.DateOfBirth + "-";
+                if (user.Gender == Constant.Gender.Male.ToString())
+                {
+                    user.EnrolmentRollId = user.EnrolmentRollId + "M";
+                }
+                else
+                {
+                    user.EnrolmentRollId = user.EnrolmentRollId + "F";
+                }
+            }
+            
+            string pass = EncryptionUtility.GetHashPassword(user.Password);
+            user.Password = pass;
+            return await _userRepository.SaveLogin(user);
         }
 
         public async Task<Users> SaveSuperAdmin(Users user)
         {
             _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
+           
+            if (user.Id == 0)
+            {
+                user.EnrolmentRollId = user.Name.Substring(0, 2) + "-" + user.DateOfBirth + "-";
+                if (user.Gender == Constant.Gender.Male.ToString())
+                {
+                    user.EnrolmentRollId = user.EnrolmentRollId + "M";
+                }
+                else
+                {
+                    user.EnrolmentRollId = user.EnrolmentRollId + "F";
+                }
+            }
 
             string pass = EncryptionUtility.GetHashPassword(user.Password);
             user.Password = pass;
-            return await _userRepository.SaveSuperAdmin(user);
+            return await _userRepository.SaveLogin(user);
+        }
+
+        public async Task<Users> GetUserById(int userId,int type)
+        {
+            _logger.LogInformation($"UserManager : Bll : GetUser : Started");
+
+            return await _userRepository.GetUserById(userId, type);
+        }
+
+        public async Task<string> CheckUserMobileNumber(string mobileNumber)
+        {
+            _logger.LogInformation($"UserManager : Bll : CheckUserMobileNumber : Started");
+
+            return await _userRepository.CheckUserMobileNumber(mobileNumber);
+        }
+
+        public async Task<List<Users>> GetRegisteredTeachers()
+        {
+            _logger.LogInformation($"UserManager : Bll : GetRegisteredTeachers : Started");
+
+            return await _userRepository.GetRegisteredTeachers();
+        }
+
+        public async Task<List<Users>> GetAllRegionalAdmins()
+        {
+            _logger.LogInformation($"UserManager : Bll : GetAllRegionalAdmins : Started");
+
+            return await _userRepository.GetAllRegionalAdmins();
         }
         #endregion
     }

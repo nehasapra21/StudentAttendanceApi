@@ -36,6 +36,7 @@ namespace StudentAttendanceApiDAL.Repository
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VidhanSabhaRepository : GetAllVidhanSabha ", ex);
+                throw ex;
             }
 
             return vidanSabha;
@@ -52,7 +53,8 @@ namespace StudentAttendanceApiDAL.Repository
                     appDbContext.Entry(vidhanSabha).State = EntityState.Modified;
                 }
                 else
-                {
+                {   
+                    vidhanSabha.CreatedOn = DateTime.Now;
                     vidhanSabha.VidhanSabhaGuidId = Guid.NewGuid();
                     appDbContext.VidhanSabha.Add(vidhanSabha);
                 }
@@ -63,6 +65,7 @@ namespace StudentAttendanceApiDAL.Repository
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VidhanSabhaRepository : SaveVidhanSabha ", ex);
+                throw ex;
             }
             return vidhanSabha;
         }
@@ -76,6 +79,25 @@ namespace StudentAttendanceApiDAL.Repository
             logger.LogInformation($"VidhanSabhaRepository : GetVidhanSabhaByDistrictId : End");
 
             return vidhanSabha;
+        }
+
+        public async Task<string> CheckVidhanSabhaName(string name)
+        {
+            logger.LogInformation($"UserRepository : CheckVidhanSabhaName : Started");
+
+            VidhanSabha vidhanSabha = new VidhanSabha();
+            try
+            {
+                vidhanSabha = appDbContext.VidhanSabha.AsNoTracking().FirstOrDefaultAsync(x => x.Name == name).Result;
+
+                logger.LogInformation($"UserRepository : CheckVidhanSabhaName : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : CheckVidhanSabhaName", ex);
+                throw ex;
+            }
+            return vidhanSabha == null ? null : vidhanSabha.Name;
         }
     }
 }

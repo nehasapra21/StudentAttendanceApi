@@ -47,6 +47,14 @@ namespace StudentAttendanceApiBLL.Manager
 
             return await _districtRepository.SaveDistrict(district);
         }
+
+        public async Task<string> CheckDistrictName(string name)
+        {
+            _logger.LogInformation($"VillageManager : Bll : CheckDistrictName : Started");
+
+            return await _districtRepository.CheckDistrictName(name);
+        }
+
         #endregion
     }
 }

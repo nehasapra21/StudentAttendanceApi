@@ -13,6 +13,7 @@ namespace StudentAttendanceApiBLL
     {
         public int Id { get; set; }
         public Guid DistrictGuidId { get; set; }
+        [Required]
         public string? Name { get; set; }
         public bool? Status { get; set; }
 

@@ -33,6 +33,16 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
+        public async Task<RegionalAdmin> LoginRegionalAdmin(string name, string password)
+        {
+            _logger.LogInformation($"UserManager : Bll : LoginRegionalAdmin : Started");
+
+            string pass = EncryptionUtility.GetHashPassword(password);
+
+            return await _masterAdminRepository.LoginRegionalAdmin(name, pass);
+        }
+
+
         public async Task<List<RegionalAdmin>> GetAllRegionalAdmin()
         {
             _logger.LogInformation($"MasterAdminManager : Bll : GetAllMasterAdmin : Started");

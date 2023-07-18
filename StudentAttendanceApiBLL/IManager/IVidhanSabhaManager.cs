@@ -12,5 +12,6 @@ namespace StudentAttendanceApiBLL.IManager
         Task<List<VidhanSabha>> GetAllVidhanSabha();
         Task<VidhanSabha> SaveVidhanSabha(VidhanSabha vidhanSabha);
         Task<VidhanSabha> GetVidhanSabhaByDistrictId(int districtId);
+        Task<string> CheckVidhanSabhaName(string name);
     }
 }

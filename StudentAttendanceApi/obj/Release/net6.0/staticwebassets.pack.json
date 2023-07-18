@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\Neha\\StudentAttendanceApi\\StudentAttendanceApi\\wwwroot\\UploadProfileImage\\cc667a02-a1ba-4121-9670-8402c89e66ad_test.jpg\\test.jpg",
+      "PackagePath": "staticwebassets\\UploadProfileImage\\cc667a02-a1ba-4121-9670-8402c89e66ad_test.jpg\\test.jpg"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.StudentAttendanceApi.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.build.StudentAttendanceApi.props",
+      "PackagePath": "build\\StudentAttendanceApi.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.StudentAttendanceApi.props",
+      "PackagePath": "buildMultiTargeting\\StudentAttendanceApi.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.buildTransitive.StudentAttendanceApi.props",
+      "PackagePath": "buildTransitive\\StudentAttendanceApi.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

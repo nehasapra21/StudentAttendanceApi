@@ -6,7 +6,26 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
+    <Compile Remove="Controllers\CommonController.cs" />
+    <Compile Remove="Controllers\RegionalAdminController.cs" />
+    <Compile Remove="Controllers\TeacherController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Controllers\VillageController.cs~RF40715c3.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="5.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.19" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
@@ -14,8 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Permission\" />
     <Folder Include="wwwRoot\" />
-    <Folder Include="Utility\" />
   </ItemGroup>
 
   <ItemGroup>

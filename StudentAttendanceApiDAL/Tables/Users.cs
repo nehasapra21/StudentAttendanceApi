@@ -14,7 +14,7 @@ namespace StudentAttendanceApiDAL.Tables
     {
         [Key]
         public int Id { get; set; }
-        public Guid UserGuidId { get; set; }
+        public string EnrolmentRollId { get; set; }
         public string? Password { get; set; }
         public string? Name { get; set; }
         public string? Token { get; set; }
@@ -32,7 +32,14 @@ namespace StudentAttendanceApiDAL.Tables
         public string? FullAddress { get; set; }
         public int? RoleId { get; set; }
         public DateTime? CreatedOn { get; set; }
+        public DateTime? EnrollmentDate { get; set; }
         public int? CreatedBy { get; set; }
+        public int? VidhanSabhaId { get; set; }
+        public int? DistrictId { get; set; }
+        public int? PanchayatId { get; set; }
+        public int? VillageId { get; set; }
+        public bool? AssignedTeacherStatus { get; set; }
+        public bool? AssignedRegionalAdminStatus { get; set; }
 
     }
     

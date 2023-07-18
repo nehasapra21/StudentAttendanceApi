@@ -12,6 +12,7 @@ using StudentAttendanceApiDAL.Tables;
 
 namespace StudentAttendanceApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PanchayatController : ControllerBase
@@ -25,13 +26,22 @@ namespace StudentAttendanceApi.Controllers
             this._panchayatManager = panchayatManager;
         }
 
+        [Authorize]
         [HttpGet("GetAllPanchayat")]
         public async Task<IActionResult> GetAllPanchayat()
         {
             logger.LogInformation("PanchayatController : GetAllPanchayat : Started");
             try
             {
-                return Ok(await _panchayatManager.GetAllPanchayat());
+                var panchayat = await _panchayatManager.GetAllPanchayat();
+                if (panchayat != null)
+                {
+                    return Ok(panchayat);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
@@ -40,18 +50,34 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("SavePanchayat")]
-        public async Task<ActionResult> SaveDistrict([FromBody] PanchayatDto panchayatDto)
+        public async Task<ActionResult> SaveDistrict([FromForm] PanchayatDto panchayatDto)
         {
             logger.LogInformation("PanchayatController : SavePanchayat : Started");
             try
             {
                 Panchayat panchayat = PanchayatConvertor.ConvertPanchayatDtoToPanchayat(panchayatDto);
                 var panchayatVal = await _panchayatManager.SavePanchayat(panchayat);
-                logger.LogInformation("PanchayatController : SavePanchayat : End");
-                if (panchayatVal == null)
-                    return BadRequest(new { message = "panchayatVal" });
-                return new OkObjectResult(panchayatVal);
+                if (panchayatVal != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = panchayatVal,
+                        message = "Panchayat save successfully",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "Panchayat doesn't save",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
 
             }
             catch (Exception ex)
@@ -61,18 +87,62 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("GetPanchayatByDistrictAndVidhanSabhaId")]
         public async Task<ActionResult> GetPanchayatByDistrictAndVidhanSabhaId(int districtId, int vidhanSabhaId)
         {
             logger.LogInformation("VidhanSabhaController : GetPanchayatByDistrictAndVidhanSabhaId : Started");
             try
             {
-                return Ok(await _panchayatManager.GetPanchayatByDistrictAndVidhanSabhaId(districtId, vidhanSabhaId));
+                var panchayat=await _panchayatManager.GetPanchayatByDistrictAndVidhanSabhaId(districtId, vidhanSabhaId);
+                if (panchayat != null)
+                {
+                    return Ok(panchayat);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VidhanSabhaController : GetPanchayatByDistrictAndVidhanSabhaId ", ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "error");
+            }
+        }
+
+        [Authorize]
+        [HttpPost("CheckPanchayatName")]
+        public async Task<IActionResult> CheckPanchayatName(string name)
+        {
+            logger.LogInformation("UserController : CheckPanchayatName : Started");
+            try
+            {
+                var mobileNo = await _panchayatManager.CheckPanchayatName(name);
+                if (mobileNo != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = false,
+                        message = "Panchayat name already exists",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = true,
+                        error = "Panchayat name doesn't exists",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : CheckPanchayatName ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, "error");
             }
         }
     }

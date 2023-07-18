@@ -32,7 +32,11 @@ namespace StudentAttendanceApiBLL
             masterAdmin.Type = masterAdminDto.Type;
             masterAdmin.CreatedBy = masterAdminDto.CreatedBy;
             masterAdmin.CreatedOn = masterAdminDto.CreatedOn;
-
+            masterAdmin.DistrictId = masterAdminDto.DistrictId;
+            masterAdmin.CenterId = masterAdminDto.CenterId;
+            masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
+            masterAdmin.VillageId = masterAdminDto.VillageId;
+            masterAdmin.VidhanSabhaId = masterAdminDto.VidhanSabhaId;
             return masterAdmin;
 
         }

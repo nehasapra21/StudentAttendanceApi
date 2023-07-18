@@ -9,7 +9,8 @@ namespace StudentAttendanceApiDAL.IRepository
 {
     public interface IRegionalAdminRepository
     {
-       public Task<List<RegionalAdmin>> GetAllRegionalAdmin();
+        Task<RegionalAdmin> LoginRegionalAdmin(string name, string password);
         Task<RegionalAdmin> SaveRegionalAdmin(RegionalAdmin masterAdmin);
+        public Task<List<RegionalAdmin>> GetAllRegionalAdmin();
     }
 }

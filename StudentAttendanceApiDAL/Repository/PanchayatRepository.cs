@@ -36,6 +36,7 @@ namespace StudentAttendanceApiDAL.Repository
             catch (Exception ex)
             {
                 logger.LogError(ex, $"PanchayatRepository : GetAllDistrict ", ex);
+                throw ex;
             }
 
             return panchayat;
@@ -53,6 +54,7 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
+                    panchayat.CreatedOn = DateTime.Now;
                     panchayat.PanchayatGuidId = Guid.NewGuid();
                     appDbContext.Panchayat.Add(panchayat);
                 }
@@ -63,6 +65,7 @@ namespace StudentAttendanceApiDAL.Repository
             catch (Exception ex)
             {
                 logger.LogError(ex, $"PanchayatRepository : SavePanchayat ", ex);
+                throw ex;
             }
             return panchayat;
         }
@@ -76,6 +79,25 @@ namespace StudentAttendanceApiDAL.Repository
             logger.LogInformation($"VidhanSabhaRepository : GetPanchayatByDistrictAndVidhanSabhaId : End");
 
             return panchayat;
+        }
+
+        public async Task<string> CheckPanchayatName(string name)
+        {
+            logger.LogInformation($"UserRepository : CheckPanchayatName : Started");
+
+            Panchayat panchayat = new Panchayat();
+            try
+            {
+                panchayat = appDbContext.Panchayat.AsNoTracking().FirstOrDefaultAsync(x => x.Name == name).Result;
+
+                logger.LogInformation($"UserRepository : CheckPanchayatName : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : CheckPanchayatName", ex);
+                throw ex;
+            }
+            return panchayat == null ? null : panchayat.Name;
         }
 
     }

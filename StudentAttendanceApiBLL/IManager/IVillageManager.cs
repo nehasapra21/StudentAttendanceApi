@@ -12,5 +12,6 @@ namespace StudentAttendanceApiBLL.IManager
         Task<List<Village>> GetAllVillage();
         Task<Village> SaveVillage(Village village);
         Task<Village> GetVillageByDistrictVidhanSabhaAndPanchId(int districtId, int vidhanSabhaId, int PanchayatId);
+        Task<string> CheckVillageName(string name);
     }
 }

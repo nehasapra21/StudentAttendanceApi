@@ -31,14 +31,15 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 village = await appDbContext.Village.AsNoTracking().ToListAsync();
                 logger.LogInformation($"VillageRepository : GetAllVillage : End");
-                return village.ToList();
+                
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VillageRepository : GetAllVillage ", ex);
+                throw ex;
             }
 
-            return village;
+            return village.ToList();
         }
 
 
@@ -53,7 +54,8 @@ namespace StudentAttendanceApiDAL.Repository
                     appDbContext.Entry(village).State = EntityState.Modified;
                 }
                 else
-                {
+                {   
+                    village.CreatedOn = DateTime.Now;
                     village.VillageGuidId= Guid.NewGuid();
                     appDbContext.Village.Add(village);
                 }
@@ -64,6 +66,7 @@ namespace StudentAttendanceApiDAL.Repository
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VillageRepository : SaveVillage ", ex);
+                throw ex;
             }
             return village;
         }
@@ -77,6 +80,25 @@ namespace StudentAttendanceApiDAL.Repository
             logger.LogInformation($"VillageRepository : GetVillageByDistrictVidhanSabhaAndPanchId : End");
 
             return village;
+        }
+
+        public async Task<string> CheckVillageName(string name)
+        {
+            logger.LogInformation($"UserRepository : CheckVillageName : Started");
+
+            Village village = new Village();
+            try
+            {
+                village = appDbContext.Village.AsNoTracking().FirstOrDefaultAsync(x => x.Name == name).Result;
+
+                logger.LogInformation($"UserRepository : CheckVillageName : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : CheckVillageName", ex);
+                throw ex;
+            }
+            return village == null ? null : village.Name; 
         }
 
     }

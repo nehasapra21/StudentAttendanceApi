@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StudentAttendanceApiDAL.Tables
 {
-    [Table("MasterAdmin")]
+    [Table("RegionalAdmin")]
     public class RegionalAdmin
     {
         [Key]
@@ -27,6 +27,15 @@ namespace StudentAttendanceApiDAL.Tables
         public int? RoleId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
-    }
+        public int VidhanSabhaId { get; set; }
 
+        public int DistrictId { get; set; }
+
+        public int PanchayatId { get; set; }
+
+        public int VillageId { get; set; }
+
+        public int CenterId { get; set; }
+
+    }
 }

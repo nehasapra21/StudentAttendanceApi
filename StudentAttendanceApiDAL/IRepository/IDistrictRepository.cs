@@ -11,5 +11,6 @@ namespace StudentAttendanceApiDAL.IRepository
     {
        public Task<List<District>> GetAllDistrict();
        Task<District> SaveDistrict(District district);
+        Task<string> CheckDistrictName(string name);
     }
 }

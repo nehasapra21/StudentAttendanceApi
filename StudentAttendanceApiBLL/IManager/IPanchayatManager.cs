@@ -12,5 +12,6 @@ namespace StudentAttendanceApiBLL.IManager
         Task<List<Panchayat>> GetAllPanchayat();
         Task<Panchayat> SavePanchayat(Panchayat panchayat);
         Task<Panchayat> GetPanchayatByDistrictAndVidhanSabhaId(int districtId, int vidhanSabhaId);
+        Task<string> CheckPanchayatName(string name);
     }
 }
