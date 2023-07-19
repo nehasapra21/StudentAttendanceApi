@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\Neha\StudentAttendanceApi\PublishApi</_PublishTargetUrl>
-    <History>True|2023-07-18T11:32:35.2234033Z;True|2023-07-17T18:29:31.8581228+05:30;True|2023-07-16T14:47:25.2427560+05:30;True|2023-07-16T14:45:42.1820528+05:30;True|2023-07-16T14:33:23.0468265+05:30;True|2023-07-13T20:08:53.7496415+05:30;</History>
+    <History>True|2023-07-18T17:57:12.5478357Z;True|2023-07-18T17:02:35.2234033+05:30;True|2023-07-17T18:29:31.8581228+05:30;True|2023-07-16T14:47:25.2427560+05:30;True|2023-07-16T14:45:42.1820528+05:30;True|2023-07-16T14:33:23.0468265+05:30;True|2023-07-13T20:08:53.7496415+05:30;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>
