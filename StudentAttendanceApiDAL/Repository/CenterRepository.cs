@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Linq;
+using System.Collections;
 
 namespace StudentAttendanceApiDAL.Repository
 {
@@ -40,17 +41,21 @@ namespace StudentAttendanceApiDAL.Repository
                 {
                     center.CreatedDate = DateTime.UtcNow;
                     appDbContext.Center.Add(center);
-
-                    //update assigned teacher status
-                    Users user = await appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Convert.ToInt32(center.AssignedTeachers));
-                   
-                    if (user != null)
-                    {
-                        user.AssignedTeacherStatus = true;
-                    }
-                    appDbContext.Users.Update(user);
-
                 }
+
+                //update assigned teacher status
+                List<int> userIds = new List<int>();
+                userIds.Add(center.AssignedRegionalAdmin.Value);
+                userIds.Add(center.AssignedTeachers.Value);
+
+                List<Users> user = await appDbContext.Users.Where(x => userIds.Contains(x.Id)).AsNoTracking().ToListAsync();
+
+                appDbContext.Users.Where(x => userIds.Contains(x.Id)).ToList().ForEach(i => { 
+                    i.AssignedTeacherStatus = true;
+                    i.AssignedRegionalAdminStatus = true;
+                    }
+                );
+                
                 await appDbContext.SaveChangesAsync();
 
                 logger.LogInformation($"UserRepository : SaveCenter : Started");
@@ -104,11 +109,11 @@ namespace StudentAttendanceApiDAL.Repository
                                      VidhanSabhaName = v.Name,
                                      PanchayatName = p.Name,
                                      AssignedTeachers = c.AssignedTeachers,
-                                     TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id ==             c.AssignedTeachers).Name,
-                                     TotalStudents = appDbContext.Student.Where(x => x.CenterId ==                    c.Id).AsNoTracking().ToList().Count
-                                     }).ToListAsync();
+                                     TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == c.AssignedTeachers).Name,
+                                     TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id).AsNoTracking().ToList().Count
+                                 }).ToListAsync();
 
-                
+
                 logger.LogInformation($"UserRepository : GetAllCenters : End");
             }
             catch (Exception ex)

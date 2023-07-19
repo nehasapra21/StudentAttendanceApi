@@ -22,7 +22,7 @@ namespace StudentAttendanceApiDAL.Tables
         public DateTime? CreatedDate { get; set; }
         public DateTime? StartedDate { get; set; }
         public int? AssignedTeachers { get; set; }
-        public string? AssignedRegionalAdmin { get; set; }
+        public int? AssignedRegionalAdmin { get; set; }
         public int VidhanSabhaId { get; set; }
         public int DistrictId { get; set; }
         public int PanchayatId { get; set; }

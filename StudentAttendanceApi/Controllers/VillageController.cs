@@ -45,7 +45,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VillageController : GetAllVillage ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -83,7 +83,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VillageController : SaveVillage ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -107,7 +107,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VillageController : GetVillageByDistrictVidhanSabhaAndPanchId ", ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, "error");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.InnerException.Message);
             }
         }
 
@@ -142,7 +142,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : CheckVillageName ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 

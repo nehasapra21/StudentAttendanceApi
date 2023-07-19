@@ -28,6 +28,7 @@ namespace StudentAttendanceApi.Controllers
             this.logger = logger;
         }
 
+        [Authorize]
         [HttpPost("UploadProfileImage")]
         public IActionResult UploadProfileImage(string base64img)
         {
@@ -77,7 +78,7 @@ namespace StudentAttendanceApi.Controllers
                 {
                     status = false,
                     type = ex.GetType().FullName,
-                    error = ex.Message,
+                    error = ex.InnerException.Message,
                     code = StatusCodes.Status404NotFound
                 });
             }

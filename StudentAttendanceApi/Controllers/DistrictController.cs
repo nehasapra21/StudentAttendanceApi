@@ -46,7 +46,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"DistrictController : GetAllDistrict ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -82,43 +82,43 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"DistrictController : SaveDistrict ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
         [Authorize]
-        [HttpPost("CheckDistrictName")]
-        public async Task<IActionResult> CheckDistrictName(string name)
-        {
-            logger.LogInformation("UserController : CheckUserMobileNumber : Started");
-            try
-            {
-                var mobileNo = await _districtManager.CheckDistrictName(name);
-                if (mobileNo != null)
-                {
-                    return StatusCode(StatusCodes.Status200OK, new
-                    {
-                        status = false,
-                        message = "District name already exists",
-                        code = StatusCodes.Status200OK
-                    });
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status404NotFound, new
-                    {
-                        status = true,
-                        error = "District name doesn't exists",
-                        code = StatusCodes.Status404NotFound
-                    });
-                }
+        //[HttpPost("CheckDistrictName")]
+        //public async Task<IActionResult> CheckDistrictName(string name)
+        //{
+        //    logger.LogInformation("UserController : CheckUserMobileNumber : Started");
+        //    try
+        //    {
+        //        var mobileNo = await _districtManager.CheckDistrictName(name);
+        //        if (mobileNo != null)
+        //        {
+        //            return StatusCode(StatusCodes.Status200OK, new
+        //            {
+        //                status = false,
+        //                message = "District name already exists",
+        //                code = StatusCodes.Status200OK
+        //            });
+        //        }
+        //        else
+        //        {
+        //            return StatusCode(StatusCodes.Status404NotFound, new
+        //            {
+        //                status = true,
+        //                error = "District name doesn't exists",
+        //                code = StatusCodes.Status404NotFound
+        //            });
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
+        //        return StatusCode(StatusCodes.Status501NotImplemented, "error");
+        //    }
+        //}
     }
 }

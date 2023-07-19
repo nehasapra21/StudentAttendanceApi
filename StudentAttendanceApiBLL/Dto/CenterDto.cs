@@ -20,8 +20,8 @@ namespace StudentAttendanceApiBLL
         public bool? Status { get; set; }
         [Required]
         public int? AssignedTeachers { get; set; }
-      
-        public string? AssignedRegionalAdmin { get; set; }
+        [Required]
+        public int? AssignedRegionalAdmin { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? StartedDate { get; set; }
        

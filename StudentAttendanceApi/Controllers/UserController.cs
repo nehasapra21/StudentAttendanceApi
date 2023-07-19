@@ -57,7 +57,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : LoginUser ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -94,7 +94,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -131,18 +131,18 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
         [Authorize]
         [HttpGet("GetUserById")]
-        public async Task<IActionResult> GetUserById(int userId,int type)
+        public async Task<IActionResult> GetUserById(int userId)
         {
             logger.LogInformation("UserController : GetUser : Started");
             try
             {
-                var user = await _userManager.GetUserById(userId, type);
+                var user = await _userManager.GetUserById(userId);
                 if (user != null)
                 {
                     return Ok(user);
@@ -156,7 +156,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -191,7 +191,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -216,7 +216,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : GetRegisteredTeachers ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -241,7 +241,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : GetAllRegionalAdmins ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 

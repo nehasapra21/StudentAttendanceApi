@@ -59,7 +59,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -94,7 +94,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : CheckCenterName ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -117,7 +117,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : GetAllCenters ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 

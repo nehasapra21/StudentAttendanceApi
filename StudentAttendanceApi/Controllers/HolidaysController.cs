@@ -57,7 +57,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : SaveHolidays ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -80,7 +80,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"DistrictController : allHolidays ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
@@ -104,7 +104,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"DistrictController : GetAllHolidaysByYear ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
             }
         }
 
