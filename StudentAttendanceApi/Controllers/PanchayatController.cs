@@ -36,7 +36,12 @@ namespace StudentAttendanceApi.Controllers
                 var panchayat = await _panchayatManager.GetAllPanchayat();
                 if (panchayat != null)
                 {
-                    return Ok(panchayat);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        message = "List of panchayat",
+                        data = panchayat,
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {

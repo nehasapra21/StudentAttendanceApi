@@ -29,7 +29,24 @@ namespace StudentAttendanceApiDAL.Repository
             List<Panchayat> panchayat = new List<Panchayat>();
             try
             {
-                panchayat = await appDbContext.Panchayat.AsNoTracking().ToListAsync();
+                panchayat = await (from p in appDbContext.Panchayat
+                                    join v in appDbContext.VidhanSabha
+                                 on p.VidhanSabhaId equals v.Id
+                                   join d in appDbContext.District
+                                   on p.DistrictId equals d.Id
+                                   select new Panchayat
+                                    {
+                                        Id = p.Id,
+                                        PanchayatGuidId = p.PanchayatGuidId,
+                                        Name = p.Name,
+                                        DistrictId = p.DistrictId,
+                                        DistrictName = d.Name,
+                                        VidhanSabhaId = p.VidhanSabhaId,
+                                        VidhanSabhaName =v.Name,
+                                        CreatedOn = p.CreatedOn,
+                                        CreatedBy = p.CreatedBy,
+                                        Status = p.Status
+                                    }).ToListAsync();
                 logger.LogInformation($"PanchayatRepository : GetAllVidhanSabha : End");
                 return panchayat.ToList();
             }

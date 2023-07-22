@@ -33,10 +33,16 @@ namespace StudentAttendanceApi.Controllers
             logger.LogInformation("DistrictController : GetAllDistrict : Started");
             try
             {
-                var allDistricts = await _districtManager.GetAllDistrict();
+                List<District> allDistricts = await _districtManager.GetAllDistrict();
+               
                 if (allDistricts != null)
                 {
-                    return Ok(allDistricts);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        message = "List of district",
+                        data = allDistricts,
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {
@@ -86,7 +92,6 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        [Authorize]
         //[HttpPost("CheckDistrictName")]
         //public async Task<IActionResult> CheckDistrictName(string name)
         //{
@@ -120,5 +125,6 @@ namespace StudentAttendanceApi.Controllers
         //        return StatusCode(StatusCodes.Status501NotImplemented, "error");
         //    }
         //}
+    
     }
 }

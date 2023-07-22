@@ -22,6 +22,10 @@ namespace StudentAttendanceApiDAL.Tables
         public int? CreatedBy { get; set; }
         public int DistrictId { get; set; }
         public int VidhanSabhaId { get; set; }
+        [NotMapped]
+        public string DistrictName { get; set; }
+        [NotMapped]
+        public string VidhanSabhaName { get; set; }
     }
 
 }

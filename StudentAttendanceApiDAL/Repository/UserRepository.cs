@@ -24,14 +24,14 @@ namespace StudentAttendanceApiDAL.Repository
             this.configuration = configuration;
         }
 
-        public async Task<Users?> GetUserById(int userId,int type)
+        public async Task<Users> GetUserById(int userId)
         {
             logger.LogInformation($"UserRepository : GetUserById : Started");
 
             Users user = new Users();
             try
             {
-                user = await appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId && x.Type==type);
+                user = await appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
                 if (user != null)
                 {
                     return user;

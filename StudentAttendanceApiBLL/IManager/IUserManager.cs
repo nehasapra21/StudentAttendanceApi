@@ -13,7 +13,7 @@ namespace StudentAttendanceApiBLL.IManager
         Task<Users> LoginUser(string name, string password);
         Task<Users> SaveLogin(Users user);
         Task<Users> SaveSuperAdmin(Users users);
-        Task<Users> GetUserById(int userId,int type);
+        Task<Users> GetUserById(int userId);
         Task<string> CheckUserMobileNumber(string mobileNumber);
         Task<List<Users>> GetRegisteredTeachers();
         Task<List<Users>> GetAllRegionalAdmins();

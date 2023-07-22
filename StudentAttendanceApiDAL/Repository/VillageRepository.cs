@@ -29,9 +29,30 @@ namespace StudentAttendanceApiDAL.Repository
             List<Village> village = new List<Village>();
             try
             {
-                village = await appDbContext.Village.AsNoTracking().ToListAsync();
+                village = await (from v in appDbContext.Village
+                                 join p in appDbContext.Panchayat
+                                 on v.PanchayatId equals p.Id
+                                 join d in appDbContext.District
+                                on v.DistrictId equals d.Id
+                                 join vid in appDbContext.VidhanSabha
+                                on v.VidhanSabhaId equals vid.Id
+                                 select new Village
+                                 {
+                                     Id = v.Id,
+                                     VillageGuidId = v.VillageGuidId,
+                                     Name = v.Name,
+                                     DistrictId = v.DistrictId,
+                                     DistrictName = d.Name,
+                                     VidhanSabhaId = v.VidhanSabhaId,
+                                     VidhanSabhaName = vid.Name,
+                                     PanchayatId = v.PanchayatId,
+                                     PanchayatName = p.Name,
+                                     CreatedOn = v.CreatedOn,
+                                     CreatedBy = v.CreatedBy,
+                                     Status = v.Status
+                                 }).ToListAsync();
                 logger.LogInformation($"VillageRepository : GetAllVillage : End");
-                
+
             }
             catch (Exception ex)
             {
@@ -54,9 +75,9 @@ namespace StudentAttendanceApiDAL.Repository
                     appDbContext.Entry(village).State = EntityState.Modified;
                 }
                 else
-                {   
+                {
                     village.CreatedOn = DateTime.Now;
-                    village.VillageGuidId= Guid.NewGuid();
+                    village.VillageGuidId = Guid.NewGuid();
                     appDbContext.Village.Add(village);
                 }
                 await appDbContext.SaveChangesAsync();
@@ -75,7 +96,7 @@ namespace StudentAttendanceApiDAL.Repository
         {
             logger.LogInformation($"VillageRepository : GetVillageByDistrictVidhanSabhaAndPanchId : Started");
 
-            var village = await appDbContext.Village.AsNoTracking().FirstOrDefaultAsync(x => x.DistrictId == districtId && x.VidhanSabhaId == vidhanSabhaId && x.PanchayatId==panchayatId);
+            var village = await appDbContext.Village.AsNoTracking().FirstOrDefaultAsync(x => x.DistrictId == districtId && x.VidhanSabhaId == vidhanSabhaId && x.PanchayatId == panchayatId);
 
             logger.LogInformation($"VillageRepository : GetVillageByDistrictVidhanSabhaAndPanchId : End");
 
@@ -98,7 +119,7 @@ namespace StudentAttendanceApiDAL.Repository
                 logger.LogError(ex, $"UserRepository : CheckVillageName", ex);
                 throw ex;
             }
-            return village == null ? null : village.Name; 
+            return village == null ? null : village.Name;
         }
 
     }

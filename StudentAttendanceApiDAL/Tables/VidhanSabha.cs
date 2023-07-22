@@ -21,6 +21,8 @@ namespace StudentAttendanceApiDAL.Tables
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
         public int DistrictId { get; set; }
+        [NotMapped]
+        public string DistrictName { get; set; }
     }
 
 }

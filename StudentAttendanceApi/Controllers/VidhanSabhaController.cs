@@ -35,7 +35,12 @@ namespace StudentAttendanceApi.Controllers
                 var vidhanSabha = await _vidhanSabhaManager.GetAllVidhanSabha();
                 if (vidhanSabha != null)
                 {
-                    return Ok(vidhanSabha);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        message = "List of vidhanSabha",
+                        data = vidhanSabha,
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {

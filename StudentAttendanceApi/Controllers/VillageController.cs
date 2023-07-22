@@ -35,7 +35,12 @@ namespace StudentAttendanceApi.Controllers
                var villageVal=await _villageManager.GetAllVillage();
                 if (villageVal != null)
                 {
-                    return Ok(villageVal);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        message = "List of villages",
+                        data = villageVal,
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {

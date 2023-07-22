@@ -87,11 +87,11 @@ namespace StudentAttendanceApiBLL.Manager
             return await _userRepository.SaveLogin(user);
         }
 
-        public async Task<Users> GetUserById(int userId,int type)
+        public async Task<Users> GetUserById(int userId)
         {
             _logger.LogInformation($"UserManager : Bll : GetUser : Started");
 
-            return await _userRepository.GetUserById(userId, type);
+            return await _userRepository.GetUserById(userId);
         }
 
         public async Task<string> CheckUserMobileNumber(string mobileNumber)

@@ -21,25 +21,80 @@ namespace StudentAttendanceApi.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ILogger<FileController> logger;
 
+        //public FileController(IWebHostEnvironment webHostEnvironment, ILogger<FileController> logger)
+        //{
+        //    _webHostEnvironment = webHostEnvironment;
+        //    this.logger = logger;
+        //}
 
-        public FileController(IWebHostEnvironment webHostEnvironment, ILogger<FileController> logger)
-        {
-            _webHostEnvironment = webHostEnvironment;
-            this.logger = logger;
-        }
+        //[Authorize]
+        //[HttpPost("UploadProfileImage")]
+        //public IActionResult UploadProfileImage(string base64img)
+        //{
+        //    logger.LogInformation("FileController : UploadProfileImage : Started");
+        //    ImagesDto fileUrls = new ImagesDto();
 
-        [Authorize]
+        //    try
+        //    {
+        //        if (!string.IsNullOrEmpty(base64img))
+        //        {
+        //            fileUrls = FileApiUtilty.UploadFileInFolder(base64img, _webHostEnvironment);
+        //            logger.LogInformation("FileController : UploadProfileImage : End");
+        //            if (fileUrls.FilePath != null)
+        //            {
+        //                return StatusCode(StatusCodes.Status200OK, new
+        //                {
+        //                    status = true,
+        //                    data = fileUrls,
+        //                    code = StatusCodes.Status200OK
+        //                }); ;
+        //            }
+        //            else
+        //            {
+        //                return StatusCode(StatusCodes.Status200OK, new
+        //                {
+        //                    status = false,
+        //                    error = "File url not found",
+        //                    code = StatusCodes.Status204NoContent
+        //                });
+        //            }
+
+        //        }
+        //        else
+        //        {
+        //            return StatusCode(StatusCodes.Status200OK, new
+        //            {
+        //                status = false,
+        //                error = "File not found",
+        //                code = StatusCodes.Status204NoContent
+        //            });
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.LogError(ex, $"FileController : UploadProfileImage ", ex);
+        //        return StatusCode(StatusCodes.Status404NotFound, new
+        //        {
+        //            status = false,
+        //            type = ex.GetType().FullName,
+        //            error = ex.InnerException.Message,
+        //            code = StatusCodes.Status404NotFound
+        //        });
+        //    }
+        //}
+
+
         [HttpPost("UploadProfileImage")]
-        public IActionResult UploadProfileImage(string base64img)
+        public IActionResult UploadProfileImage([FromForm] List<IFormFile> files)
         {
             logger.LogInformation("FileController : UploadProfileImage : Started");
             ImagesDto fileUrls = new ImagesDto();
 
             try
             {
-                if (!string.IsNullOrEmpty(base64img))
+                if (files.Count > 0)
                 {
-                    fileUrls = FileApiUtilty.UploadFileInFolder(base64img, _webHostEnvironment);
+                    fileUrls =  FileApiUtilty.UploadFileInFolder(files, _webHostEnvironment);
                     logger.LogInformation("FileController : UploadProfileImage : End");
                     if (fileUrls.FilePath != null)
                     {
@@ -83,9 +138,7 @@ namespace StudentAttendanceApi.Controllers
                 });
             }
 
-
         }
-
         //[HttpGet("DownloadFile")]
         //public async Task<byte[]> DownloadFile(string filePath)
         //{

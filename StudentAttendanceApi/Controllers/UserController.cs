@@ -49,7 +49,7 @@ namespace StudentAttendanceApi.Controllers
                     {
                         status = false,
                         error = "invalid credential",
-                        code = StatusCodes.Status404NotFound
+                        code = StatusCodes.Status401Unauthorized
                     });
                 }
 
