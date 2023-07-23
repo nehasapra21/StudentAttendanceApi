@@ -64,6 +64,8 @@ builder.Services.AddAuthentication(au =>
 
 
 ///register services
+builder.Services.AddTransient<IClassRepository, ClassRepository>();
+builder.Services.AddTransient<IClassManager, ClassManager>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserManager, UserManager>();
 builder.Services.AddTransient<ICenterRepository, CenterRepository>();

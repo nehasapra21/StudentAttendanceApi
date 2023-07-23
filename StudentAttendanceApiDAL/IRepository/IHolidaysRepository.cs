@@ -13,5 +13,6 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<Holidays> SaveHolidays(Holidays holidays);
         Task<List<Holidays>> GetAllHolidaysByTeacherId(int teacherId, string selecteddate);
         Task<List<Holidays>> GetAllHolidaysByYear(int year);
+        Task<List<Holidays>> GetAllHolidaysByCenterId(int centerId);
     }
 }

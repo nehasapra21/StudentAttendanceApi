@@ -51,7 +51,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"PanchayatController : GetAllPanchayat ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
@@ -88,7 +88,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"PanchayatController : SavePanchayat ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
@@ -112,7 +112,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VidhanSabhaController : GetPanchayatByDistrictAndVidhanSabhaId ", ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
@@ -147,7 +147,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : CheckPanchayatName ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
     }

@@ -35,10 +35,14 @@ namespace StudentAttendanceApiBLL
             masterAdmin.DistrictId = masterAdminDto.DistrictId;
             masterAdmin.VidhanSabhaId = masterAdminDto.VidhanSabhaId;
             masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
+           // masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
             masterAdmin.VillageId = masterAdminDto.VillageId;
             masterAdmin.AssignedRegionalAdminStatus = masterAdminDto.AssignedRegionalAdminStatus;
             masterAdmin.AssignedTeacherStatus = masterAdminDto.AssignedTeacherStatus;
             masterAdmin.EnrollmentDate = masterAdminDto.EnrollmentDate;
+            masterAdmin.GuardianName = masterAdminDto.GuardianName;
+            masterAdmin.GuardianNumber = masterAdminDto.GuardianNumber;
+             
             return masterAdmin;
 
         }

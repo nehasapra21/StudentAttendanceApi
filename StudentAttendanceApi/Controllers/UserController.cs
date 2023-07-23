@@ -57,11 +57,10 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : LoginUser ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
-        [Authorize]
         [HttpPost("SaveSuperAdmin")]
         public async Task<IActionResult> SaveSuperAdmin([FromForm] SuperAdminDto superAdminDto)
         {
@@ -94,7 +93,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
@@ -131,11 +130,11 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
-        [Authorize]
+        
         [HttpGet("GetUserById")]
         public async Task<IActionResult> GetUserById(int userId)
         {
@@ -216,7 +215,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : GetRegisteredTeachers ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
@@ -241,7 +240,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : GetAllRegionalAdmins ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 

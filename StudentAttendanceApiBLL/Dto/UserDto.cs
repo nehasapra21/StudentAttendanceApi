@@ -12,13 +12,13 @@ namespace StudentAttendanceApiBLL
     public class UserDto
     {
         public int Id { get; set; }
-        public string EnrolmentRollId { get; set; }
+        public string? EnrolmentRollId { get; set; }
         [Required]
         public string? Name { get; set; }
         [Required]
         public string? Password { get; set; }
         public string? Token { get; set; }
-        [Required]
+        
         public string? Email { get; set; }
         [Required]
         public int? Type { get; set; }
@@ -43,12 +43,15 @@ namespace StudentAttendanceApiBLL
         public int VidhanSabhaId { get; set; }
         [Required]
         public int DistrictId { get; set; }
+        //[Required]
+       //public int PanchayatId { get; set; }
+        public int? VillageId { get; set; }
         [Required]
-        public int PanchayatId { get; set; }
-        [Required]
-        public int VillageId { get; set; }
+        public string? PanchayatId { get; set; }
         public bool? AssignedTeacherStatus { get; set; }
         public bool? AssignedRegionalAdminStatus { get; set; }
-    }
+        public string? GuardianName { get; set; }
+        public string? GuardianNumber { get; set; }
+}
     
 }

@@ -57,6 +57,15 @@ namespace StudentAttendanceApiBLL.Manager
 
             return await _holidaysRepository.GetAllHolidaysByYear(year);
         }
+
+
+        public async Task<List<Holidays>> GetAllHolidaysByCenterId(int centerId)
+        {
+            _logger.LogInformation($"UserManager : Bll : GetAllHolidaysByCenterId : Started");
+
+
+            return await _holidaysRepository.GetAllHolidaysByCenterId(centerId);
+        }
         #endregion
     }
 }

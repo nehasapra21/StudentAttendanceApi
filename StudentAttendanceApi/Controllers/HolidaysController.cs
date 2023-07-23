@@ -57,7 +57,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : SaveHolidays ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
@@ -80,7 +80,30 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"DistrictController : allHolidays ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetAllHolidaysByCenterId")]
+        public async Task<IActionResult> GetAllHolidaysByCenterId(int centerId)
+        {
+            logger.LogInformation("DistrictController : GetAllDistrict : Started");
+            try
+            {
+                var allHolidays = await _holidaysManager.GetAllHolidaysByCenterId(centerId);
+                if (allHolidays != null)
+                {
+                    return Ok(allHolidays);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"DistrictController : GetAllHolidaysByCenterId ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 

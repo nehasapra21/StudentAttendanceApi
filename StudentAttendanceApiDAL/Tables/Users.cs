@@ -33,13 +33,25 @@ namespace StudentAttendanceApiDAL.Tables
         public int? RoleId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? EnrollmentDate { get; set; }
+        public string? GuardianName { get; set; }
+        public string? GuardianNumber { get; set; }
         public int? CreatedBy { get; set; }
         public int? VidhanSabhaId { get; set; }
         public int? DistrictId { get; set; }
-        public int? PanchayatId { get; set; }
+        //public int? PanchayatId { get; set; }
         public int? VillageId { get; set; }
+        
+        public string? PanchayatId { get; set; }
         public bool? AssignedTeacherStatus { get; set; }
         public bool? AssignedRegionalAdminStatus { get; set; }
+        [NotMapped]
+        public string DistrictName { get; set; }
+        [NotMapped]
+        public string VidhanSabhaName { get; set; }
+        [NotMapped]
+        public string VillageName { get; set; }
+        [NotMapped]
+        public List<string> PanchayatName { get; set; }
 
     }
     

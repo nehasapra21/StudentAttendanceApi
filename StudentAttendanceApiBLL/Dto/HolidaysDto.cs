@@ -16,12 +16,13 @@ namespace StudentAttendanceApiBLL
         public string? Name { get; set; }
         public string? Description { get; set; }
         public bool? Status { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        [Required]
-        public DateTime? SelectedDate { get; set; }
-        public int? CreatedBy { get; set; }
         [Required]
         public int CenterId { get; set; }
+        [Required]
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
         public List<int> CenterIds { get; set; }
     }
 

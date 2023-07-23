@@ -32,9 +32,13 @@ namespace StudentAttendanceApiDAL.Tables
         [NotMapped]
         public string VidhanSabhaName { get; set; }
         [NotMapped]
+        public string VillageName { get; set; }
+        [NotMapped]
         public string PanchayatName { get; set; }
         [NotMapped]
         public string TeacherName { get; set; }
+        [NotMapped]
+        public string RegionalAdminName { get; set; }
         [NotMapped]
         public int? TotalStudents { get; set; }
 

@@ -26,7 +26,8 @@ namespace StudentAttendanceApi.Controllers
             this._centerManager = centerManager;
         }
 
-       
+
+        [Authorize]
         [HttpPost("SaveCenter")]
         public async Task<IActionResult> SaveCenter([FromForm] CenterDto centerDto)
         {
@@ -59,7 +60,7 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
@@ -94,10 +95,11 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : CheckCenterName ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
+        [Authorize]
         [HttpGet("GetAllCenters")]
         public async Task<IActionResult> GetAllCenters()
         {

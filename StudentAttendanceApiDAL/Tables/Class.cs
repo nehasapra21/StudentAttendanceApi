@@ -9,23 +9,21 @@ using System.Threading.Tasks;
 
 namespace StudentAttendanceApiDAL.Tables
 {
-    [Table("Holidays")]
-    public class Holidays
+    [Table("Class")]
+    public class Class
     {
         [Key]
         public int Id { get; set; }
+        public string? ClassEnrolmentId { get; set; }
         public string? Name { get; set; }
-        public string? Description { get; set; }
-        public bool? Status { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public int? CreatedBy{ get; set; }
         public int CenterId { get; set; }
-        [NotMapped]
-        public List<int> CenterIds { get; set; }
-        [NotMapped]
-        public string? CenterName { get; set; }
+        public bool? Status { get; set; }
+        public DateTime? StartedDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int? TotalStudents { get; set; }
+        public int? AvilableStudents { get; set; }
+        public string? Reason { get; set; }
+        public int? CancelBy { get; set; }
 
     }
     

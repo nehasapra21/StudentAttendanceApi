@@ -5,8 +5,11 @@ using Microsoft.IdentityModel.Tokens;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Model;
 using StudentAttendanceApiDAL.Tables;
+using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection.Metadata;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace StudentAttendanceApiDAL.Repository
@@ -32,11 +35,48 @@ namespace StudentAttendanceApiDAL.Repository
             try
             {
                 user = await appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
-                if (user != null)
+                if (user != null && user.Type != (int)Constant.Type.SuperAdmin)
+                {
+
+                    user = await (from u in appDbContext.Users
+                                  join d in appDbContext.District
+                                  on u.DistrictId equals d.Id
+                                  join vid in appDbContext.VidhanSabha
+                                  on u.VidhanSabhaId equals vid.Id
+                                  into emp
+                                  from Village in emp.DefaultIfEmpty()
+                                  where u.Id == userId
+                                  select new Users
+                                  {
+                                      Id = u.Id,
+                                      Name = u.Name,
+                                      DistrictId = d.Id,
+                                      DistrictName=d.Name,
+                                      VidhanSabhaId = u.VidhanSabhaId,
+                                     // VidhanSabhaName = emp.FirstOrDefault().Name,
+                                      PanchayatId = u.PanchayatId,
+                                      VillageId = Village.Id,
+                                      VillageName = Village == null ? string.Empty : Village.Name,
+                                  }).AsNoTracking().FirstOrDefaultAsync();
+                }
+                else
                 {
                     return user;
                 }
 
+                if (user != null)
+                {
+                    List<Panchayat> listOfPanchayat =await appDbContext.Panchayat.AsNoTracking().Where(x => user.PanchayatId.Contains(x.Id.ToString())).ToListAsync();
+                    if (listOfPanchayat != null)
+
+                        user.PanchayatName = new List<string>();
+                    foreach (var item in listOfPanchayat)
+                    {
+                        user.PanchayatName.Add(item.Name);
+                    }
+
+                  user.VidhanSabhaName=  appDbContext.VidhanSabha.AsNoTracking().FirstOrDefaultAsync(x => x.Id == user.VidhanSabhaId).Result.Name;
+                }
                 logger.LogInformation($"UserRepository : GetUserById : End");
             }
             catch (Exception ex)
@@ -87,7 +127,6 @@ namespace StudentAttendanceApiDAL.Repository
                 else
                 {//
                     user.CreatedOn = DateTime.UtcNow;
-
                     appDbContext.Users.Add(user);
                 }
                 await appDbContext.SaveChangesAsync();

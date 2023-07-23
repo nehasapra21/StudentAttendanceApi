@@ -14,33 +14,33 @@ namespace StudentAttendanceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentController : ControllerBase
+    public class ClassController : ControllerBase
     {
-        private readonly ILogger<StudentController> logger;
-        private readonly IStudentManager _studentManager;
+        private readonly ILogger<ClassController> logger;
+        private readonly IClassManager _classManager;
 
-        public StudentController(IStudentManager studentManager, ILogger<StudentController> logger)
+        public ClassController(IClassManager classManager, ILogger<ClassController> logger)
         {
             this.logger = logger;
-            this._studentManager = studentManager;
+            this._classManager = classManager;
         }
 
         [Authorize]
-        [HttpPost("SaveStudent")]
-        public async Task<IActionResult> SaveStudent([FromForm] StudentDto studentDto)
+        [HttpPost("SaveClass")]
+        public async Task<IActionResult> SaveClass([FromForm] ClassDto classDto)
         {
             logger.LogInformation("UserController : LoginSuperAdmin : Started");
             try
             {
-                Student teacher= StudentConvertor.ConvertStudenttoToStudent(studentDto);
-                var masterAdmin = await _studentManager.SaveStudent(teacher);
-                if (masterAdmin != null)
+                Class cls= ClassConvertor.ConvertClasstoToClass(classDto);
+                var classData = await _classManager.SaveClass(cls);
+                if (classData != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,
-                        data = masterAdmin,
-                        message = "Student save successfully",
+                        data = classData,
+                        message = "Class save successfully",
                         code = StatusCodes.Status200OK
                     });
                 }
@@ -49,7 +49,7 @@ namespace StudentAttendanceApi.Controllers
                     return StatusCode(StatusCodes.Status404NotFound, new
                     {
                         status = false,
-                        error = "Student doesn't save",
+                        error = "Class doesn't save",
                         code = StatusCodes.Status404NotFound
                     });
                 }

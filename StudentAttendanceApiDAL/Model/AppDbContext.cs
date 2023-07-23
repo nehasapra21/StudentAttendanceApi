@@ -29,5 +29,6 @@ namespace StudentAttendanceApiDAL.Model
         public DbSet<VidhanSabha> VidhanSabha { get; set; }
         public DbSet<Panchayat> Panchayat { get; set; }
         public DbSet<Village> Village { get; set; }
+        public DbSet<Class> Class { get; set; }
     }
 }

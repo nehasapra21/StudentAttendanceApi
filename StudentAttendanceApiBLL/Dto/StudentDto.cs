@@ -15,6 +15,7 @@ namespace StudentAttendanceApiBLL
         public string EnrollmentId { get; set; }
         [Required]
         public string? FullName { get; set; }
+        public string? MotherName { get; set; }
         public string? FatherName { get; set; }
         public int? Age { get; set; }
         [Required]
@@ -25,7 +26,7 @@ namespace StudentAttendanceApiBLL
         public int? Counter{ get; set; }
         [Required]
         public string? DateOfBirth { get; set; }
-        [Required]
+     
         public string? Email { get; set; }
         public string? Remarks { get; set; }
         public string? Grade { get; set; }

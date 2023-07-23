@@ -20,8 +20,8 @@ namespace StudentAttendanceApiBLL
             holidays.Status = holidaysDto.Status;
             holidays.CreatedBy = holidaysDto.CreatedBy;
             holidays.CreatedOn = holidaysDto.CreatedOn;
-            holidays.SelectedDate = holidaysDto.SelectedDate;
-
+            holidays.StartDate = holidaysDto.StartDate;
+            holidays.EndDate = holidaysDto.EndDate;
             return holidays;
 
         }

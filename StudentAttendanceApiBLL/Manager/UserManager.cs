@@ -46,7 +46,7 @@ namespace StudentAttendanceApiBLL.Manager
         public async Task<Users> SaveLogin(Users user)
         {
             _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
-           
+
             if (user.Id == 0)
             {
                 user.EnrolmentRollId = user.Name.Substring(0, 2) + "-" + user.DateOfBirth + "-";
@@ -59,16 +59,20 @@ namespace StudentAttendanceApiBLL.Manager
                     user.EnrolmentRollId = user.EnrolmentRollId + "F";
                 }
             }
-            
-            string pass = EncryptionUtility.GetHashPassword(user.Password);
-            user.Password = pass;
+
+            string pass = string.Empty;
+            if (user.Id == 0)
+            {
+                pass = EncryptionUtility.GetHashPassword(user.Password);
+                user.Password = pass;
+            }
             return await _userRepository.SaveLogin(user);
         }
 
         public async Task<Users> SaveSuperAdmin(Users user)
         {
             _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
-           
+
             if (user.Id == 0)
             {
                 user.EnrolmentRollId = user.Name.Substring(0, 2) + "-" + user.DateOfBirth + "-";
@@ -81,9 +85,12 @@ namespace StudentAttendanceApiBLL.Manager
                     user.EnrolmentRollId = user.EnrolmentRollId + "F";
                 }
             }
-
-            string pass = EncryptionUtility.GetHashPassword(user.Password);
-            user.Password = pass;
+            string pass = string.Empty;
+            if (user.Id == 0)
+            {
+                pass = EncryptionUtility.GetHashPassword(user.Password);
+                user.Password = pass;
+            }
             return await _userRepository.SaveLogin(user);
         }
 

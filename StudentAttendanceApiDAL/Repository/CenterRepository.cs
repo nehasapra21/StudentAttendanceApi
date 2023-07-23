@@ -101,20 +101,42 @@ namespace StudentAttendanceApiDAL.Repository
                                  on c.VidhanSabhaId equals v.Id
                                  join p in appDbContext.Panchayat
                                   on c.PanchayatId equals p.Id
+                                 into center
+                                 from Village in center.DefaultIfEmpty()
+                                // join vi in appDbContext.Village
+                                //on c.VillageId equals vi.Id
                                  select new Center
                                  {
                                      Id = c.Id,
                                      CenterName = c.CenterName,
+                                     DistrictId = d.Id,
+                                     VidhanSabhaId = v.Id,
+                                     PanchayatId = c.Id,
+                                     VillageId=c.Id,
+                                   //  VillageName=vi.Name,
                                      DistrictName = d.Name,
                                      VidhanSabhaName = v.Name,
-                                     PanchayatName = p.Name,
+                                     //PanchayatName = p.Name,
                                      AssignedTeachers = c.AssignedTeachers,
+                                     AssignedRegionalAdmin = c.AssignedRegionalAdmin,
                                      TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == c.AssignedTeachers).Name,
+                                     RegionalAdminName = appDbContext.Users.FirstOrDefault(x => x.Id == c.AssignedRegionalAdmin).Name,
                                      TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id).AsNoTracking().ToList().Count
                                  }).ToListAsync();
 
 
                 logger.LogInformation($"UserRepository : GetAllCenters : End");
+
+
+                if(centers!=null && centers.Count>0)
+                {
+                    foreach (var item in centers)
+                    {
+                        item.PanchayatName = appDbContext.Panchayat.AsNoTracking()
+                                         .FirstOrDefaultAsync(x => x.Id == item.PanchayatId).Result.Name;
+
+                    }
+                }
             }
             catch (Exception ex)
             {

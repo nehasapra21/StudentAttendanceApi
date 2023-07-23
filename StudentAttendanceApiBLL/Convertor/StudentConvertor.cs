@@ -36,7 +36,8 @@ namespace StudentAttendanceApiBLL
             student.VillageId = studentDto.VillageId;
             student.PanchayatId = studentDto.PanchayatId;
             student.CenterId = studentDto.CenterId;
-
+            student.FatherName = studentDto.FatherName;
+            student.MotherName = studentDto.MotherName;
             return student;
 
         }
