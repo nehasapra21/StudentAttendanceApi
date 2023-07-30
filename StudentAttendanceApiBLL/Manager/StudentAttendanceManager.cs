@@ -74,6 +74,24 @@ namespace StudentAttendanceApiBLL.Manager
             }
             return studentAttendanceDetailDtos;
         }
+
+
+        public async Task<List<StudentAttendanceDetailDto>> GetAllStudentAttendancByMonth(int centerId,int studentId, int month)
+        {
+            _logger.LogInformation($"UserManager : Bll : SaveStudentAttendance : Started");
+            List<StudentAttendanceDetailDto> studentAttendanceDetailDtos = new List<StudentAttendanceDetailDto>();
+            List<Student> students = await _studentAttendanceRepository.GetAllStudentAttendancByMonth(centerId,studentId, month);
+            if (students != null)
+            {
+                foreach (var item in students)
+                {
+                    StudentAttendanceDetailDto studentAttendanceDetailDto = new StudentAttendanceDetailDto();
+                    studentAttendanceDetailDto = StudentAttendanceConvertor.ConvertStudentToStudentAttendanceDeatilDto(item);
+                    studentAttendanceDetailDtos.Add(studentAttendanceDetailDto);
+                }
+            }
+            return studentAttendanceDetailDtos;
+        }
         #endregion
     }
 }

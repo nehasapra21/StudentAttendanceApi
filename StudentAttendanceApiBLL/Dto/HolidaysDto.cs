@@ -21,6 +21,7 @@ namespace StudentAttendanceApiBLL
         [Required]
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        [Required]
         public int? CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
         public List<int> CenterIds { get; set; }

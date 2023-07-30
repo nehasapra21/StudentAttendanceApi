@@ -18,6 +18,7 @@ namespace StudentAttendanceApiBLL
         public bool? Status { get; set; }
 
         public DateTime? CreatedOn { get; set; }
+
         public int? CreatedBy { get; set; }
         [Required]
         public int DistrictId { get; set; }

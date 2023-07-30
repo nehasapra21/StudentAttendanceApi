@@ -37,7 +37,7 @@ namespace StudentAttendanceApiBLL
         public int? RoleId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? EnrollmentDate { get; set; }
-        
+        [Required]
         public int? CreatedBy { get; set; }
        
         //public int VidhanSabhaId { get; set; }

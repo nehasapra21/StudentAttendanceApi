@@ -83,10 +83,10 @@ namespace StudentAttendanceApiDAL.Repository
                                                   .Include(x => x.Panchayat)
                                                   .Include(x => x.Village)
                                                   .Include(x => x.RegionalAdminPanchayat)
-                                                  .Include(x=>x.CenterAssignUser)
+                                                  .Include(x => x.CenterAssignUser)
                                                   .Where(x => x.Id == userId).FirstOrDefault();
-                    user.Centers = appDbContext.Center.Include(x=>x.CenterAssignUser).Where(x =>                                  x.AssignedRegionalAdmin == user.Id).ToList();
-                   
+                    user.Centers = appDbContext.Center.Include(x => x.CenterAssignUser).Where(x => x.AssignedRegionalAdmin == user.Id).ToList();
+
                 }
                 else
                 {
@@ -152,45 +152,85 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 if (user.Id > 0)
                 {
-                    appDbContext.Entry(user).State = EntityState.Modified;
+                    var userVal = appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == user.Id).Result;
+                    if (userVal != null)
+                    {
+                        user.EnrolmentRollId = userVal.EnrolmentRollId;
+                        user.Password = userVal.Password;
+                        user.CreatedOn = userVal.CreatedOn;
+                        user.Status = userVal.Status;
+                    }
+                    if (user.Type == (int)Constant.Type.Teacher && user.ListOfPanchayatId != null && user.ListOfPanchayatId.Count == 1)
+                    {
+                        user.PanchayatId = Convert.ToInt32(user.ListOfPanchayatId[0]);
+                    }
+
+                    appDbContext.Update(user);
+
+                    if (user.Type == (int)Constant.Type.RegionalAdmin && user.ListOfPanchayatId != null && user.ListOfPanchayatId.Count > 0)
+                    {
+                        List<RegionalAdminPanchayat> list = await appDbContext.RegionalAdminPanchayat.Where(x => x.UsersId == user.Id).ToListAsync();
+
+                        if (list != null && list.Count > 0)
+                        {
+                            //var listOfNew=list.Where(l => user.ListOfPanchayatId.Contains    (l.PanchayatId.Value)).ToList();
+
+                            appDbContext.RemoveRange(list);
+                            appDbContext.SaveChanges();
+                        }
+
+                        AddRegionalAdminPanchayat(user);
+                    }
+                    await appDbContext.SaveChangesAsync();
                 }
                 else
                 {//
                     user.Status = true;
                     user.CreatedOn = DateTime.UtcNow;
+                    if (user.Type == (int)Constant.Type.Teacher && user.ListOfPanchayatId != null && user.ListOfPanchayatId.Count == 1)
+                    {
+                        user.PanchayatId = Convert.ToInt32(user.ListOfPanchayatId[0]);
+                    }
                     appDbContext.Users.Add(user);
                     await appDbContext.SaveChangesAsync();
+                    if (user.Type == (int)Constant.Type.RegionalAdmin && user.ListOfPanchayatId != null && user.ListOfPanchayatId.Count > 0)
+                    {
+                        AddRegionalAdminPanchayat(user);
+
+                        await appDbContext.SaveChangesAsync();
+                    }
                 }
 
                 #region Add list of panchayat in table (regionalAdminPanchayat)
-                if (user.Type == (int)Constant.Type.RegionalAdmin)
-                {
-                    if (user.ListOfPanchayatId != null && user.ListOfPanchayatId.Count > 0)
-                    {
-                        if (user.Id == 0)
-                        {
-                            AddRegionalAdminPanchayat(user);
-                            await appDbContext.SaveChangesAsync();
-                        }
-                        else
-                        {
-                            //Chcek same id exists in db
+                //if (user.Type == (int)Constant.Type.RegionalAdmin)
+                //{
+                //    if (user.ListOfPanchayatId != null && user.ListOfPanchayatId.Count > 0)
+                //    {
+                //        if (user.Id == 0)
+                //        {
+                //            AddRegionalAdminPanchayat(user);
+                //            await appDbContext.SaveChangesAsync();
+                //        }
+                //        else
+                //        {
+                //            //Chcek same id exists in db
 
-                            List<RegionalAdminPanchayat> list = await appDbContext.RegionalAdminPanchayat.Where(x => x.UsersId == user.Id).ToListAsync();
+                //            List<RegionalAdminPanchayat> list = await appDbContext.RegionalAdminPanchayat.Where(x => x.UsersId == user.Id).ToListAsync();
 
-                            if (list != null)
-                            {
-                                //var listOfNew=list.Where(l => user.ListOfPanchayatId.Contains    (l.PanchayatId.Value)).ToList();
+                //            if (list != null)
+                //            {
+                //                //var listOfNew=list.Where(l => user.ListOfPanchayatId.Contains    (l.PanchayatId.Value)).ToList();
 
-                                appDbContext.RemoveRange(list);
-                                appDbContext.SaveChanges();
-                            }
+                //                appDbContext.RemoveRange(list);
+                //                appDbContext.SaveChanges();
+                //            }
 
-                            AddRegionalAdminPanchayat(user);
-                            appDbContext.SaveChanges();
-                        }
-                    }
-                }
+                //            AddRegionalAdminPanchayat(user);
+                //            appDbContext.SaveChanges();
+                //        }
+                //    }
+                //}
+
 
                 #endregion
                 logger.LogInformation($"UserRepository : SaveLogin : Started");

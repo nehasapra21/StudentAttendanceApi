@@ -30,16 +30,29 @@ namespace StudentAttendanceApiDAL.Repository
 
             try
             {
-                var classExists = appDbContext.Class.FirstOrDefaultAsync(x => x.ClassEnrolmentId == cls.ClassEnrolmentId && x.StartedDate.Value.Date == DateTime.UtcNow.Date).Result;
+                var classExists = appDbContext.Class.AsNoTracking().FirstOrDefaultAsync(x => x.ClassEnrolmentId == cls.ClassEnrolmentId && x.StartedDate.Value.Date == DateTime.UtcNow.Date).Result;
                 if (classExists != null)
                 {
                     return null;
                 }
                 else
                 {
-                    cls.StartedDate = DateTime.UtcNow;
-                    cls.Status = (int)Constant.ClassStatus.Active;
-                    appDbContext.Class.Add(cls);
+                    if (cls.Id == 0)
+                    {
+                        cls.StartedDate = DateTime.UtcNow;
+                        cls.Status = (int)Constant.ClassStatus.Active;
+                        appDbContext.Class.Add(cls);
+                    }
+                    else
+                    {
+                        var classVal = appDbContext.Class.AsNoTracking().FirstOrDefaultAsync(x => x.Id == cls.Id).Result;
+                        if(classVal!=null)
+                        {
+                            cls.Status = classVal.Status;
+                        }
+                      
+
+                    }
                 }
                 await appDbContext.SaveChangesAsync();
 
@@ -59,7 +72,7 @@ namespace StudentAttendanceApiDAL.Repository
 
             try
             {
-                Class clasVal =await appDbContext.Class.FirstOrDefaultAsync(x => x.Id == cls.Id);
+                Class clasVal =await appDbContext.Class.AsNoTracking().FirstOrDefaultAsync(x => x.Id == cls.Id);
                 if (clasVal != null)
                 {
                     clasVal.Reason = cls.Reason;
@@ -90,17 +103,17 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 if (cls.Id > 0)
                 {
-                    var clasData=appDbContext.Class.FirstOrDefaultAsync(x=>x.Id == cls.Id).Result;
+                    var clasData=appDbContext.Class.AsNoTracking().FirstOrDefaultAsync(x=>x.Id == cls.Id).Result;
                     if(clasData != null)
                     {
                         clasData.EndDate= DateTime.UtcNow;
                         clasData.Status = (int)(Constant.ClassStatus.Completed);//completed
                     }
                     appDbContext.Update(clasData);
-                    
+                    await appDbContext.SaveChangesAsync();
 
                     //
-                    var studentAttendane=appDbContext.StudentAttendance.FirstOrDefaultAsync(x=>x.ClassId==cls.Id).Result;
+                    var studentAttendane=appDbContext.StudentAttendance.AsNoTracking().FirstOrDefaultAsync(x=>x.ClassId==cls.Id).Result;
                     if (studentAttendane != null)
                     {
                         var student=appDbContext.Student.FirstOrDefaultAsync(x=>x.Id==(studentAttendane.StudentId)).Result;
@@ -108,8 +121,9 @@ namespace StudentAttendanceApiDAL.Repository
                         {
                             student.ActiveClassStatus = false;
                             appDbContext.Student.Update(student);
+                            await appDbContext.SaveChangesAsync();
                         }
-                        appDbContext.SaveChangesAsync();
+                     
                     }
 
                 }
@@ -134,7 +148,7 @@ namespace StudentAttendanceApiDAL.Repository
             Dictionary<int, int> ClassData = new Dictionary<int, int>();
             try
             {
-                List<Class> classes = await appDbContext.Class.ToListAsync();
+                List<Class> classes = await appDbContext.Class.AsNoTracking().ToListAsync();
                 List<Class> activeClasses = classes.Where(x => x.Status == (int)Constant.ClassStatus.Active).ToList();
 
                 ClassData.Add(activeClasses.Count(), classes.Count());

@@ -35,7 +35,14 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 if (center.Id > 0)
                 {
-                    appDbContext.Entry(center).State = EntityState.Modified;
+                    var centerVal = appDbContext.Center.AsNoTracking().FirstOrDefaultAsync(x => x.Id == center.Id).Result;
+                    if (centerVal != null)
+                    {
+                        center.Status = centerVal.Status;
+                        center.ClassStatus = centerVal.ClassStatus;
+                    }
+                    appDbContext.Update(center);
+                    await appDbContext.SaveChangesAsync();
                 }
                 else
                 {
@@ -81,7 +88,7 @@ namespace StudentAttendanceApiDAL.Repository
                 list.Add(centerAssignAdmin);
 
                 appDbContext.AddRange(list);
-                appDbContext.SaveChanges();
+                await  appDbContext.SaveChangesAsync();
                 #endregion
 
                 logger.LogInformation($"UserRepository : SaveCenter : Started");
@@ -129,7 +136,7 @@ namespace StudentAttendanceApiDAL.Repository
                 if (center != null)
                 {
                     center.RegionalAdminName = appDbContext.Users.AsNoTracking().FirstOrDefault(x => x.Id == center.AssignedRegionalAdmin).Name;
-
+              
                     center.User = appDbContext.Users.AsNoTracking().FirstOrDefault(x => x.Id == center.AssignedTeachers);
 
                     center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == center.Id).AsNoTracking().ToList().Count();
@@ -152,8 +159,14 @@ namespace StudentAttendanceApiDAL.Repository
             try
             {
                 centers = await (from c in appDbContext.Center
-                                 join d in appDbContext.Users
-                                 on c.AssignedTeachers equals d.Id
+                                 join u in appDbContext.Users
+                                 on c.AssignedTeachers equals u.Id
+                                 join d in appDbContext.District
+                                 on c.DistrictId equals d.Id
+                                 join v in appDbContext.VidhanSabha
+                                 on c.VidhanSabhaId equals v.Id
+                                 join p in appDbContext.Panchayat
+                                  on c.PanchayatId equals p.Id
                                  select new Center
                                  {
                                      Id = c.Id,
@@ -161,6 +174,12 @@ namespace StudentAttendanceApiDAL.Repository
                                      CenterName=c.CenterName,
                                      AssignedTeachers=c.AssignedTeachers,
                                      Status=c.Status,
+                                     PanchayatId = p.Id,
+                                     DistrictId = d.Id,
+                                     VidhanSabhaId = v.Id,
+                                     PanchayatName = p.Name,
+                                     DistrictName = d.Name,
+                                     VidhanSabhaName = v.Name,
                                      TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id).AsNoTracking().ToList().Count
                                  }).ToListAsync();
                 //centers = await (from c in appDbContext.Center

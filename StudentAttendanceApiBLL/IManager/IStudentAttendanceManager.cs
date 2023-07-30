@@ -12,6 +12,7 @@ namespace StudentAttendanceApiBLL.IManager
         Task<int> SaveStudentAttendance(StudentAttendance studentAttendance);
         Task<List<StudentAttendanceDetailDto>> GetAllStudentWihAvgAttendance(int centerId);
         Task<List<StudentAttendanceDetailDto>> GetAllStudentAttendancStatus(int centerId, string classDate);
+        Task<List<StudentAttendanceDetailDto>> GetAllStudentAttendancByMonth(int centerId,int studentId, int month);
     }
 
 }

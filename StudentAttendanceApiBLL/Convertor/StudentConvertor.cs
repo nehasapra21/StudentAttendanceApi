@@ -44,5 +44,35 @@ namespace StudentAttendanceApiBLL
             return student;
 
         }
+
+
+        public static StudentDetailDto ConvertStudentDetailDtoToStudentDto(Student studentDto)
+        {
+            StudentDetailDto student = new StudentDetailDto();
+            student.Id = studentDto.Id;
+            student.EnrollmentId = studentDto.EnrollmentId;
+            student.FullName = studentDto.FullName;
+            student.FullAddress = studentDto.FullAddress;
+            // student.Status = studentDto.Status;
+            student.Age = studentDto.Age;
+            student.Gender = studentDto.Gender;
+            student.DateOfBirth = studentDto.DateOfBirth;
+            student.PhoneNumber = studentDto.PhoneNumber;
+            student.WhatsApp = studentDto.WhatsApp;
+            student.Email = studentDto.Email;
+            student.Contact = studentDto.Contact;
+            //  student.Counter = studentDto.Counter;
+            student.Grade = studentDto.Grade;
+            student.Remarks = studentDto.Remarks;
+            student.ProfileImage = studentDto.ProfileImage;
+            //  student.LastClass = studentDto.LastClass;
+            student.FatherName = studentDto.FatherName;
+            student.JoiningDate = studentDto.JoiningDate;
+            student.MotherName = studentDto.MotherName;
+            // student.ActiveClassStatus = studentDto.ActiveClassStatus;
+
+            return student;
+
+        }
     }
 }

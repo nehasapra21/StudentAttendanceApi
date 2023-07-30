@@ -17,7 +17,8 @@ namespace StudentAttendanceApiBLL
             center.CenterName = centerDto.CenterName;
             center.AssignedRegionalAdmin = centerDto.AssignedRegionalAdmin;
             center.AssignedTeachers = centerDto.AssignedTeachers;
-          //  center.CreatedDate = centerDto.CreatedDate;
+            center.StartedDate = centerDto.StartedDate;
+            //  center.CreatedDate = centerDto.CreatedDate;
             center.DistrictId = centerDto.DistrictId;
             center.VidhanSabhaId = centerDto.VidhanSabhaId;
             center.VillageId = centerDto.VillageId;
@@ -45,6 +46,7 @@ namespace StudentAttendanceApiBLL
             center.DistrictId = centerDto.DistrictId;
             center.VidhanSabhaId = centerDto.VidhanSabhaId;
             center.VillageId = centerDto.VillageId;
+            center.RegionalAdminId = centerDto.AssignedRegionalAdmin;
             center.DistrictName = centerDto.District != null ? centerDto.District.Name : string.Empty;
             center.VidhanSabhaName = (centerDto.VidhanSabha != null) ? centerDto.VidhanSabha.Name : string.Empty;
             center.PanchayatName = (centerDto.Panchayat != null) ? centerDto.Panchayat.Name : string.Empty;

@@ -67,10 +67,7 @@ namespace StudentAttendanceApiBLL.Manager
                 pass = EncryptionUtility.GetHashPassword(user.Password);
                 user.Password = pass;
             }
-            else
-            {
-                user =await _userRepository.GetUserById(user.Id);
-            }
+            
            
             Users saveUser= await _userRepository.SaveLogin(user);
             UserDto userDto = new UserDto();

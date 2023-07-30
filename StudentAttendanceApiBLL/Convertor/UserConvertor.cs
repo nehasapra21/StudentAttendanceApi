@@ -34,7 +34,7 @@ namespace StudentAttendanceApiBLL
             masterAdmin.CreatedOn = masterAdminDto.CreatedOn;
             masterAdmin.DistrictId = masterAdminDto.DistrictId;
             masterAdmin.VidhanSabhaId = masterAdminDto.VidhanSabhaId;
-            masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
+           // masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
             masterAdmin.VillageId = masterAdminDto.VillageId;
             masterAdmin.AssignedRegionalAdminStatus = masterAdminDto.AssignedRegionalAdminStatus;
             masterAdmin.AssignedTeacherStatus = masterAdminDto.AssignedTeacherStatus;
@@ -104,7 +104,7 @@ namespace StudentAttendanceApiBLL
             masterAdmin.CreatedOn = masterAdminDto.CreatedOn;
             masterAdmin.DistrictId = masterAdminDto.DistrictId;
             masterAdmin.VidhanSabhaId = masterAdminDto.VidhanSabhaId;
-            masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
+           // masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
             masterAdmin.VillageId = masterAdminDto.VillageId;
             masterAdmin.AssignedRegionalAdminStatus = masterAdminDto.AssignedRegionalAdminStatus;
             masterAdmin.AssignedTeacherStatus = masterAdminDto.AssignedTeacherStatus;
@@ -115,7 +115,7 @@ namespace StudentAttendanceApiBLL
             masterAdmin.ListOfPanchayatId = masterAdminDto.ListOfPanchayatId;
             masterAdmin.DistrictId = masterAdminDto.DistrictId;
             masterAdmin.VidhanSabhaId = masterAdminDto.VidhanSabhaId;
-            masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
+            //masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
             masterAdmin.VillageId = masterAdminDto.VillageId;
             //masterAdmin.DistrictName = masterAdminDto.District != null ? masterAdminDto.District.Name : string.Empty;
 
@@ -213,7 +213,7 @@ namespace StudentAttendanceApiBLL
                 foreach (var item in masterAdminDto.RegionalAdminPanchayat)
                 {
                     PanchayatDto panchayat = new PanchayatDto();
-                    panchayat.Id = item.Id;
+                    panchayat.Id = item.PanchayatId;
                     panchayat.Name = item.PanchayatName;
                     masterAdmin.ListOfPanchayat.Add(panchayat);
                 }

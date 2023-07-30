@@ -41,11 +41,16 @@ namespace StudentAttendanceApiBLL.Manager
             return await _studentRepository.SaveStudent(student);
         }
 
-        public async Task<Student> GetStudentById(int id)
+        public async Task<StudentDetailDto> GetStudentById(int id)
         {
             _logger.LogInformation($"UserManager : Bll : GetUser : Started");
-
-            return await _studentRepository.GetStudentById(id);
+            Student student= await _studentRepository.GetStudentById(id);
+            StudentDetailDto studentDetailDto = new StudentDetailDto();
+            if(student!=null)
+            {
+                studentDetailDto = StudentConvertor.ConvertStudentDetailDtoToStudentDto(student);
+            }
+            return studentDetailDto;
         }
 
         public async Task<Student> GetStudentByCenterId(int centerId)

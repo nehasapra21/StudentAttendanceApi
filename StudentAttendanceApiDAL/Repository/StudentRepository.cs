@@ -32,11 +32,21 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 if (student.Id > 0)
                 {
-                    appDbContext.Entry(student).State = EntityState.Modified;
+                    var studentVal = appDbContext.Student.AsNoTracking().FirstOrDefaultAsync(x => x.Id == student.Id).Result;
+                    if (student != null)
+                    {
+                        student.Status = studentVal.Status;
+                        student.LastClass = studentVal.LastClass;
+                        student.ActiveClassStatus = studentVal.ActiveClassStatus;
+                        student.Counter = studentVal.Counter;
+                        appDbContext.Entry(student).State = EntityState.Modified;
+                    }
                 }
                 else
                 {
                     student.Status = true;
+                    student.CreatedOn = DateTime.UtcNow;
+                    student.ActiveClassStatus = false;
                     appDbContext.Student.Add(student);
                 }
                 await appDbContext.SaveChangesAsync();

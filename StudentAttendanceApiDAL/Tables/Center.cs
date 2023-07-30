@@ -27,14 +27,14 @@ namespace StudentAttendanceApiDAL.Tables
         public int DistrictId { get; set; }
         public int PanchayatId { get; set; }
         public int? VillageId { get; set; }
-        //[NotMapped]
-        //public string DistrictName { get; set; }
-        //[NotMapped]
-        //public string VidhanSabhaName { get; set; }
-        //[NotMapped]
-        //public string VillageName { get; set; }
-        //[NotMapped]
-        //public string PanchayatName { get; set; }
+        [NotMapped]
+        public string DistrictName { get; set; }
+        [NotMapped]
+        public string VidhanSabhaName { get; set; }
+        [NotMapped]
+        public string VillageName { get; set; }
+        [NotMapped]
+        public string PanchayatName { get; set; }
         public ICollection<CenterAssignUser> CenterAssignUser { get; set; }
         public District District { get; set; }
         public VidhanSabha VidhanSabha { get; set; }
@@ -46,7 +46,9 @@ namespace StudentAttendanceApiDAL.Tables
         public string TeacherName { get; set; }
         [NotMapped]
         public string RegionalAdminName { get; set; }
-       
+        [NotMapped]
+        public string RegionalAdminId { get; set; }
+
         [NotMapped]
         public int? TotalActiveStudents { get; set; }
         [NotMapped]

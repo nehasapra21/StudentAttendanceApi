@@ -104,7 +104,7 @@ namespace StudentAttendanceApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
-                        status = false,
+                        status = true,
                         data = student,
                         message = "student exists",
                         code = StatusCodes.Status200OK
@@ -134,7 +134,7 @@ namespace StudentAttendanceApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
-                        status = false,
+                        status = true,
                         data = student,
                         message = "Status updated",
                         code = StatusCodes.Status200OK
@@ -166,14 +166,17 @@ namespace StudentAttendanceApi.Controllers
             try
             {
                 var allClasses = await _studentManager.GetTotalStudentPresent();
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                data.Add("PresentStudents", allClasses.Keys.ToList());
+                data.Add("TotalStudents", allClasses.Values.ToList());
                 if (allClasses != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
-                        status = false,
+                        status = true,
                         PresentStudents = allClasses.Keys.ToList(),
                         TotalStudents = allClasses.Values.ToList(),
-                        message = "Present student",
+                        message = "Total student present",
                         code = StatusCodes.Status200OK
                     });
                 }

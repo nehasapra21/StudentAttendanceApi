@@ -12,7 +12,6 @@ using StudentAttendanceApiDAL.Tables;
 
 namespace StudentAttendanceApi.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentAttendanceController : ControllerBase
@@ -107,12 +106,47 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetAllStudentAttendancStatus")]
-        public async Task<IActionResult> GetAllStudentAttendancStatus(int centerId,string classDate)
+        public async Task<IActionResult> GetAllStudentAttendancStatus(int centerId,string scanDate)
         {
             logger.LogInformation("UserController : SaveStudentAttendance : Started");
             try
             {
-                var students = await _studentAttendanceManager.GetAllStudentAttendancStatus(centerId, classDate);
+                var students = await _studentAttendanceManager.GetAllStudentAttendancStatus(centerId, scanDate);
+                if (students != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = students,
+                        message = "Student exixts",
+                        code = StatusCodes.Status200OK
+                    }); ;
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "Student  not exists",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetAllStudentAttendancByMonth")]
+        public async Task<IActionResult> GetAllStudentAttendancByMonth(int centerId,int studentId, int month)
+        {
+            logger.LogInformation("UserController : SaveStudentAttendance : Started");
+            try
+            {
+                var students = await _studentAttendanceManager.GetAllStudentAttendancByMonth(centerId, studentId, month);
                 if (students != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
