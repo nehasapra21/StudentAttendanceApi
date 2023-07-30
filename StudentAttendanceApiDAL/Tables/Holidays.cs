@@ -21,11 +21,9 @@ namespace StudentAttendanceApiDAL.Tables
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? CreatedBy{ get; set; }
-        public int CenterId { get; set; }
+        public int? CenterId { get; set; }
         [NotMapped]
         public List<int> CenterIds { get; set; }
-        [NotMapped]
-        public string? CenterName { get; set; }
 
     }
     

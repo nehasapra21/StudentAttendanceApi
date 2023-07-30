@@ -14,9 +14,9 @@ namespace StudentAttendanceApiDAL.Tables
     {
         [Key]
         public int Id { get; set; }
-        public string CenterGuidId { get; set; }
+        public string? CenterGuidId { get; set; }
         public string? CenterName { get; set; }
-       
+
         public bool? ClassStatus { get; set; }
         public bool? Status { get; set; }
         public DateTime? CreatedDate { get; set; }
@@ -26,22 +26,34 @@ namespace StudentAttendanceApiDAL.Tables
         public int VidhanSabhaId { get; set; }
         public int DistrictId { get; set; }
         public int PanchayatId { get; set; }
-        public int VillageId { get; set; }
+        public int? VillageId { get; set; }
+        //[NotMapped]
+        //public string DistrictName { get; set; }
+        //[NotMapped]
+        //public string VidhanSabhaName { get; set; }
+        //[NotMapped]
+        //public string VillageName { get; set; }
+        //[NotMapped]
+        //public string PanchayatName { get; set; }
+        public ICollection<CenterAssignUser> CenterAssignUser { get; set; }
+        public District District { get; set; }
+        public VidhanSabha VidhanSabha { get; set; }
+        public Panchayat Panchayat { get; set; }
+        public Village Village { get; set; }
         [NotMapped]
-        public string DistrictName { get; set; }
-        [NotMapped]
-        public string VidhanSabhaName { get; set; }
-        [NotMapped]
-        public string VillageName { get; set; }
-        [NotMapped]
-        public string PanchayatName { get; set; }
+        public int? TotalStudents { get; set; }
         [NotMapped]
         public string TeacherName { get; set; }
         [NotMapped]
         public string RegionalAdminName { get; set; }
+       
         [NotMapped]
-        public int? TotalStudents { get; set; }
+        public int? TotalActiveStudents { get; set; }
+        [NotMapped]
+        public int? TotalPresentStudents { get; set; }
 
+        [NotMapped]
+        public Users User { get; set; }
     }
-    
+
 }

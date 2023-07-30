@@ -13,15 +13,34 @@ namespace StudentAttendanceApiBLL
         {
             Class cls = new Class();
             cls.Id = classDto.Id;
+            cls.CenterId = classDto.CenterId;
             cls.ClassEnrolmentId = classDto.ClassEnrolmentId;
             cls.Name = classDto.Name;
-            cls.Status = classDto.Status;
             cls.TotalStudents = classDto.TotalStudents;
             cls.AvilableStudents = classDto.AvilableStudents;
-            cls.StartedDate = classDto.StartedDate;
-            cls.EndDate = classDto.EndDate;
+            //cls.EndDate = classDto.EndDate;
+            //cls.Reason = classDto.Reason;
+            //classDto.IsCancel = classDto.IsCancel;
+            //cls.CancelDate = classDto.CancelDate;
+            cls.UsersId = classDto.UserId;
+            return cls;
+
+        }
+
+        public static Class ConvertClasstoToClass(CancelClassDto classDto)
+        {
+            Class cls = new Class();
+            cls.Id = classDto.Id;
             cls.Reason = classDto.Reason;
-            classDto.CancelBy = classDto.CancelBy;
+            cls.CancelBy = classDto.CancelBy;
+            return cls;
+
+        }
+
+        public static Class ConvertClasstoToEndClassDto(EndClassDto classDto)
+        {
+            Class cls = new Class();
+            cls.Id = classDto.Id;
             return cls;
 
         }

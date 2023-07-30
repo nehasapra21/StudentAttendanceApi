@@ -10,6 +10,9 @@ namespace StudentAttendanceApiBLL.IManager
     public interface IClassManager
     {
         Task<Class> SaveClass(Class classval);
+        Task<Class> UpdateEndClassTime(Class cls);
+        Task<Dictionary<int, int>> GetActiveClass();
+        Task<Class> CancelClass(Class cls);
     }
 
 }

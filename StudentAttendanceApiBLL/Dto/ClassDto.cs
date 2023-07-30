@@ -13,15 +13,22 @@ namespace StudentAttendanceApiDAL.Tables
     {
         public int Id { get; set; }
         public string? ClassEnrolmentId { get; set; }
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
+        [Required]
         public int CenterId { get; set; }
-        public bool? Status { get; set; }
-        public DateTime? StartedDate { get; set; }
-        public DateTime? EndDate { get; set; }
+       
+        //public DateTime? CancelDate { get; set; }
+        
+        //public DateTime? EndDate { get; set; }
+        [Required]
+        public int? UserId { get; set; }
+        [Required]
         public int? TotalStudents { get; set; }
+        [Required]
         public int? AvilableStudents { get; set; }
-        public string? Reason { get; set; }
-        public int? CancelBy { get; set; }
+        //public string? Reason { get; set; }
+        //public bool? IsCancel { get; set; }
 
     }
 

@@ -61,6 +61,7 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("SaveSuperAdmin")]
         public async Task<IActionResult> SaveSuperAdmin([FromForm] SuperAdminDto superAdminDto)
         {
@@ -68,7 +69,7 @@ namespace StudentAttendanceApi.Controllers
             try
             {
                 Users user = UserConvertor.ConvertSuperAdminUsertoToSuperAdminUser(superAdminDto);
-                var masterAdmin = await _userManager.SaveSuperAdmin(user);
+                var masterAdmin = await _userManager.SaveLogin(user);
                 if (masterAdmin != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
@@ -134,7 +135,8 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        
+
+        [Authorize]
         [HttpGet("GetUserById")]
         public async Task<IActionResult> GetUserById(int userId)
         {
@@ -144,7 +146,13 @@ namespace StudentAttendanceApi.Controllers
                 var user = await _userManager.GetUserById(userId);
                 if (user != null)
                 {
-                    return Ok(user);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = user,
+                        message = "user exists",
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {
@@ -159,52 +167,89 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        //[Authorize]
+        //[HttpPost("CheckUserMobileNumber")]
+        //public async Task<IActionResult> CheckUserMobileNumber(string mobileNumber)
+        //{
+        //    logger.LogInformation("UserController : CheckUserMobileNumber : Started");
+        //    try
+        //    {
+        //        var mobileNo = await _userManager.CheckUserMobileNumber(mobileNumber);
+        //        if (mobileNo != null)
+        //        {
+        //            return StatusCode(StatusCodes.Status200OK, new
+        //            {
+        //                status = false,
+        //                message = "Mobile number already exists",
+        //                code = StatusCodes.Status200OK
+        //            });
+        //        }
+        //        else
+        //        {
+        //            return StatusCode(StatusCodes.Status404NotFound, new
+        //            {
+        //                status = true,
+        //                error = "Mobile number doesn't exists",
+        //                code = StatusCodes.Status404NotFound
+        //            });
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
+        //        return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+        //    }
+        //}
+
         [Authorize]
-        [HttpPost("CheckUserMobileNumber")]
-        public async Task<IActionResult> CheckUserMobileNumber(string mobileNumber)
+        [HttpGet("GetAssignedTeachers")]
+        public async Task<IActionResult> GetAssignedTeachers()
         {
-            logger.LogInformation("UserController : CheckUserMobileNumber : Started");
+            logger.LogInformation("UserController : GetRegisteredTeachers : Started");
             try
             {
-                var mobileNo = await _userManager.CheckUserMobileNumber(mobileNumber);
-                if (mobileNo != null)
+                var allTeachers = await _userManager.GetAssignedTeachers();
+                if (allTeachers != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
-                        status = false,
-                        message = "Mobile number already exists",
+                        status = true,
+                        data = allTeachers,
+                        message = "List of teachers",
                         code = StatusCodes.Status200OK
                     });
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new
-                    {
-                        status = true,
-                        error = "Mobile number doesn't exists",
-                        code = StatusCodes.Status404NotFound
-                    });
+                    return NotFound();
                 }
 
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+                logger.LogError(ex, $"UserController : GetRegisteredTeachers ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
         [Authorize]
-        [HttpGet("GetRegisteredTeachers")]
-        public async Task<IActionResult> GetRegisteredTeachers()
+        [HttpGet("GetRegisterTeachers")]
+        public async Task<IActionResult> GetRegisterTeachers()
         {
-            logger.LogInformation("UserController : GetRegisteredTeachers : Started");
+            logger.LogInformation("UserController : GetRegisterTeachers : Started");
             try
             {
-                var allTeachers = await _userManager.GetRegisteredTeachers();
+                var allTeachers = await _userManager.GetAllTeachers();
                 if (allTeachers != null)
                 {
-                    return Ok(allTeachers);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = allTeachers,
+                        message = "List of teachers",
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {
@@ -229,7 +274,14 @@ namespace StudentAttendanceApi.Controllers
                 var allRegionalAdmin = await _userManager.GetAllRegionalAdmins();
                 if (allRegionalAdmin != null)
                 {
-                    return Ok(allRegionalAdmin);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = allRegionalAdmin,
+                        message = "List of regional admins",
+                        code = StatusCodes.Status200OK
+                    });
+                   
                 }
                 else
                 {

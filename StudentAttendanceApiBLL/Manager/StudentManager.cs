@@ -40,6 +40,35 @@ namespace StudentAttendanceApiBLL.Manager
 
             return await _studentRepository.SaveStudent(student);
         }
+
+        public async Task<Student> GetStudentById(int id)
+        {
+            _logger.LogInformation($"UserManager : Bll : GetUser : Started");
+
+            return await _studentRepository.GetStudentById(id);
+        }
+
+        public async Task<Student> GetStudentByCenterId(int centerId)
+        {
+            _logger.LogInformation($"UserManager : Bll : GetUser : Started");
+
+            return await _studentRepository.GetStudentByCenterId(centerId);
+        }
+
+        public async Task<Student> UpdateStudentActiveOrInactive(int id, int status)
+        {
+            _logger.LogInformation($"UserManager : Bll : UpdateStudentActiveOrInactive : Started");
+
+            return await _studentRepository.UpdateStudentActiveOrInactive(id,status);
+        }
+
+        public async Task<Dictionary<int, int>> GetTotalStudentPresent()
+        {
+            _logger.LogInformation($"UserManager : Bll : GetTotalStudentPresent : Started");
+
+            return await _studentRepository.GetTotalStudentPresent();
+        }
+
         #endregion
     }
 }

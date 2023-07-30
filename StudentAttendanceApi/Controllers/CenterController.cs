@@ -13,6 +13,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StudentAttendanceApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CenterController : ControllerBase
@@ -64,6 +65,36 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [HttpGet("GetCenteryId")]
+        public async Task<IActionResult> GetCenteryId(int userId)
+        {
+            logger.LogInformation("UserController : GetUser : Started");
+            try
+            {
+                var user = await _centerManager.GetCenteryId(userId);
+                if (user != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = user,
+                        message = "user exists",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+            }
+        }
+
         [Authorize]
         [HttpPost("CheckCenterName")]
         public async Task<IActionResult> CheckCenterName(string name)
@@ -76,7 +107,7 @@ namespace StudentAttendanceApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
-                        status = false,
+                        status = true,
                         message = "Center name already exists",
                         code = StatusCodes.Status200OK
                     });
@@ -85,7 +116,7 @@ namespace StudentAttendanceApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status404NotFound, new
                     {
-                        status = true,
+                        status = false,
                         error = "Center name doesn't exists",
                         code = StatusCodes.Status404NotFound
                     });
@@ -99,7 +130,6 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        [Authorize]
         [HttpGet("GetAllCenters")]
         public async Task<IActionResult> GetAllCenters()
         {
@@ -109,7 +139,42 @@ namespace StudentAttendanceApi.Controllers
                 var allCenters = await _centerManager.GetAllCenters();
                 if (allCenters != null)
                 {
-                    return Ok(allCenters);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data= allCenters,
+                        message = "List of centers",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : GetAllCenters ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetStudentAttendanceOfCenter")]
+        public async Task<IActionResult> GetStudentAttendanceOfCenter(int status)
+        {
+            logger.LogInformation("UserController : GetStudentAttendanceOfCenter : Started");
+            try
+            {
+                var allCenters = await _centerManager.GetStudentAttendanceOfCenter(status);
+                if (allCenters != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = allCenters,
+                        message = "Student attendance of centers",
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {

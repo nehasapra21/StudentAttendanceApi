@@ -13,5 +13,13 @@
             FeMale = 1,
             Male = 2,
         }
+
+        public enum ClassStatus
+        {
+            Active = 1,
+            Completed = 2,
+            Cancel=3,
+            Upcoming=4
+        }
     }
 }

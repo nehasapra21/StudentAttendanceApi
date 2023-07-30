@@ -39,24 +39,50 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
+                    center.Status = true;
+                    center.ClassStatus = false;
                     center.CreatedDate = DateTime.UtcNow;
                     appDbContext.Center.Add(center);
+
+                    await appDbContext.SaveChangesAsync();
                 }
 
-                //update assigned teacher status
+                #region  update assigned teacher status
+
                 List<int> userIds = new List<int>();
                 userIds.Add(center.AssignedRegionalAdmin.Value);
                 userIds.Add(center.AssignedTeachers.Value);
 
                 List<Users> user = await appDbContext.Users.Where(x => userIds.Contains(x.Id)).AsNoTracking().ToListAsync();
 
-                appDbContext.Users.Where(x => userIds.Contains(x.Id)).ToList().ForEach(i => { 
+                appDbContext.Users.Where(x => userIds.Contains(x.Id)).ToList().ForEach(i =>
+                {
                     i.AssignedTeacherStatus = true;
                     i.AssignedRegionalAdminStatus = true;
-                    }
+                }
                 );
-                
-                await appDbContext.SaveChangesAsync();
+
+                #endregion
+
+
+                #region save history of user assign
+                List<CenterAssignUser> list = new List<CenterAssignUser>();
+                CenterAssignUser centerAssignUser = new CenterAssignUser();
+                centerAssignUser.CenterId = center.Id;
+                centerAssignUser.UsersId = center.AssignedTeachers.Value;
+                centerAssignUser.Date = DateTime.UtcNow;
+                list.Add(centerAssignUser);
+
+                CenterAssignUser centerAssignAdmin = new CenterAssignUser();
+                centerAssignAdmin.CenterId = center.Id;
+                centerAssignAdmin.UsersId = center.AssignedRegionalAdmin.Value;
+                centerAssignAdmin.Date = DateTime.UtcNow;
+
+                list.Add(centerAssignAdmin);
+
+                appDbContext.AddRange(list);
+                appDbContext.SaveChanges();
+                #endregion
 
                 logger.LogInformation($"UserRepository : SaveCenter : Started");
             }
@@ -87,6 +113,37 @@ namespace StudentAttendanceApiDAL.Repository
             return center == null ? null : center.CenterName;
         }
 
+        public async Task<Center> GetCenteryId(int centerId)
+        {
+            logger.LogInformation($"UserRepository : CheckDistrictName : Started");
+
+            Center center = new Center();
+            try
+            {
+                center = await appDbContext.Center.Include(x => x.District)
+                                                  .Include(x => x.VidhanSabha)
+                                                  .Include(x => x.Panchayat)
+                                                  .Include(x => x.Village)
+                                                  .Where(x => x.Id == centerId).FirstOrDefaultAsync();
+
+                if (center != null)
+                {
+                    center.RegionalAdminName = appDbContext.Users.AsNoTracking().FirstOrDefault(x => x.Id == center.AssignedRegionalAdmin).Name;
+
+                    center.User = appDbContext.Users.AsNoTracking().FirstOrDefault(x => x.Id == center.AssignedTeachers);
+
+                    center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == center.Id).AsNoTracking().ToList().Count();
+
+                    logger.LogInformation($"UserRepository : CheckDistrictName : End");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : CheckDistrictName", ex);
+            }
+            return center;
+        }
+
         public async Task<List<Center>> GetAllCenters()
         {
             logger.LogInformation($"UserRepository : GetAllCenters : Started");
@@ -95,52 +152,126 @@ namespace StudentAttendanceApiDAL.Repository
             try
             {
                 centers = await (from c in appDbContext.Center
-                                 join d in appDbContext.District
-                                 on c.DistrictId equals d.Id
-                                 join v in appDbContext.VidhanSabha
-                                 on c.VidhanSabhaId equals v.Id
-                                 join p in appDbContext.Panchayat
-                                  on c.PanchayatId equals p.Id
-                                 into center
-                                 from Village in center.DefaultIfEmpty()
-                                // join vi in appDbContext.Village
-                                //on c.VillageId equals vi.Id
+                                 join d in appDbContext.Users
+                                 on c.AssignedTeachers equals d.Id
                                  select new Center
                                  {
                                      Id = c.Id,
-                                     CenterName = c.CenterName,
-                                     DistrictId = d.Id,
-                                     VidhanSabhaId = v.Id,
-                                     PanchayatId = c.Id,
-                                     VillageId=c.Id,
-                                   //  VillageName=vi.Name,
-                                     DistrictName = d.Name,
-                                     VidhanSabhaName = v.Name,
-                                     //PanchayatName = p.Name,
-                                     AssignedTeachers = c.AssignedTeachers,
-                                     AssignedRegionalAdmin = c.AssignedRegionalAdmin,
-                                     TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == c.AssignedTeachers).Name,
-                                     RegionalAdminName = appDbContext.Users.FirstOrDefault(x => x.Id == c.AssignedRegionalAdmin).Name,
+                                     CenterGuidId =c.CenterGuidId,
+                                     CenterName=c.CenterName,
+                                     AssignedTeachers=c.AssignedTeachers,
+                                     Status=c.Status,
                                      TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id).AsNoTracking().ToList().Count
                                  }).ToListAsync();
+                //centers = await (from c in appDbContext.Center
+                //                 join d in appDbContext.District
+                //                 on c.DistrictId equals d.Id
+                //                 join v in appDbContext.VidhanSabha
+                //                 on c.VidhanSabhaId equals v.Id
+                //                 join p in appDbContext.Panchayat
+                //                  on c.PanchayatId equals p.Id
+                //                 into center
+                //                 from Village in center.DefaultIfEmpty()
+                //                     // join vi in appDbContext.Village
+                //                     //on c.VillageId equals vi.Id
+                //                 select new Center
+                //                 {
+                //                     Id = c.Id,
+                //                     CenterName = c.CenterName,
+                //                     DistrictId = d.Id,
+                //                     VidhanSabhaId = v.Id,
+                //                     PanchayatId = c.PanchayatId,
+                //                     VillageId = Village.Id,
+
+                                     //                     //   DistrictName = d.Name,
+                                     //                     //  VidhanSabhaName = v.Name,
+                                     //                     StartedDate = c.StartedDate,
+                                     //                     AssignedTeachers = c.AssignedTeachers,
+                                     //                     AssignedRegionalAdmin = c.AssignedRegionalAdmin,
+                                     //                     TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == c.AssignedTeachers).Name,
+                                     //                     RegionalAdminName = appDbContext.Users.FirstOrDefault(x => x.Id == c.AssignedRegionalAdmin).Name,
+                                     //                     TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id).AsNoTracking().ToList().Count
+                                     //                 }).ToListAsync();
 
 
                 logger.LogInformation($"UserRepository : GetAllCenters : End");
 
 
-                if(centers!=null && centers.Count>0)
-                {
-                    foreach (var item in centers)
-                    {
-                        item.PanchayatName = appDbContext.Panchayat.AsNoTracking()
-                                         .FirstOrDefaultAsync(x => x.Id == item.PanchayatId).Result.Name;
+                //if (centers != null && centers.Count > 0)
+                //{
+                //    foreach (var item in centers)
+                //    {
+                //        Panchayat pac = appDbContext.Panchayat.AsNoTracking()
+                //                          .FirstOrDefaultAsync(x => x.Id == item.PanchayatId).Result;
+                //        if (pac != null)
+                //        {
+                //            item.PanchayatName = pac.Name;
+                //        }
 
-                    }
-                }
+                //    }
+                //}
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserRepository : GetAllCenters", ex);
+                throw ex;
+            }
+            return centers;
+        }
+
+        public async Task<List<Center>> GetStudentAttendanceOfCenter(int status)
+        {
+            logger.LogInformation($"UserRepository : GetAllClasses : Started");
+
+            List<Center> centers = new List<Center>();
+            try
+            {
+                if (status != (int)(Constant.ClassStatus.Upcoming))
+                {
+                    centers = await (from c in appDbContext.Class
+                                     join cen in appDbContext.Center
+                                     on c.CenterId equals cen.Id
+                                     //join s in appDbContext.Student
+                                     //on cen.Id equals s.CenterId
+                                     where c.Status == status && c.StartedDate.Value.Date == DateTime.UtcNow.Date
+                                     select new Center
+                                     {
+                                         Id = c.Id,
+                                         CenterName = cen.CenterName,
+                                         TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == cen.AssignedTeachers).Name,
+                                         TotalPresentStudents = c.AvilableStudents,
+                                         TotalActiveStudents = c.TotalStudents,
+                                         TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id).AsNoTracking().ToList().Count
+                                     }).ToListAsync();
+
+
+                }
+                else
+                {
+                    List<int> centerIds=appDbContext.Class.Where(x=>x.StartedDate==DateTime.UtcNow.Date).Select(x=>x.CenterId).ToList();
+
+                    centers=await appDbContext.Center.Where(x=> !centerIds.Contains(x.Id)).ToListAsync();
+
+                    centers = await (from c in appDbContext.Center
+                                     join cen in appDbContext.Class
+                                     on c.Id equals cen.CenterId
+                                     where !centerIds.Contains(c.Id)
+                                     select new Center
+                                     {
+                                         Id = c.Id,
+                                         CenterName = c.CenterName,
+                                         //TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == cen.AssignedTeachers).Name,
+                                         //TotalPresentStudents = c.AvilableStudents,
+                                         //TotalActiveStudents = c.TotalStudents,
+                                         //TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id).AsNoTracking().ToList().Count
+                                     }).ToListAsync();
+                }
+
+                logger.LogInformation($"UserRepository : GetAllClasses : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetAllClasses", ex);
                 throw ex;
             }
             return centers;

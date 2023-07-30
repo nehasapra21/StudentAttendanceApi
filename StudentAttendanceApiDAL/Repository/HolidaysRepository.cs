@@ -65,7 +65,7 @@ namespace StudentAttendanceApiDAL.Repository
             return holidays;
         }
 
-        public async Task<List<Holidays>> GetAllHolidaysByTeacherId(int teacherId,string selecteddate)
+        public async Task<List<Holidays>> GetAllHolidaysByTeacherId(int teacherId)
         {
             logger.LogInformation($"DistrictRepository : GetAllHolidaysByTeacherId : Started");
             List<Holidays> holidays = new List<Holidays>();
@@ -78,9 +78,10 @@ namespace StudentAttendanceApiDAL.Repository
                                   (h.StartDate.Value.Date >= DateTime.UtcNow.Date&& h.EndDate.Value.Date <= DateTime.UtcNow.Date)
                                   select new Holidays
                                   {
-                                     // SelectedDate = h.SelectedDate,
+                                      Id = h.Id,
                                       Name = h.Name,
-                                      CenterName = c.CenterName
+                                      CenterId=c.Id,
+                                      Description=h.Description
                                   }).ToListAsync();
 
                 logger.LogInformation($"DistrictRepository : GetAllHolidaysByTeacherId : End");

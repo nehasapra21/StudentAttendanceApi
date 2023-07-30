@@ -20,6 +20,7 @@ namespace StudentAttendanceApiDAL.Tables
 
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
+        public VidhanSabha VidhanSabha { get; set; }
 
     }
     

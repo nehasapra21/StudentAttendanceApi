@@ -36,8 +36,7 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
-                    student.CreatedOn = DateTime.UtcNow;
-                  
+                    student.Status = true;
                     appDbContext.Student.Add(student);
                 }
                 await appDbContext.SaveChangesAsync();
@@ -51,6 +50,97 @@ namespace StudentAttendanceApiDAL.Repository
             }
             return student;
         }
-     
+
+        public async Task<Student> GetStudentById(int id)
+        {
+            logger.LogInformation($"UserRepository : GetStudentById : Started");
+
+            Student student = new Student();
+            try
+            {
+                student = await appDbContext.Student.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+
+                logger.LogInformation($"UserRepository : GetStudentById : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetStudentById", ex);
+                throw ex;
+            }
+            return student;
+        }
+
+        public async Task<Student> GetStudentByCenterId(int centerId)
+        {
+            logger.LogInformation($"UserRepository : GetStudentCenterById : Started");
+
+            Student student = new Student();
+            try
+            {
+                student = await appDbContext.Student.AsNoTracking().FirstOrDefaultAsync(x => x.CenterId == centerId);
+
+                logger.LogInformation($"UserRepository : GetStudentCenterById : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetStudentCenterById", ex);
+                throw ex;
+            }
+            return student;
+        }
+
+        public async Task<Student> UpdateStudentActiveOrInactive(int id, int status)
+        {
+            logger.LogInformation($"UserRepository : UpdateStudentActive : Started");
+
+            Student studentVal = new Student();
+            try
+            {
+                if (id > 0)
+                {
+                    studentVal = appDbContext.Student.FirstOrDefaultAsync(x => x.Id == id).Result;
+                    if (studentVal != null)
+                    {
+                        studentVal.Status = status == 1 ? true : false;
+                        appDbContext.Student.Update(studentVal);
+                    }
+                }
+
+                await appDbContext.SaveChangesAsync();
+
+                logger.LogInformation($"UserRepository : UpdateStudentActive : Started");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : UpdateStudentActive ", ex);
+                throw ex;
+            }
+            return studentVal;
+        }
+
+        public async Task<Dictionary<int, int>> GetTotalStudentPresent()
+        {
+            logger.LogInformation($"UserRepository : GetTotalStudentPresent : Started");
+
+            Dictionary<int, int> totalPresentStudentData = new Dictionary<int, int>();
+            try
+            {
+                List<Student> students = await appDbContext.Student.AsNoTracking().ToListAsync();
+                List<Student> totalStudents = students.Where(x => x.Status.Value).ToList();
+
+                List<Student> presentStudents = students.Where(x => x.ActiveClassStatus.Value).ToList();
+
+                totalPresentStudentData.Add(presentStudents.Count(), totalStudents.Count());
+                await appDbContext.SaveChangesAsync();
+
+                logger.LogInformation($"UserRepository : UpdateStudentActive : Started");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : UpdateStudentActive ", ex);
+                throw ex;
+            }
+            return totalPresentStudentData;
+        }
     }
 }

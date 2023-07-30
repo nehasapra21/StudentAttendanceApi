@@ -42,6 +42,19 @@ namespace StudentAttendanceApiBLL.Manager
             return await _centerRepository.SaveCenter(center);
         }
 
+        public async Task<CenterDetailDto> GetCenteryId(int centerId)
+        {
+            _logger.LogInformation($"UserManager : Bll : LoginSuperAdmin : Started");
+
+            CenterDetailDto centerDetailDto = new CenterDetailDto();
+            Center center = await _centerRepository.GetCenteryId(centerId);
+            if (center != null)
+            {
+                centerDetailDto=CenterConvertor.ConvertCentertoToCenterDetailDto(center);
+            }
+
+            return centerDetailDto;
+        }
         public async Task<string> CheckCenterName(string name)
         {
             _logger.LogInformation($"VillageManager : Bll : CheckCenterName : Started");
@@ -52,8 +65,14 @@ namespace StudentAttendanceApiBLL.Manager
         public async Task<List<Center>> GetAllCenters()
         {
             _logger.LogInformation($"VillageManager : Bll : GetAllCenters : Started");
-
             return await _centerRepository.GetAllCenters();
+        }
+
+        public async Task<List<Center>> GetStudentAttendanceOfCenter(int status)
+        {
+            _logger.LogInformation($"VillageManager : Bll : GetStudentAttendanceOfCenter : Started");
+
+            return await _centerRepository.GetStudentAttendanceOfCenter(status);
         }
 
         public async Task<List<Center>> GetAllCentersById(int districtId, int vidhanSabhaId, int panchayatId, int villageId)

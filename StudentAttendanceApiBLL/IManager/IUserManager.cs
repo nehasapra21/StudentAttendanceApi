@@ -11,12 +11,13 @@ namespace StudentAttendanceApiBLL.IManager
     public interface IUserManager
     {
         Task<Users> LoginUser(string name, string password);
-        Task<Users> SaveLogin(Users user);
-        Task<Users> SaveSuperAdmin(Users users);
-        Task<Users> GetUserById(int userId);
+        Task<UserDto> SaveLogin(Users user);
+        //Task<Users> SaveSuperAdmin(Users users);
+        Task<object> GetUserById(int userId);
         Task<string> CheckUserMobileNumber(string mobileNumber);
-        Task<List<Users>> GetRegisteredTeachers();
-        Task<List<Users>> GetAllRegionalAdmins();
+        Task<List<UserDto>> GetAssignedTeachers();
+        Task<List<TeacherDto>> GetAllTeachers();
+        Task<List<RegionalAdminDto>> GetAllRegionalAdmins();
     }
 
 }

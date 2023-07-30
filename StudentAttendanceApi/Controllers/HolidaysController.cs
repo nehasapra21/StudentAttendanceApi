@@ -12,6 +12,7 @@ using StudentAttendanceApiDAL.Tables;
 
 namespace StudentAttendanceApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class HolidaysController : ControllerBase
@@ -38,7 +39,6 @@ namespace StudentAttendanceApi.Controllers
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,
-                        data = masterAdmin,
                         message = "Holdays save successfully",
                         code = StatusCodes.Status200OK
                     });
@@ -62,15 +62,22 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetAllHolidaysByTeacherId")]
-        public async Task<IActionResult> GetAllHolidaysByTeacherId(int teacherId,string selectedDate)
+        public async Task<IActionResult> GetAllHolidaysByTeacherId(int teacherId)
         {
             logger.LogInformation("DistrictController : GetAllDistrict : Started");
             try
             {
-                var allHolidays = await _holidaysManager.GetAllHolidaysByTeacherId(teacherId,selectedDate);
+                var allHolidays = await _holidaysManager.GetAllHolidaysByTeacherId(teacherId);
                 if (allHolidays != null)
                 {
-                    return Ok(allHolidays);
+
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data= allHolidays,
+                        message = "List of Holidays",
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {
@@ -93,7 +100,13 @@ namespace StudentAttendanceApi.Controllers
                 var allHolidays = await _holidaysManager.GetAllHolidaysByCenterId(centerId);
                 if (allHolidays != null)
                 {
-                    return Ok(allHolidays);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = allHolidays,
+                        message = "List of Holidays",
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {
@@ -117,7 +130,13 @@ namespace StudentAttendanceApi.Controllers
                 var allHolidays = await _holidaysManager.GetAllHolidaysByYear(year);
                 if (allHolidays != null)
                 {
-                    return Ok(allHolidays);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = allHolidays,
+                        message = "List of Holidays",
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {

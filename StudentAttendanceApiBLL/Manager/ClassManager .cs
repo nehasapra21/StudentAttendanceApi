@@ -40,6 +40,29 @@ namespace StudentAttendanceApiBLL.Manager
 
             return await _classRepository.SaveClass(cls);
         }
+
+
+        public async Task<Class> UpdateEndClassTime(Class cls)
+        {
+            _logger.LogInformation($"UserManager : Bll : SaveClass : Started");
+
+            return await _classRepository.UpdateEndClassTime(cls);
+        }
+
+        public async Task<Dictionary<int, int>> GetActiveClass()
+        {
+            _logger.LogInformation($"UserManager : Bll : GetActiveClass : Started");
+
+            return await _classRepository.GetActiveClass();
+        }
+
+        public async Task<Class> CancelClass(Class cls)
+        {
+            _logger.LogInformation($"UserManager : Bll : CancelClass : Started");
+
+            return await _classRepository.CancelClass(cls);
+        }
+
         #endregion
     }
 }

@@ -42,12 +42,12 @@ namespace StudentAttendanceApiBLL.Manager
             return await _holidaysRepository.SaveHolidays(holidays);
         }
 
-        public async Task<List<Holidays>> GetAllHolidaysByTeacherId(int teacherId, string selecteddate)
+        public async Task<List<Holidays>> GetAllHolidaysByTeacherId(int teacherId)
         {
             _logger.LogInformation($"UserManager : Bll : SaveHolidays : Started");
 
 
-            return await _holidaysRepository.GetAllHolidaysByTeacherId(teacherId, selecteddate);
+            return await _holidaysRepository.GetAllHolidaysByTeacherId(teacherId);
         }
 
         public async Task<List<Holidays>> GetAllHolidaysByYear(int year)

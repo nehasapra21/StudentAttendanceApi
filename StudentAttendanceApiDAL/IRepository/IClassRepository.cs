@@ -10,5 +10,8 @@ namespace StudentAttendanceApiDAL.IRepository
     public interface IClassRepository
     {
         Task<Class> SaveClass(Class classval);
+        Task<Class> UpdateEndClassTime(Class cls);
+        Task<Dictionary<int, int>> GetActiveClass();
+        Task<Class> CancelClass(Class cls);
     }
 }

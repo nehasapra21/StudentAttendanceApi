@@ -6,6 +6,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StudentAttendanceApiDAL.Tables;
+using System.Text.Json.Serialization;
 
 namespace StudentAttendanceApiBLL
 {
@@ -32,26 +34,25 @@ namespace StudentAttendanceApiBLL
         [Required]
         public string? PhoneNumber { get; set; }
         public string? Picture { get; set; }
+        [Required]
         public string? WhatsApp { get; set; }
         public string? LastLoginTime { get; set; }
         public string? FullAddress { get; set; }
+        public string? Education { get; set; }
         public int? RoleId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? EnrollmentDate { get; set; }
         public int? CreatedBy { get; set; }
-        [Required]
-        public int VidhanSabhaId { get; set; }
-        [Required]
-        public int DistrictId { get; set; }
-        //[Required]
-       //public int PanchayatId { get; set; }
+     
+        public int? VidhanSabhaId { get; set; }
+        public int? DistrictId { get; set; }
         public int? VillageId { get; set; }
-        [Required]
-        public string? PanchayatId { get; set; }
+        public int? PanchayatId { get; set; }
         public bool? AssignedTeacherStatus { get; set; }
         public bool? AssignedRegionalAdminStatus { get; set; }
         public string? GuardianName { get; set; }
         public string? GuardianNumber { get; set; }
-}
+        public List<int>? ListOfPanchayatId { get; set; }
+    }
     
 }

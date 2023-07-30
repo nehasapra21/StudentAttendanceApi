@@ -15,7 +15,8 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<Users> SaveSuperAdmin(Users users);
         Task<Users> GetUserById(int userId);
         Task<string> CheckUserMobileNumber(string mobileNumber);
-        Task<List<Users>> GetRegisteredTeachers();
+        Task<List<Users>> GetAssignedTeachers();
+        Task<List<Users>> GetAllTeachers();
         Task<List<Users>> GetAllRegionalAdmins();
     }
 }

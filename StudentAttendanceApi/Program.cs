@@ -64,6 +64,8 @@ builder.Services.AddAuthentication(au =>
 
 
 ///register services
+builder.Services.AddTransient<IStudentAttendanceManager, StudentAttendanceManager>();
+builder.Services.AddTransient<IStudentAttendanceRepository, StudentAttendanceRepository>();
 builder.Services.AddTransient<IClassRepository, ClassRepository>();
 builder.Services.AddTransient<IClassManager, ClassManager>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();

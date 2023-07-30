@@ -16,7 +16,7 @@ namespace StudentAttendanceApiBLL
             student.EnrollmentId = studentDto.EnrollmentId;
             student.FullName = studentDto.FullName;
             student.FullAddress = studentDto.FullAddress;
-            student.Status = studentDto.Status;
+           // student.Status = studentDto.Status;
             student.Age = studentDto.Age;
             student.Gender = studentDto.Gender;
             student.DateOfBirth = studentDto.DateOfBirth;
@@ -24,13 +24,14 @@ namespace StudentAttendanceApiBLL
             student.WhatsApp = studentDto.WhatsApp;
             student.Email = studentDto.Email;
             student.Contact = studentDto.Contact;
-            student.Counter = studentDto.Counter;
+          //  student.Counter = studentDto.Counter;
             student.Grade = studentDto.Grade;
             student.Remarks = studentDto.Remarks;
             student.ProfileImage = studentDto.ProfileImage;
-            student.LastClass = studentDto.LastClass;
+          //  student.LastClass = studentDto.LastClass;
             student.CreatedBy = studentDto.CreatedBy;
             student.CreatedOn = studentDto.CreatedOn;
+            student.JoiningDate = studentDto.JoiningDate;
             student.DistrictId = studentDto.DistrictId;
             student.VidhanSabhaId = studentDto.VidhanSabhaId;
             student.VillageId = studentDto.VillageId;
@@ -38,6 +39,8 @@ namespace StudentAttendanceApiBLL
             student.CenterId = studentDto.CenterId;
             student.FatherName = studentDto.FatherName;
             student.MotherName = studentDto.MotherName;
+           // student.ActiveClassStatus = studentDto.ActiveClassStatus;
+          
             return student;
 
         }

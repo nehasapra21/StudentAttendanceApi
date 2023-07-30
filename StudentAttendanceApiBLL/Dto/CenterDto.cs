@@ -12,17 +12,16 @@ namespace StudentAttendanceApiBLL
     public class CenterDto
     {
         public int Id { get; set; }
-        public string CenterGuidId { get; set; }
+        public string? CenterGuidId { get; set; }
         [Required]
         public string? CenterName { get; set; }
        
-        public bool? ClassStatus { get; set; }
-        public bool? Status { get; set; }
+     
         [Required]
         public int? AssignedTeachers { get; set; }
         [Required]
         public int? AssignedRegionalAdmin { get; set; }
-        public DateTime? CreatedDate { get; set; }
+      
         public DateTime? StartedDate { get; set; }
        
         [Required]
@@ -31,8 +30,8 @@ namespace StudentAttendanceApiBLL
         public int DistrictId { get; set; }
         [Required]
         public int PanchayatId { get; set; }
-        [Required]
-        public int VillageId { get; set; }
+        
+        public int? VillageId { get; set; }
        
 
     }

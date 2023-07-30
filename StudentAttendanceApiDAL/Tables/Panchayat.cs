@@ -26,6 +26,7 @@ namespace StudentAttendanceApiDAL.Tables
         public string DistrictName { get; set; }
         [NotMapped]
         public string VidhanSabhaName { get; set; }
+        public Village Village { get; set; }
     }
 
 }
