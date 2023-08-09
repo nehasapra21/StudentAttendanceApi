@@ -9,31 +9,31 @@ using System.Threading.Tasks;
 
 namespace StudentAttendanceApiBLL
 {
-    public class CenterDetailDto
+    public class AllCenterStatusDto
     {
         public int Id { get; set; }
 
         public string? CenterName { get; set; }
 
+        public string? Date { get; set; }
+
         public bool? ClassStatus { get; set; }
         public bool? Status { get; set; }
+        public string DistrictName { get; set; }
 
-        public string EnrollmentDate { get; set; }
-
-        public int VidhanSabhaId { get; set; }
-        public int DistrictId { get; set; }
-        public int PanchayatId { get; set; }
-        public int? VillageId { get; set; }
-
-        public string? DistrictName { get; set; }
-        public string? VidhanSabhaName { get; set; }
-        public string? VillageName { get; set; }
-        public string? PanchayatName { get; set; }
-        
-        public int? RegionalAdminId { get; set; }
-        public string RegionalAdminName { get; set; }
+        public string VidhanSabhaName { get; set; }
+        public int? TotalPresentStudents { get; set; }
         public int? TotalStudents { get; set; }
-        public UserDto Teacher { get; set; }
+        public string PanchayatName { get; set; }
+        public int VidhanSabhaId { get; set; }
+
+        public int DistrictId { get; set; }
+
+        public int PanchayatId { get; set; }
+        public int? AssignedTeacher { get; set; }
+        public string TeacherName { get; set; }
+
+
     }
 
 }

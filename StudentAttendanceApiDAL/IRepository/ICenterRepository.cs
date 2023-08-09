@@ -14,6 +14,7 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<Center> GetCenteryId(int centerId);
         Task<List<Center>> GetAllCenters();
         Task<List<Center>> GetStudentAttendanceOfCenter(int status);
+        Task<Center> GetCenterByUserId(int userId);
         Task<List<Center>> GetAllCentersById(int districtId, int vidhanSabhaId, int panchayatId, int villageId);
     }
 }

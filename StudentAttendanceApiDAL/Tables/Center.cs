@@ -52,10 +52,13 @@ namespace StudentAttendanceApiDAL.Tables
         [NotMapped]
         public int? TotalActiveStudents { get; set; }
         [NotMapped]
-        public int? TotalPresentStudents { get; set; }
-
+        public int TotalPresentStudents { get; set; }
         [NotMapped]
+        public DateTime? ClassEndDate{ get; set; }
+        [NotMapped]
+
         public Users User { get; set; }
+        public ICollection<ClassCancelTeacher> ClassCancelTeacher { get; set; }
     }
 
 }

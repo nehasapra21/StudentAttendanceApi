@@ -1,4 +1,5 @@
-﻿using StudentAttendanceApiDAL.Tables;
+﻿using Microsoft.Extensions.Logging;
+using StudentAttendanceApiDAL.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,24 @@ namespace StudentAttendanceApiBLL
     {
         public static StudentAttendance ConvertStudentAttendancetoToStudentAttendance(StudentAttendanceDto studentAttendanceDto)
         {
-            StudentAttendance studentAttendance= new StudentAttendance();
+            StudentAttendance studentAttendance = new StudentAttendance();
             studentAttendance.Id = studentAttendanceDto.Id;
             studentAttendance.ClassId = studentAttendanceDto.ClassId;
             studentAttendance.UserId = studentAttendanceDto.UserId;
-            studentAttendance.StudentId = studentAttendanceDto.StudentId;
-            studentAttendance.ScanDate = studentAttendanceDto.ScanDate; 
-            studentAttendance.CenterId= studentAttendanceDto.CenterId;
+
+            
+            if (!string.IsNullOrEmpty(studentAttendanceDto.StudentIds))
+            {
+                studentAttendance.ListOfStudentIds = studentAttendanceDto.StudentIds.Split(',').Select(int.Parse).ToList();
+            }
+            else
+            {
+                studentAttendance.StudentId = Convert.ToInt32(studentAttendanceDto.StudentIds);
+
+            }
+
+            studentAttendance.ScanDate = studentAttendanceDto.ScanDate;
+            studentAttendance.CenterId = studentAttendanceDto.CenterId;
             return studentAttendance;
 
         }
@@ -29,8 +41,31 @@ namespace StudentAttendanceApiBLL
             studentAttendance.EnrollmentId = studentAttendanceDto.EnrollmentId;
             studentAttendance.FullName = studentAttendanceDto.FullName;
             studentAttendance.AttendanceStatus = studentAttendanceDto.StudentStaus;
-            studentAttendance.AverageAttendance =Math.Round(studentAttendanceDto.AvgAttendance,2);
+            studentAttendance.AverageAttendance = Math.Round(studentAttendanceDto.AvgAttendance, 2);
             studentAttendance.Date = studentAttendanceDto.CreatedOn;
+            return studentAttendance;
+
+        }
+
+        public static StudentAttendanceMonthDetailDto ConvertStudentToStudentAttendanceMonthDeatilDto(Student studentAttendanceDto)
+        {
+            StudentAttendanceMonthDetailDto studentAttendance = new StudentAttendanceMonthDetailDto();
+            studentAttendance.Id = studentAttendanceDto.Id;
+            studentAttendance.FullName = studentAttendanceDto.FullName;
+            studentAttendance.AttendanceStatus = studentAttendanceDto.StudentStaus;
+            studentAttendance.Date = studentAttendanceDto.CreatedOn;
+            return studentAttendance;
+
+        }
+
+        public static StudentAbsentClassDto ConvertStudentToStudentAbsentClassDtoDto(Student studentAttendanceDto)
+        {
+            StudentAbsentClassDto studentAttendance = new StudentAbsentClassDto();
+            studentAttendance.Id = studentAttendanceDto.Id;
+            studentAttendance.EnrollmentId = studentAttendanceDto.EnrollmentId;
+            studentAttendance.Name = studentAttendanceDto.FullName;
+            studentAttendance.ProfileImage = studentAttendanceDto.ProfileImage;
+            studentAttendance.ManualAttendance = studentAttendanceDto.ManualAttendance;
             return studentAttendance;
 
         }

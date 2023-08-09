@@ -39,6 +39,7 @@ namespace StudentAttendanceApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
+                        status=true,
                         message = "List of district",
                         data = allDistricts,
                         code = StatusCodes.Status200OK
@@ -46,7 +47,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        message = "List of district not found",
+                        data = allDistricts,
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)

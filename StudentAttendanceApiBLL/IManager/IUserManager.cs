@@ -15,8 +15,8 @@ namespace StudentAttendanceApiBLL.IManager
         //Task<Users> SaveSuperAdmin(Users users);
         Task<object> GetUserById(int userId);
         Task<string> CheckUserMobileNumber(string mobileNumber);
-        Task<List<UserDto>> GetAssignedTeachers();
         Task<List<TeacherDto>> GetAllTeachers();
+        Task<List<TeacherDto>> GetAllUnAssignedTeacher();
         Task<List<RegionalAdminDto>> GetAllRegionalAdmins();
     }
 

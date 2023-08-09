@@ -33,21 +33,35 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-    
+
         public async Task<int> SaveStudentAttendance(StudentAttendance studentAttendance)
         {
             _logger.LogInformation($"UserManager : Bll : SaveStudentAttendance : Started");
 
             return await _studentAttendanceRepository.SaveStudentAttendance(studentAttendance);
         }
+        public async Task<int> SaveAtuomaticStudentAttendance(StudentAttendance studentAttendance)
+        {
+            _logger.LogInformation($"UserManager : Bll : SaveStudentAttendance : Started");
 
+            return await _studentAttendanceRepository.SaveAtuomaticStudentAttendance(studentAttendance);
+        }
+
+
+        public async Task<int> SaveManualStudentAttendance(StudentAttendance studentAttendance)
+        {
+            _logger.LogInformation($"UserManager : Bll : SaveStudentAttendance : Started");
+
+            return await _studentAttendanceRepository.SaveManualStudentAttendance(studentAttendance);
+        }
         public async Task<List<StudentAttendanceDetailDto>> GetAllStudentWihAvgAttendance(int centerId)
         {
             _logger.LogInformation($"UserManager : Bll : SaveStudentAttendance : Started");
-            List<StudentAttendanceDetailDto> studentAttendanceDetailDtos = new List<StudentAttendanceDetailDto>();
+            List<StudentAttendanceDetailDto> studentAttendanceDetailDtos = null;
             List<Student> students= await _studentAttendanceRepository.GetAllStudentWihAvgAttendance(centerId);
             if (students != null)
             {
+                studentAttendanceDetailDtos = new List<StudentAttendanceDetailDto>();
                 foreach (var item in students)
                 {
                     StudentAttendanceDetailDto studentAttendanceDetailDto = new StudentAttendanceDetailDto();
@@ -61,10 +75,11 @@ namespace StudentAttendanceApiBLL.Manager
         public async Task<List<StudentAttendanceDetailDto>> GetAllStudentAttendancStatus(int centerId, string classDate)
         {
             _logger.LogInformation($"UserManager : Bll : SaveStudentAttendance : Started");
-            List<StudentAttendanceDetailDto> studentAttendanceDetailDtos = new List<StudentAttendanceDetailDto>();
+            List<StudentAttendanceDetailDto> studentAttendanceDetailDtos = null;
             List<Student> students = await _studentAttendanceRepository.GetAllStudentAttendancStatus(centerId, classDate);
             if (students != null)
             {
+                studentAttendanceDetailDtos = new List<StudentAttendanceDetailDto>();
                 foreach (var item in students)
                 {
                     StudentAttendanceDetailDto studentAttendanceDetailDto = new StudentAttendanceDetailDto();
@@ -76,17 +91,36 @@ namespace StudentAttendanceApiBLL.Manager
         }
 
 
-        public async Task<List<StudentAttendanceDetailDto>> GetAllStudentAttendancByMonth(int centerId,int studentId, int month)
+        public async Task<List<StudentAttendanceMonthDetailDto>> GetAllStudentAttendancByMonth(int centerId,int studentId, int month,int year)
         {
             _logger.LogInformation($"UserManager : Bll : SaveStudentAttendance : Started");
-            List<StudentAttendanceDetailDto> studentAttendanceDetailDtos = new List<StudentAttendanceDetailDto>();
-            List<Student> students = await _studentAttendanceRepository.GetAllStudentAttendancByMonth(centerId,studentId, month);
+            List<StudentAttendanceMonthDetailDto> studentAttendanceDetailDtos = null;
+            List<Student> students = await _studentAttendanceRepository.GetAllStudentAttendancByMonth(centerId,studentId, month, year);
             if (students != null)
             {
+                studentAttendanceDetailDtos = new List<StudentAttendanceMonthDetailDto>();
                 foreach (var item in students)
                 {
-                    StudentAttendanceDetailDto studentAttendanceDetailDto = new StudentAttendanceDetailDto();
-                    studentAttendanceDetailDto = StudentAttendanceConvertor.ConvertStudentToStudentAttendanceDeatilDto(item);
+                    StudentAttendanceMonthDetailDto studentAttendanceDetailDto = new StudentAttendanceMonthDetailDto();
+                    studentAttendanceDetailDto = StudentAttendanceConvertor.ConvertStudentToStudentAttendanceMonthDeatilDto(item);
+                    studentAttendanceDetailDtos.Add(studentAttendanceDetailDto);
+                }
+            }
+            return studentAttendanceDetailDtos;
+        }
+
+        public async Task<List<StudentAbsentClassDto>> GetAllAbsentAttendance(int centerId)
+        {
+            _logger.LogInformation($"UserManager : Bll : SaveStudentAttendance : Started");
+            List<StudentAbsentClassDto> studentAttendanceDetailDtos = null;
+            List<Student> students = await _studentAttendanceRepository.GetAllAbsentAttendance(centerId);
+            if (students != null)
+            {
+                studentAttendanceDetailDtos=new List<StudentAbsentClassDto>();
+                foreach (var item in students)
+                {
+                    StudentAbsentClassDto studentAttendanceDetailDto = new StudentAbsentClassDto();
+                    studentAttendanceDetailDto = StudentAttendanceConvertor.ConvertStudentToStudentAbsentClassDtoDto(item);
                     studentAttendanceDetailDtos.Add(studentAttendanceDetailDto);
                 }
             }

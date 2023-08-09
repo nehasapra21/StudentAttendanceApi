@@ -9,18 +9,17 @@ using System.Threading.Tasks;
 
 namespace StudentAttendanceApiDAL.Tables
 {
-    [Table("StudentAttendance")]
-    public class StudentAttendance
+    [Table("ClassCancelByTeacher")]
+    public class ClassCancelTeacher
     {
+        [Key]
         public int Id { get; set; }
-        public int? ClassId { get; set; }
-        public int? CenterId { get; set; }
+        public int CenterId { get; set; }
+        public DateTime? StartingDate { get; set; }
+        public DateTime? EndingDate { get; set; }
+        public DateTime? CreatedOn { get; set; }
         public int? UserId { get; set; }
-        public bool? Type { get; set; }
-        public int? StudentId { get; set; }
-        public DateTime? ScanDate { get; set; }
-        [NotMapped]
-        public List<int> ListOfStudentIds { get; set; }
+        public string? Reason { get; set; }
 
     }
     

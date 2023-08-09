@@ -49,7 +49,7 @@ namespace StudentAttendanceApi.Controllers
                     {
                         status = false,
                         error = "invalid credential",
-                        code = StatusCodes.Status401Unauthorized
+                        code = StatusCodes.Status404NotFound
                     });
                 }
 
@@ -105,6 +105,7 @@ namespace StudentAttendanceApi.Controllers
             logger.LogInformation("UserController : SaveUser : Started");
             try
             {
+                
                 Users user=UserConvertor.ConvertUsertoToUser(userDto);
                 var masterAdmin = await _userManager.SaveLogin(user);
                 if (masterAdmin != null)
@@ -156,7 +157,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = user,
+                        message = "user not exists",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
 
             }
@@ -203,26 +210,32 @@ namespace StudentAttendanceApi.Controllers
         //}
 
         [Authorize]
-        [HttpGet("GetAssignedTeachers")]
-        public async Task<IActionResult> GetAssignedTeachers()
+        [HttpGet("GetAllTeachers")]
+        public async Task<IActionResult> GetAllTeachers()
         {
             logger.LogInformation("UserController : GetRegisteredTeachers : Started");
             try
             {
-                var allTeachers = await _userManager.GetAssignedTeachers();
+                var allTeachers = await _userManager.GetAllTeachers();
                 if (allTeachers != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,
                         data = allTeachers,
-                        message = "List of teachers",
+                        message = "List of assigned teachers",
                         code = StatusCodes.Status200OK
                     });
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = allTeachers,
+                        message = "Asigned teachers not found",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
 
             }
@@ -234,13 +247,13 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("GetRegisterTeachers")]
-        public async Task<IActionResult> GetRegisterTeachers()
+        [HttpGet("GetAllUnAssignedTeacher")]
+        public async Task<IActionResult> GetAllUnAssignedTeacher()
         {
             logger.LogInformation("UserController : GetRegisterTeachers : Started");
             try
             {
-                var allTeachers = await _userManager.GetAllTeachers();
+                var allTeachers = await _userManager.GetAllUnAssignedTeacher();
                 if (allTeachers != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
@@ -253,7 +266,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = allTeachers,
+                        message = "List of teachers not found",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
 
             }
@@ -285,7 +304,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = allRegionalAdmin,
+                        message = "List of regional admins not found",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
 
             }

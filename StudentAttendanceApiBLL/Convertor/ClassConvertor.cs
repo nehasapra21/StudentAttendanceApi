@@ -44,5 +44,33 @@ namespace StudentAttendanceApiBLL
             return cls;
 
         }
+
+        public static ClassLiveDetailDto ConvertClasstoToClassLiveDetailDto(Class classDto)
+        {
+            ClassLiveDetailDto cls = new ClassLiveDetailDto();
+            cls.Id = classDto.Id;
+            cls.Name = classDto.Name;
+            cls.Status = classDto.Status;
+            cls.StartDate = classDto.StartedDate;
+            cls.EndDate = classDto.EndDate;
+            cls.TotalStudents = classDto.TotalStudents;
+            cls.AvilableStudents = classDto.AvilableStudents;
+            cls.SubStatus = classDto.SubStatus;
+            return cls;
+
+        }
+        public static ClassCancelTeacher ConvertClassToClassCancelTeacherDto(ClassCancelTeacherDto classDto)
+        {
+            ClassCancelTeacher cls = new ClassCancelTeacher();
+            cls.Id = classDto.Id;
+            cls.StartingDate = classDto.StartingDate;
+            cls.EndingDate = classDto.EndingDate;
+            cls.CreatedOn = classDto.CreatedOn;
+            cls.CenterId = classDto.CenterId;
+            cls.UserId = classDto.UsersId;
+            cls.Reason = classDto.Reason;
+            return cls;
+
+        }
     }
 }

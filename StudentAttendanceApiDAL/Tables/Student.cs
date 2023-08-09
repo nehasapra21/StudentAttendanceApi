@@ -54,6 +54,8 @@ namespace StudentAttendanceApiDAL.Tables
         public int? value{ get; set; }
         [NotMapped]
         public int? classcount { get; set; }
+        [NotMapped]
+        public List<int> ListOfStudentIds { get; set; }
 
     }
     

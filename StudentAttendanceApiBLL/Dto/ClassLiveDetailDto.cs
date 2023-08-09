@@ -9,20 +9,18 @@ using System.Threading.Tasks;
 
 namespace StudentAttendanceApiBLL
 {
-    public class HolidaysDto
+    public class ClassLiveDetailDto
     {
         public int Id { get; set; }
-        [Required]
         public string? Name { get; set; }
-        public string? Description { get; set; }
-        public bool? Status { get; set; }
-        [Required]
+        public int? Status{ get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        [Required]
-        public int? CreatedBy { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        [Required]
-        public string ListCenterIds { get; set; }
+
+        public int? TotalStudents { get; set; }
+        public int? AvilableStudents { get; set; }
+        public int? SubStatus { get; set; }
+
     }
+
 }

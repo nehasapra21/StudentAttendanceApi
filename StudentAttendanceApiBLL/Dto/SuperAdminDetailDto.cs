@@ -28,13 +28,9 @@ namespace StudentAttendanceApiBLL
         public string? WhatsApp { get; set; }
         public string? LastLoginTime { get; set; }
         public string? FullAddress { get; set; }
-        public string? Education { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? EnrollmentDate { get; set; }
         public int? CreatedBy { get; set; }
-     
-        public string? GuardianName { get; set; }
-        public string? GuardianNumber { get; set; }
        
     }
     

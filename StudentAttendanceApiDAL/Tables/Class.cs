@@ -21,11 +21,12 @@ namespace StudentAttendanceApiDAL.Tables
         public DateTime? StartedDate { get; set; }
         public DateTime? CancelDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public int? TotalStudents { get; set; }
+        public int TotalStudents { get; set; }
         public int? UsersId { get; set; }
         public int? AvilableStudents { get; set; }
         public string? Reason { get; set; }
         public int? CancelBy{ get; set; }
+        public int? SubStatus { get; set; }
 
     }
     

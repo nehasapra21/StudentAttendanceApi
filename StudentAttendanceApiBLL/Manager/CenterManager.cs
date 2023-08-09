@@ -34,7 +34,7 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-    
+
         public async Task<Center> SaveCenter(Center center)
         {
             _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
@@ -46,11 +46,12 @@ namespace StudentAttendanceApiBLL.Manager
         {
             _logger.LogInformation($"UserManager : Bll : LoginSuperAdmin : Started");
 
-            CenterDetailDto centerDetailDto = new CenterDetailDto();
+            CenterDetailDto centerDetailDto = null;
             Center center = await _centerRepository.GetCenteryId(centerId);
             if (center != null)
             {
-                centerDetailDto=CenterConvertor.ConvertCentertoToCenterDetailDto(center);
+                centerDetailDto = new CenterDetailDto();
+                centerDetailDto = CenterConvertor.ConvertCentertoToCenterDetailDto(center);
             }
 
             return centerDetailDto;
@@ -62,26 +63,59 @@ namespace StudentAttendanceApiBLL.Manager
             return await _centerRepository.CheckCenterName(name);
         }
 
-        public async Task<List<Center>> GetAllCenters()
+        public async Task<List<AllCenterDto>> GetAllCenters()
         {
             _logger.LogInformation($"VillageManager : Bll : GetAllCenters : Started");
-            return await _centerRepository.GetAllCenters();
+            List<AllCenterDto> list = null;
+            List<Center> centers = await _centerRepository.GetAllCenters();
+            if (centers != null && centers.Count > 0)
+            {
+                list=new List<AllCenterDto>();
+                foreach (var item in centers)
+                {
+                    AllCenterDto allCenterDto = CenterConvertor.ConvertCenterToAllCenterDto(item);
+                    list.Add(allCenterDto);
+                }
+            }
+            return list;
         }
 
-        public async Task<List<Center>> GetStudentAttendanceOfCenter(int status)
+        public async Task<List<AllCenterStatusDto>> GetStudentAttendanceOfCenter(int status)
         {
             _logger.LogInformation($"VillageManager : Bll : GetStudentAttendanceOfCenter : Started");
-
-            return await _centerRepository.GetStudentAttendanceOfCenter(status);
+            List<AllCenterStatusDto> list = null;
+            List<Center> centers= await _centerRepository.GetStudentAttendanceOfCenter(status);
+            if (centers != null && centers.Count > 0)
+            {
+                list = new List<AllCenterStatusDto>();
+                foreach (var item in centers)
+                {
+                    AllCenterStatusDto allCenterDto = CenterConvertor.ConvertCenterToAllCenterStatusDto(item);
+                    list.Add(allCenterDto);
+                }
+            }
+            return list;
         }
 
         public async Task<List<Center>> GetAllCentersById(int districtId, int vidhanSabhaId, int panchayatId, int villageId)
         {
             _logger.LogInformation($"VillageManager : Bll : GetAllCentersById : Started");
 
-            return await _centerRepository.GetAllCentersById( districtId,  vidhanSabhaId,  panchayatId,  villageId);
+            return await _centerRepository.GetAllCentersById(districtId, vidhanSabhaId, panchayatId, villageId);
         }
+        public async Task<CenterDetailDto> GetCenterByUserId(int userId)
+        {
+            _logger.LogInformation($"VillageManager : Bll : GetAllCentersById : Started");
+            CenterDetailDto centerDetailDto = null;
+            Center center = await _centerRepository.GetCenterByUserId(userId);
+            if (center != null)
+            {
+                centerDetailDto=new CenterDetailDto();
+                centerDetailDto = CenterConvertor.ConvertCentertoToCenterDetailDto(center);
+            }
 
+            return centerDetailDto;
+        }
         #endregion
     }
 }

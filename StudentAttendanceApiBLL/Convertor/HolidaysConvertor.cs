@@ -15,15 +15,16 @@ namespace StudentAttendanceApiBLL
             holidays.Id = holidaysDto.Id;
             holidays.Name = holidaysDto.Name;
             holidays.Description = holidaysDto.Description;
-            holidays.CenterId = holidaysDto.CenterId;
-            holidays.CenterIds = holidaysDto.CenterIds;
             holidays.Status = holidaysDto.Status;
             holidays.CreatedBy = holidaysDto.CreatedBy;
             holidays.CreatedOn = holidaysDto.CreatedOn;
             holidays.StartDate = holidaysDto.StartDate;
             holidays.EndDate = holidaysDto.EndDate;
+            if (!string.IsNullOrEmpty(holidaysDto.ListCenterIds))
+            {
+                holidays.CenterIds = holidaysDto.ListCenterIds.Split(',').Select(int.Parse).ToList();
+            }
             return holidays;
-
         }
     }
 }

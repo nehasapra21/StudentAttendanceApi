@@ -3,12 +3,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StudentAttendanceApiBLL;
 using StudentAttendanceApiBLL.IManager;
 using StudentAttendanceApiBLL.Manager;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Repository;
 using StudentAttendanceApiDAL.Tables;
+using System.Net;
+using System.Text;
+using System.Text.Json.Nodes;
 
 namespace StudentAttendanceApi.Controllers
 {
@@ -47,11 +52,11 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new
+                    return StatusCode(StatusCodes.Status409Conflict, new
                     {
                         status = false,
                         error = "Class already exists",
-                        code = StatusCodes.Status404NotFound
+                        code = StatusCodes.Status409Conflict
                     });
                 }
             }
@@ -133,36 +138,204 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        [HttpGet("GetActiveClass")]
-        public async Task<IActionResult> GetActiveClassCount()
+
+        [HttpPost("UpdateClassSubStatus")]
+        public async Task<IActionResult> UpdateClassSubStatus([FromForm] UpdateClassSubStatusDto classDto)
         {
-            logger.LogInformation("UserController : GetActiveClass : Started");
+            logger.LogInformation("UserController : SaveClass : Started");
             try
             {
-                var allClasses = await _classManager.GetActiveClass();
-                Dictionary<string, object> data = new Dictionary<string, object>();
-                data.Add("ActiveClasses", allClasses.Keys.ToList());
-                data.Add("TotalClasses", allClasses.Values.ToList());
-                if (allClasses != null)
+                var classData = await _classManager.UpdateClassSubStatus(classDto);
+                if (classData != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,
-                        data = data ,
+                        message = "Status updated",
                         code = StatusCodes.Status200OK
                     });
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "Status not updated",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
+
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"UserController : GetAllClasses ", ex);
+                logger.LogError(ex, $"UserController : SaveClass ", ex);
                 return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
+
+        [HttpPost("CancelClassByTeacher")]
+        public async Task<IActionResult> CancelClassByTeacher([FromForm] ClassCancelTeacherDto classDto)
+        {
+            logger.LogInformation("UserController : SaveClass : Started");
+            try
+            {
+                ClassCancelTeacher cls = ClassConvertor.ConvertClassToClassCancelTeacherDto(classDto);
+                var classData = await _classManager.CancelClassByTeacher(cls);
+                if (classData != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        message = "Class cancelled",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "Class not cancelled",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpPost("DeleteClassByTeacherId")]
+        public async Task<IActionResult> DeleteClassByClassId(int classId)
+        {
+            //var response = this.Request.CreateResponse(HttpStatusCode.OK);
+            logger.LogInformation("UserController : SaveClass : Started");
+            try
+            {
+
+                Class classData = await _classManager.DeleteClassByTeacherId(classId);
+
+                if (classData != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        message = "class deleted",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "class  not deleted",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetClassCurrentStatus")]
+        public async Task<IActionResult> GetClassCurrentStatus(int centerId, int teacherId)
+        {
+            //var response = this.Request.CreateResponse(HttpStatusCode.OK);
+            logger.LogInformation("UserController : SaveClass : Started");
+            try
+            {
+
+                string classData = await _classManager.GetClassCurrentStatus(centerId, teacherId);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = classData;
+                contentResult.ContentType = "application/json";
+              
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+
+        [HttpGet("GetLiveClassDetail")]
+        public async Task<IActionResult> GetLiveClassDetail(int classId)
+        {
+            //var response = this.Request.CreateResponse(HttpStatusCode.OK);
+            logger.LogInformation("UserController : SaveClass : Started");
+            try
+            {
+
+                var classData = await _classManager.GetLiveClassDetail(classId);
+
+                if (classData != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data= classData,
+                        message = "class detail exists",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "Class detail not exists",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+        //[HttpGet("GetActiveClass")]
+        //public async Task<IActionResult> GetActiveClassCount()
+        //{
+        //    logger.LogInformation("UserController : GetActiveClass : Started");
+        //    try
+        //    {
+        //        var allClasses = await _classManager.GetActiveClass();
+        //        Dictionary<string, object> data = new Dictionary<string, object>();
+        //        data.Add("ActiveClasses", allClasses.Keys.ToList());
+        //        data.Add("TotalClasses", allClasses.Values.ToList());
+        //        if (allClasses != null)
+        //        {
+        //            return StatusCode(StatusCodes.Status200OK, new
+        //            {
+        //                status = true,
+        //                data = data ,
+        //                code = StatusCodes.Status200OK
+        //            });
+        //        }
+        //        else
+        //        {
+        //            return NotFound();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.LogError(ex, $"UserController : GetAllClasses ", ex);
+        //        return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+        //    }
+        //}
 
     }
 }

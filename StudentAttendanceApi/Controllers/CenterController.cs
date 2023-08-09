@@ -66,25 +66,32 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetCenteryId")]
-        public async Task<IActionResult> GetCenteryId(int userId)
+        public async Task<IActionResult> GetCenteryId(int centeId)
         {
             logger.LogInformation("UserController : GetUser : Started");
             try
             {
-                var user = await _centerManager.GetCenteryId(userId);
+                var user = await _centerManager.GetCenteryId(centeId);
                 if (user != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,
                         data = user,
-                        message = "user exists",
+                        message = "center exists",
                         code = StatusCodes.Status200OK
                     });
                 }
                 else
                 {
-                    return NotFound();
+
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = user,
+                        message = "center not exists",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
 
             }
@@ -95,40 +102,40 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPost("CheckCenterName")]
-        public async Task<IActionResult> CheckCenterName(string name)
-        {
-            logger.LogInformation("UserController : CheckCenterName : Started");
-            try
-            {
-                var mobileNo = await _centerManager.CheckCenterName(name);
-                if (mobileNo != null)
-                {
-                    return StatusCode(StatusCodes.Status200OK, new
-                    {
-                        status = true,
-                        message = "Center name already exists",
-                        code = StatusCodes.Status200OK
-                    });
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status404NotFound, new
-                    {
-                        status = false,
-                        error = "Center name doesn't exists",
-                        code = StatusCodes.Status404NotFound
-                    });
-                }
+        //[Authorize]
+        //[HttpPost("CheckCenterName")]
+        //public async Task<IActionResult> CheckCenterName(string name)
+        //{
+        //    logger.LogInformation("UserController : CheckCenterName : Started");
+        //    try
+        //    {
+        //        var mobileNo = await _centerManager.CheckCenterName(name);
+        //        if (mobileNo != null)
+        //        {
+        //            return StatusCode(StatusCodes.Status200OK, new
+        //            {
+        //                status = true,
+        //                message = "Center name already exists",
+        //                code = StatusCodes.Status200OK
+        //            });
+        //        }
+        //        else
+        //        {
+        //            return StatusCode(StatusCodes.Status404NotFound, new
+        //            {
+        //                status = false,
+        //                error = "Center name doesn't exists",
+        //                code = StatusCodes.Status404NotFound
+        //            });
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"UserController : CheckCenterName ", ex);
-                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.LogError(ex, $"UserController : CheckCenterName ", ex);
+        //        return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+        //    }
+        //}
 
         [HttpGet("GetAllCenters")]
         public async Task<IActionResult> GetAllCenters()
@@ -149,7 +156,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = allCenters,
+                        message = "List of centers not exists",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)
@@ -159,8 +172,8 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        [HttpGet("GetStudentAttendanceOfCenter")]
-        public async Task<IActionResult> GetStudentAttendanceOfCenter(int status)
+        [HttpGet("GetAllCentersByStatus")]
+        public async Task<IActionResult> GetAllCentersByStatus(int status)
         {
             logger.LogInformation("UserController : GetStudentAttendanceOfCenter : Started");
             try
@@ -178,7 +191,49 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = allCenters,
+                        message = "No class avilable",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : GetAllCenters ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+            }
+        }
+
+
+        [HttpGet("GetCenterByTeacherId")]
+        public async Task<IActionResult> GetCenterByTeacherId(int userId)
+        {
+            logger.LogInformation("UserController : GetStudentAttendanceOfCenter : Started");
+            try
+            {
+                var center = await _centerManager.GetCenterByUserId(userId);
+                if (center != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = center,
+                        message = "center detail",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = center,
+                        message = "center detail not found",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)

@@ -24,7 +24,7 @@ namespace StudentAttendanceApiDAL.Tables
         [Required]
         public int? UserId { get; set; }
         [Required]
-        public int? TotalStudents { get; set; }
+        public int TotalStudents { get; set; }
         [Required]
         public int? AvilableStudents { get; set; }
         //public string? Reason { get; set; }

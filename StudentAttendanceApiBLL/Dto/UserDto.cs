@@ -52,7 +52,7 @@ namespace StudentAttendanceApiBLL
         public bool? AssignedRegionalAdminStatus { get; set; }
         public string? GuardianName { get; set; }
         public string? GuardianNumber { get; set; }
-        public List<int>? ListOfPanchayatId { get; set; }
+        public string ListOfPanchayatIds { get; set; }
     }
-    
+
 }

@@ -7,22 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentAttendanceApiBLL
+namespace StudentAttendanceApiDAL.Tables
 {
-    public class StudentAttendanceDto
+    public class ClassCancelTeacherDto
     {
         public int Id { get; set; }
         [Required]
-        public int? ClassId { get; set; }
+        public int CenterId { get; set; }
         [Required]
-        public int? UserId { get; set; }
+        public DateTime? StartingDate { get; set; }
         [Required]
-        public string StudentIds { get; set; }
+        public DateTime? EndingDate { get; set; }
+        public DateTime? CreatedOn { get; set; }
         [Required]
-        public DateTime? ScanDate { get; set; }
-        [Required]
-        public int? CenterId { get; set; }
+        public int? UsersId { get; set; }
+        public string? Reason { get; set; }
 
     }
-
+    
 }

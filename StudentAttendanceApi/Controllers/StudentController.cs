@@ -112,7 +112,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = student,
+                        message = "student not exists",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
 
             }
@@ -142,12 +148,12 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status200OK, new
+                    return StatusCode(StatusCodes.Status404NotFound, new
                     {
                         status = false,
                         data = student,
                         message = "Status not updated",
-                        code = StatusCodes.Status200OK
+                        code = StatusCodes.Status404NotFound
                     });
                 }
 
@@ -166,23 +172,26 @@ namespace StudentAttendanceApi.Controllers
             try
             {
                 var allClasses = await _studentManager.GetTotalStudentPresent();
-                Dictionary<string, object> data = new Dictionary<string, object>();
-                data.Add("PresentStudents", allClasses.Keys.ToList());
-                data.Add("TotalStudents", allClasses.Values.ToList());
+              
                 if (allClasses != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,
-                        PresentStudents = allClasses.Keys.ToList(),
-                        TotalStudents = allClasses.Values.ToList(),
-                        message = "Total student present",
+                        data= allClasses,
+                        message = "Total count",
                         code = StatusCodes.Status200OK
                     });
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = allClasses,
+                        message = "Not found",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
 
             }

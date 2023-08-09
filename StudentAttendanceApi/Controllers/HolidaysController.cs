@@ -27,7 +27,7 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpPost("SaveHolidays")]
-        public async Task<IActionResult> SaveHolidays(HolidaysDto holidaysDto)
+        public async Task<IActionResult> SaveHolidays([FromForm]HolidaysDto holidaysDto)
         {
             logger.LogInformation("UserController : SaveHolidays : Started");
             try
@@ -81,7 +81,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = allHolidays,
+                        message = "List of Holidays not found",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)
@@ -104,13 +110,19 @@ namespace StudentAttendanceApi.Controllers
                     {
                         status = true,
                         data = allHolidays,
-                        message = "List of Holidays",
+                        message = "List of Holidays exists",
                         code = StatusCodes.Status200OK
                     });
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = allHolidays,
+                        message = "Holidays not exists",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)
@@ -140,7 +152,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = allHolidays,
+                        message = "List of Holidays not found",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)

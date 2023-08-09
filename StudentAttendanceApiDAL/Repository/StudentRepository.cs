@@ -45,8 +45,9 @@ namespace StudentAttendanceApiDAL.Repository
                 else
                 {
                     student.Status = true;
-                    student.CreatedOn = DateTime.UtcNow;
+                    student.CreatedOn = DateTime.Now;
                     student.ActiveClassStatus = false;
+                    student.ManualAttendance = 0;
                     appDbContext.Student.Add(student);
                 }
                 await appDbContext.SaveChangesAsync();
@@ -131,16 +132,19 @@ namespace StudentAttendanceApiDAL.Repository
         public async Task<Dictionary<int, int>> GetTotalStudentPresent()
         {
             logger.LogInformation($"UserRepository : GetTotalStudentPresent : Started");
-
+            Dictionary<int, int> ClassData = new Dictionary<int, int>();
             Dictionary<int, int> totalPresentStudentData = new Dictionary<int, int>();
             try
             {
+
                 List<Student> students = await appDbContext.Student.AsNoTracking().ToListAsync();
+
                 List<Student> totalStudents = students.Where(x => x.Status.Value).ToList();
 
                 List<Student> presentStudents = students.Where(x => x.ActiveClassStatus.Value).ToList();
 
                 totalPresentStudentData.Add(presentStudents.Count(), totalStudents.Count());
+
                 await appDbContext.SaveChangesAsync();
 
                 logger.LogInformation($"UserRepository : UpdateStudentActive : Started");
@@ -151,6 +155,85 @@ namespace StudentAttendanceApiDAL.Repository
                 throw ex;
             }
             return totalPresentStudentData;
+        }
+
+        public async Task<Dictionary<int, int>> GetActiveClass()
+        {
+            logger.LogInformation($"UserRepository : GetActiveClass : Started");
+
+            Dictionary<int, int> ClassData = new Dictionary<int, int>();
+            try
+            {
+                int classes = appDbContext.Center.AsNoTracking().ToList().Count();
+                int activeClasses = appDbContext.Class.AsNoTracking().Where(x=>x.Status.Value==1 && x.StartedDate.Value.Date==DateTime.Now.Date).ToList().Count();
+
+                ClassData.Add(activeClasses, classes);
+
+                logger.LogInformation($"UserRepository : GetAllClasses : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetAllClasses", ex);
+                throw ex;
+            }
+            return ClassData;
+        }
+
+        public async Task<Dictionary<int, int>> GetTotalUpComingAndCompletedClass()
+        {
+            logger.LogInformation($"UserRepository : GetActiveClass : Started");
+
+            Dictionary<int, int> ClassData = new Dictionary<int, int>();
+            try
+            {
+                List<Class> classes = appDbContext.Class.AsNoTracking().Where(x => x.StartedDate.Value.Date == DateTime.Now.Date).ToList();
+                int completedClassesCount = 0;
+                int upcomingCount = 0;
+                if (classes != null && classes.Count > 0)
+                {
+                    completedClassesCount = classes.Where(x => x.Status.Value == (int)Constant.ClassStatus.Completed).ToList().Count();
+                    List<int> centerIds = classes.Select(x => x.CenterId).ToList();//41
+
+                    upcomingCount = appDbContext.Center.AsNoTracking().Where(x => !centerIds.Contains
+                                            (x.Id)).ToList().Count();//42
+                }
+                else
+                {
+                    upcomingCount = appDbContext.Center.AsNoTracking().ToList().Count();
+
+                }
+
+
+
+                ClassData.Add(completedClassesCount, upcomingCount);
+
+                logger.LogInformation($"UserRepository : GetAllClasses : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetAllClasses", ex);
+                throw ex;
+            }
+            return ClassData;
+        }
+
+        public async Task<int> GetCancelClassCount()
+        {
+            logger.LogInformation($"UserRepository : GetActiveClass : Started");
+            int cancelCount = 0;
+            try
+            {
+                cancelCount = appDbContext.ClassCancelTeacher.AsNoTracking().Where(
+                    x => x.StartingDate.Value.Date <= DateTime.Now.Date && x.EndingDate.Value.Date >= DateTime.Now.Date).ToList().Count();
+
+                logger.LogInformation($"UserRepository : GetAllClasses : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetAllClasses", ex);
+                throw ex;
+            }
+            return cancelCount;
         }
     }
 }

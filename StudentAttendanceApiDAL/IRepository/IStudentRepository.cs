@@ -14,6 +14,8 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<Student> GetStudentByCenterId(int centerId);
         Task<Student> UpdateStudentActiveOrInactive(int id, int status);
         Task<Dictionary<int, int>> GetTotalStudentPresent();
- 
+        Task<Dictionary<int, int>> GetActiveClass();
+        Task<int> GetCancelClassCount();
+        Task<Dictionary<int, int>> GetTotalUpComingAndCompletedClass();
     }
 }

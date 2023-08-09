@@ -37,6 +37,7 @@ namespace StudentAttendanceApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
+                        status=true,
                         message = "List of villages",
                         data = villageVal,
                         code = StatusCodes.Status200OK
@@ -44,7 +45,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        message = "List of villages not found",
+                        data = villageVal,
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)
@@ -102,11 +109,23 @@ namespace StudentAttendanceApi.Controllers
                 var village = await _villageManager.GetVillageByDistrictVidhanSabhaAndPanchId(districtId, vidhanSabhaId, panchayatId);
                 if (village != null)
                 {
-                    return Ok(village);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = village,
+                        message = "Village exists",
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = village,
+                        message = "Village not exists",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)

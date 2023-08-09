@@ -28,6 +28,8 @@ namespace StudentAttendanceApiDAL.Repository
             this.configuration = configuration;
         }
 
+       
+
         public async Task<Users> GetUserById(int userId)
         {
             logger.LogInformation($"UserRepository : GetUserById : Started");
@@ -185,8 +187,10 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {//
+                    user.AssignedTeacherStatus = false;
+                    user.AssignedRegionalAdminStatus = false;
                     user.Status = true;
-                    user.CreatedOn = DateTime.UtcNow;
+                    user.CreatedOn = DateTime.Now;
                     if (user.Type == (int)Constant.Type.Teacher && user.ListOfPanchayatId != null && user.ListOfPanchayatId.Count == 1)
                     {
                         user.PanchayatId = Convert.ToInt32(user.ListOfPanchayatId[0]);
@@ -269,8 +273,9 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {//
-                    user.CreatedOn = DateTime.UtcNow;
-
+                    user.CreatedOn = DateTime.Now;
+                    user.AssignedTeacherStatus = false;
+                    user.AssignedRegionalAdminStatus = false;
                     appDbContext.Users.Add(user);
                 }
                 await appDbContext.SaveChangesAsync();
@@ -304,7 +309,7 @@ namespace StudentAttendanceApiDAL.Repository
             return mobileNo;
         }
 
-        public async Task<List<Users>> GetAssignedTeachers()
+        public async Task<List<Users>> GetAllTeachers()
         {
             logger.LogInformation($"UserRepository : GetRegisteredTeachers : Started");
 
@@ -312,65 +317,13 @@ namespace StudentAttendanceApiDAL.Repository
 
             try
             {
-                users = await (from u in appDbContext.Users
+                users = await (from u in appDbContext.Users.Where(x =>  x.Type == 3 && x.Status.Value)
                                select new Users
                                {
+                                   Id = u.Id,
                                    Name = u.Name,
                                    AssignedTeacherStatus = u.AssignedTeacherStatus
                                }).OrderByDescending(x => x.Id).ToListAsync();
-
-                //users = await (from u in appDbContext.Users
-                //                join c in appDbContext.Center
-                //              on u.Id equals c.AssignedTeachers
-                //               join d in appDbContext.District
-                //              on u.DistrictId equals d.Id
-                //              join vid in appDbContext.VidhanSabha
-                //              on u.VidhanSabhaId equals vid.Id
-                //              into emp
-                //              from Village in emp.DefaultIfEmpty()
-                //              where u.AssignedTeacherStatus.Value && u.Type == (int)            Constant.Type.Teacher
-                //              select new Users
-                //              {
-                //                  Id = u.Id,
-                //                  EnrolmentRollId = u.EnrolmentRollId,
-                //                  Name = u.Name,
-                //                  Age=u.Age,
-                //                  Gender=u.Gender,
-                //                  DateOfBirth=u.DateOfBirth,
-                //                  PhoneNumber=u.PhoneNumber,
-                //                  WhatsApp=u.WhatsApp,
-                //                  GuardianName=u.GuardianName,
-                //                  GuardianNumber=u.GuardianNumber,
-                //                  DistrictId = d.Id,
-                //                  DistrictName = d.Name,
-                //                  VidhanSabhaId = u.VidhanSabhaId,
-                //                  Education = u.Education,
-                //                  PanchayatId = u.PanchayatId,
-                //                  VillageId = Village.Id,
-                //                  VillageName = Village == null ? string.Empty : Village.Name,
-                //                  //CenterName=c.CenterName,
-                //                  AssignedTeacherStatus=u.AssignedTeacherStatus,
-                //                  EnrollmentDate=u.EnrollmentDate
-                //              }).AsNoTracking().ToListAsync();
-
-
-                //if (users != null)
-                //{
-                //    foreach (var user in users)
-                //    {
-                //        List<Panchayat> listOfPanchayat = await appDbContext.Panchayat.AsNoTracking().Where(x => user.PanchayatId.Contains(x.Id.ToString())).ToListAsync();
-                //        if (listOfPanchayat != null)
-
-                //            user.PanchayatName = new List<string>();
-                //        foreach (var item in listOfPanchayat)
-                //        {
-                //            user.PanchayatName.Add(item.Name);
-                //        }
-
-                //        user.VidhanSabhaName = appDbContext.VidhanSabha.AsNoTracking().FirstOrDefaultAsync(x => x.Id == user.VidhanSabhaId).Result.Name;
-                //    }
-
-                //}
                 logger.LogInformation($"UserRepository : GetRegisteredTeachers : End");
             }
             catch (Exception ex)
@@ -380,14 +333,14 @@ namespace StudentAttendanceApiDAL.Repository
             return users;
         }
 
-        public async Task<List<Users>> GetAllTeachers()
+        public async Task<List<Users>> GetAllUnAssignedTeacher()
         {
             logger.LogInformation($"UserRepository : GetAllTeachers : Started");
 
             List<Users> users = new List<Users>();
             try
             {
-                users = await (from u in appDbContext.Users
+                users = await (from u in appDbContext.Users.Where(x=>x.AssignedTeacherStatus==false && x.Type == 3 && x.Status.Value)
                                select new Users
                                {
                                    Id = u.Id,

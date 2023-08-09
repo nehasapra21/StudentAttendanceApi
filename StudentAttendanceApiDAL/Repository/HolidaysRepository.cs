@@ -46,7 +46,7 @@ namespace StudentAttendanceApiDAL.Repository
                             hol.Name = holidays.Name;
                             hol.Status = holidays.Status;
                             hol.CenterId = item;
-                            hol.CreatedOn = DateTime.UtcNow;
+                            hol.CreatedOn = DateTime.Now;
                             hol.CreatedBy = holidays.CreatedBy;
                             appDbContext.Holidays.Add(hol);
                         }
@@ -75,7 +75,7 @@ namespace StudentAttendanceApiDAL.Repository
                                   join c in appDbContext.Center
                                   on h.CenterId equals c.Id
                                   where c.AssignedTeachers == teacherId &&
-                                  (h.StartDate.Value.Date >= DateTime.UtcNow.Date&& h.EndDate.Value.Date <= DateTime.UtcNow.Date)
+                                  (h.StartDate.Value.Date >= DateTime.Now.Date&& h.EndDate.Value.Date <= DateTime.Now.Date)
                                   select new Holidays
                                   {
                                       Id = h.Id,

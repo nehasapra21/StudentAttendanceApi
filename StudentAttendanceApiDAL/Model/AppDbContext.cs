@@ -33,5 +33,6 @@ namespace StudentAttendanceApiDAL.Model
         public DbSet<Panchayat> Panchayat { get; set; }
         public DbSet<Village> Village { get; set; }
         public DbSet<Class> Class { get; set; }
+        public DbSet<ClassCancelTeacher> ClassCancelTeacher { get; set; }
     }
 }

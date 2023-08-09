@@ -42,7 +42,10 @@ namespace StudentAttendanceApiBLL
             masterAdmin.GuardianName = masterAdminDto.GuardianName;
             masterAdmin.GuardianNumber = masterAdminDto.GuardianNumber;
             masterAdmin.Education = masterAdminDto.Education;
-            masterAdmin.ListOfPanchayatId = masterAdminDto.ListOfPanchayatId;
+            if (!string.IsNullOrEmpty(masterAdminDto.ListOfPanchayatIds))
+            {
+                masterAdmin.ListOfPanchayatId = masterAdminDto.ListOfPanchayatIds.Split(',').Select(int.Parse).ToList();
+            }
             return masterAdmin;
 
         }
@@ -112,7 +115,7 @@ namespace StudentAttendanceApiBLL
             masterAdmin.GuardianName = masterAdminDto.GuardianName;
             masterAdmin.GuardianNumber = masterAdminDto.GuardianNumber;
             masterAdmin.Education = masterAdminDto.Education;
-            masterAdmin.ListOfPanchayatId = masterAdminDto.ListOfPanchayatId;
+            //masterAdmin.ListOfPanchayatId = masterAdminDto.ListOfPanchayatId;
             masterAdmin.DistrictId = masterAdminDto.DistrictId;
             masterAdmin.VidhanSabhaId = masterAdminDto.VidhanSabhaId;
             //masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
@@ -157,9 +160,6 @@ namespace StudentAttendanceApiBLL
             masterAdmin.CreatedBy = masterAdminDto.CreatedBy;
             masterAdmin.CreatedOn = masterAdminDto.CreatedOn;
             masterAdmin.EnrollmentDate = masterAdminDto.EnrollmentDate;
-            masterAdmin.GuardianName = masterAdminDto.GuardianName;
-            masterAdmin.GuardianNumber = masterAdminDto.GuardianNumber;
-            masterAdmin.Education = masterAdminDto.Education;
             return masterAdmin;
 
         }
@@ -276,6 +276,8 @@ namespace StudentAttendanceApiBLL
             {
                 masterAdmin.Center = new Center();
                 masterAdmin.Center.Id = masterAdminDto.Center.Id;
+                masterAdmin.Center.Status = masterAdminDto.Center.Status;
+                masterAdmin.Center.ClassStatus = masterAdminDto.Center.ClassStatus;
                 masterAdmin.Center.CenterName = masterAdminDto.Center.CenterName;
                 masterAdmin.Center.StartedDate = masterAdminDto.Center.StartedDate;
             }

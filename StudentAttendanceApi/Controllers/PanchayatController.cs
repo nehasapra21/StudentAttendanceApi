@@ -38,6 +38,7 @@ namespace StudentAttendanceApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
+                        status=true,
                         message = "List of panchayat",
                         data = panchayat,
                         code = StatusCodes.Status200OK
@@ -45,7 +46,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        message = "List of panchayat not found",
+                        data = panchayat,
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)
@@ -102,11 +109,23 @@ namespace StudentAttendanceApi.Controllers
                 var panchayat=await _panchayatManager.GetPanchayatByDistrictAndVidhanSabhaId(districtId, vidhanSabhaId);
                 if (panchayat != null)
                 {
-                    return Ok(panchayat);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = panchayat,
+                        message = "Panchayat exists",
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = true,
+                        data = panchayat,
+                        message = "Panchayat not exists",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)

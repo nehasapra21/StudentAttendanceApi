@@ -37,6 +37,7 @@ namespace StudentAttendanceApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
+                        status=true,
                         message = "List of vidhanSabha",
                         data = vidhanSabha,
                         code = StatusCodes.Status200OK
@@ -44,7 +45,13 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        message = "List of vidhanSabha not found",
+                        data = vidhanSabha,
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)
@@ -101,11 +108,23 @@ namespace StudentAttendanceApi.Controllers
                 var vidhansabaha = await _vidhanSabhaManager.GetVidhanSabhaByDistrictId(districtId);
                 if (vidhansabaha != null)
                 {
-                    return Ok(vidhansabaha);
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = vidhansabaha,
+                        message = "VidanSabha exists",
+                        code = StatusCodes.Status200OK
+                    });
                 }
                 else
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = vidhansabaha,
+                        message = "VidanSabha not  exists",
+                        code = StatusCodes.Status404NotFound
+                    });
                 }
             }
             catch (Exception ex)
@@ -136,7 +155,7 @@ namespace StudentAttendanceApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status404NotFound, new
                     {
-                        status = true,
+                        status = false,
                         error = "VidhanSabha name doesn't exists",
                         code = StatusCodes.Status404NotFound
                     });

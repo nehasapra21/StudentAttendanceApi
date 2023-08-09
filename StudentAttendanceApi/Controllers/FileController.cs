@@ -21,11 +21,11 @@ namespace StudentAttendanceApi.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ILogger<FileController> logger;
 
-        //public FileController(IWebHostEnvironment webHostEnvironment, ILogger<FileController> logger)
-        //{
-        //    _webHostEnvironment = webHostEnvironment;
-        //    this.logger = logger;
-        //}
+        public FileController(IWebHostEnvironment webHostEnvironment, ILogger<FileController> logger)
+        {
+            _webHostEnvironment = webHostEnvironment;
+            this.logger = logger;
+        }
 
         //[Authorize]
         //[HttpPost("UploadProfileImage")]

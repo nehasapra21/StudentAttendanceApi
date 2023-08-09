@@ -86,7 +86,7 @@ namespace StudentAttendanceApiDAL.Repository
                 else
                 {
                     regionalAdmin.Type = 2;
-                    regionalAdmin.CreatedOn = DateTime.UtcNow;
+                    regionalAdmin.CreatedOn = DateTime.Now;
                     regionalAdmin.RegionalAdminGuidId = Guid.NewGuid();
                     appDbContext.RegionalAdmin.Add(regionalAdmin);
                 }
