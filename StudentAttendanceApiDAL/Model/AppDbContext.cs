@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using StudentAttendanceApi.ActivityLog;
 using StudentAttendanceApiDAL.Tables;
 using System;
 using System.Collections.Generic;
@@ -34,5 +35,6 @@ namespace StudentAttendanceApiDAL.Model
         public DbSet<Village> Village { get; set; }
         public DbSet<Class> Class { get; set; }
         public DbSet<ClassCancelTeacher> ClassCancelTeacher { get; set; }
+        public DbSet<UserActivityLog> UserActivityLog { get; set; }
     }
 }

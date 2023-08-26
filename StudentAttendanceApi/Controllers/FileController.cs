@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using StudentAttendanceApi.FCM;
+using StudentAttendanceApi.Services;
+using StudentAttendanceApiBLL.IManager;
+using StudentAttendanceApiDAL.Tables;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,19 +18,58 @@ using System.Threading.Tasks;
 
 namespace StudentAttendanceApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class FileController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ILogger<FileController> logger;
+        private readonly INotificationService _notificationService;
+        private readonly IUserManager _userManager;
 
-        public FileController(IWebHostEnvironment webHostEnvironment, ILogger<FileController> logger)
+        public FileController(IWebHostEnvironment webHostEnvironment, ILogger<FileController> logger, INotificationService notificationService, IUserManager userManager)
         {
             _webHostEnvironment = webHostEnvironment;
             this.logger = logger;
+              _notificationService = notificationService;
+            this._userManager = userManager;
         }
 
+        [Route("SendNotification")]
+        [HttpPost]
+        public async Task<IActionResult> SendNotification([FromForm]NotificationModel notificationModel)
+        {
+            try
+            {
+                notificationModel.DeviceId=await _userManager.GetUserDeviceByUserId(notificationModel.userId);
+
+                ResponseModel result =await  _notificationService.SendNotification(notificationModel);
+                if(result!= null && result.IsSuccess)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        message = result.Message,
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else{
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = result.Message,
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+            }
+        }
         //[Authorize]
         //[HttpPost("UploadProfileImage")]
         //public IActionResult UploadProfileImage(string base64img)
@@ -87,6 +130,7 @@ namespace StudentAttendanceApi.Controllers
         [HttpPost("UploadProfileImage")]
         public IActionResult UploadProfileImage([FromForm] List<IFormFile> files)
         {
+            logger.LogInformation("FileController : UploadProfileImage : Started"+_webHostEnvironment);
             logger.LogInformation("FileController : UploadProfileImage : Started");
             ImagesDto fileUrls = new ImagesDto();
 

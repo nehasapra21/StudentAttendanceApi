@@ -48,6 +48,13 @@ namespace StudentAttendanceApiBLL.Manager
             return user;
         }
 
+        public async Task<Users> UpdateDeviceId(int userId,string deviceId)
+        {
+            _logger.LogInformation($"UserManager : Bll : LoginSuperAdmin : Started");
+
+            return await _userRepository.UpdateDeviceId(userId, deviceId);
+        }
+        
         public async Task<UserDto> SaveLogin(Users user)
         {
            
@@ -147,7 +154,14 @@ namespace StudentAttendanceApiBLL.Manager
             
             return await _userRepository.CheckUserMobileNumber(mobileNumber);
         }
+        public async Task<string> GetUserDeviceByUserId(int userId)
+        {
+            _logger.LogInformation($"UserManager : Bll : CheckUserMobileNumber : Started");
 
+
+            return await _userRepository.GetUserDeviceByUserId(userId);
+
+        }
         public async Task<List<TeacherDto>> GetAllTeachers()
         {
             _logger.LogInformation($"UserManager : Bll : GetAssignedTeachers : Started");

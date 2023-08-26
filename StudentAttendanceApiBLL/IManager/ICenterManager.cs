@@ -11,9 +11,9 @@ namespace StudentAttendanceApiBLL.IManager
     {
         Task<Center> SaveCenter(Center center);
         Task<string> CheckCenterName(string name);
-        Task<List<AllCenterDto>> GetAllCenters();
-        Task<CenterDetailDto> GetCenteryId(int centerId); 
-        Task<List<AllCenterStatusDto>> GetStudentAttendanceOfCenter(int status);
+        Task<List<AllCenterDto>> GetAllCenters(int userId,int type);
+        Task<CenterDetailDto> GetCenteryId(int centerId);
+        Task<List<AllCenterStatusDto>> GetStudentAttendanceOfCenter(int status, int userId, int type);
         Task<CenterDetailDto> GetCenterByUserId(int userId);
         Task<List<Center>> GetAllCentersById(int districtId, int vidhanSabhaId, int panchayatId, int villageId);
     }

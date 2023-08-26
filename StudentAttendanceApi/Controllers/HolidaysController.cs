@@ -168,5 +168,40 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [HttpGet("GetAllHolidays")]
+        public async Task<IActionResult> GetAllHolidays(int userId,int type)
+        {
+            logger.LogInformation("DistrictController : GetAllHolidaysByYear : Started");
+            try
+            {
+                var allHolidays = await _holidaysManager.GetAllHolidays(userId,type);
+                if (allHolidays != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = allHolidays,
+                        message = "List of Holidays",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        data = allHolidays,
+                        message = "List of Holidays not found",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"DistrictController : GetAllHolidaysByYear ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+            }
+        }
+
     }
 }

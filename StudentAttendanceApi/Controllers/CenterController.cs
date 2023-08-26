@@ -13,6 +13,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StudentAttendanceApi.Controllers
 {
+
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -138,12 +139,12 @@ namespace StudentAttendanceApi.Controllers
         //}
 
         [HttpGet("GetAllCenters")]
-        public async Task<IActionResult> GetAllCenters()
+        public async Task<IActionResult> GetAllCenters(int userId=0,int type=0)
         {
             logger.LogInformation("UserController : GetAllCenters : Started");
             try
             {
-                var allCenters = await _centerManager.GetAllCenters();
+                var allCenters = await _centerManager.GetAllCenters(userId,type);
                 if (allCenters != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
@@ -173,12 +174,12 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetAllCentersByStatus")]
-        public async Task<IActionResult> GetAllCentersByStatus(int status)
+        public async Task<IActionResult> GetAllCentersByStatus(int status,int userId=0, int type=0)
         {
             logger.LogInformation("UserController : GetStudentAttendanceOfCenter : Started");
             try
             {
-                var allCenters = await _centerManager.GetStudentAttendanceOfCenter(status);
+                var allCenters = await _centerManager.GetStudentAttendanceOfCenter(status, userId, type);
                 if (allCenters != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new

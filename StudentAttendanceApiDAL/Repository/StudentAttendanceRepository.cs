@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Model;
 using StudentAttendanceApiDAL.Tables;
+using System;
 using System.Data;
 using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
@@ -328,7 +330,7 @@ namespace StudentAttendanceApiDAL.Repository
             }
 
             //update avilable student in class
-            var classVal = appDbContext.Class.FirstOrDefaultAsync(x => x.CenterId == student.CenterId).Result;
+            var classVal = appDbContext.Class.FirstOrDefaultAsync(x => x.Id == studentAttendance.ClassId).Result;
             if (classVal != null)
             {
                 int avilCounter = 0;
@@ -355,36 +357,46 @@ namespace StudentAttendanceApiDAL.Repository
             List<Student> students = new List<Student>();
             try
             {
-                //students = await (from s in appDbContext.Student
-                //                  join sa in appDbContext.StudentAttendance
-                //                  on s.Id equals sa.StudentId
-                //                  where s.CenterId == centerId
-                //                  group new { s, sa } by new { s.Id, s.EnrollmentId, s.FullName, s.CreatedOn } into g
-                //                  select new Student
-                //                  {
-                //                      Id = g.Key.Id,
-                //                      EnrollmentId = g.Key.EnrollmentId,
-                //                      FullName = g.Key.FullName,
-                //                      CreatedOn = g.Key.CreatedOn,
-                //                      AvgAttendance = Convert.ToDecimal(appDbContext.StudentAttendance.Where(x => x.StudentId == g.Key.Id).Count() * 100 / appDbContext.Class.Where(x => x.CenterId == centerId && (x.Status == 1 || x.Status == 2)).Count())
-                //                  }).ToListAsync();
 
+                int classCount = appDbContext.Class.Where(x => x.CenterId == centerId && (x.Status == 1 || x.Status == 2)).ToList().Count();
+                if(classCount==0)
+                {
+                    students = await (from s in appDbContext.Student //Left Data Source
+                                      join sa in appDbContext.StudentAttendance //Right Data Source
+                                      on s.Id equals sa.StudentId//Inner Join Condition
+                                      into EmployeeAddressGroup //Performing LINQ Group Join
+                                      from saa in EmployeeAddressGroup.DefaultIfEmpty()
+                                      where s.CenterId == centerId
+                                      group new { s, saa } by new { s.Id, s.EnrollmentId, s.FullName, s.JoiningDate } into g
+                                      select new Student
+                                      {
+                                          Id = g.Key.Id,
+                                          FullName = g.Key.FullName,
+                                          EnrollmentId = g.Key.EnrollmentId,
+                                          JoiningDate = g.Key.JoiningDate,
+                                          AvgAttendance = 0
+                                      }).Distinct().ToListAsync();
+                }
+                else
+                {
+                    students = await (from s in appDbContext.Student //Left Data Source
+                                      join sa in appDbContext.StudentAttendance //Right Data Source
+                                      on s.Id equals sa.StudentId//Inner Join Condition
+                                      into EmployeeAddressGroup //Performing LINQ Group Join
+                                      from saa in EmployeeAddressGroup.DefaultIfEmpty()
+                                      where s.CenterId == centerId
+                                      group new { s, saa } by new { s.Id, s.EnrollmentId, s.FullName, s.JoiningDate } into g
+                                      select new Student
+                                      {
+                                          Id = g.Key.Id,
+                                          FullName = g.Key.FullName,
+                                          EnrollmentId = g.Key.EnrollmentId,
+                                          JoiningDate = g.Key.JoiningDate,
+                                          AvgAttendance = Convert.ToDecimal(appDbContext.StudentAttendance.Where(x => x.StudentId == g.Key.Id).Count() * 100 / appDbContext.Class.Where(x => x.CenterId == centerId && (x.Status == 1 || x.Status == 2)).Count())
+                                      }).Distinct().ToListAsync();
 
-                students = await (from s in appDbContext.Student //Left Data Source
-                                  join sa in appDbContext.StudentAttendance //Right Data Source
-                                  on s.Id equals sa.StudentId//Inner Join Condition
-                                  into EmployeeAddressGroup //Performing LINQ Group Join
-                                  from saa in EmployeeAddressGroup.DefaultIfEmpty()
-                                  where s.CenterId == centerId
-                                  group new { s, saa } by new { s.Id, s.EnrollmentId, s.FullName, s.CreatedOn } into g
-                                  select new Student
-                                  {
-                                      Id = g.Key.Id,
-                                      FullName = g.Key.FullName,
-                                      EnrollmentId = g.Key.EnrollmentId,
-                                      CreatedOn = g.Key.CreatedOn,
-                                      AvgAttendance = Convert.ToDecimal(appDbContext.StudentAttendance.Where(x => x.StudentId == g.Key.Id).Count() * 100 / appDbContext.Class.Where(x => x.CenterId == centerId && (x.Status == 1 || x.Status == 2)).Count())
-                                  }).Distinct().ToListAsync();
+                }
+
 
             }
             catch (Exception ex)
@@ -408,10 +420,11 @@ namespace StudentAttendanceApiDAL.Repository
                 students = appDbContext.Student.AsNoTracking().Where(x => x.CenterId == centerId).ToList();
                 List<int> studentIds = students.Select(x => x.Id).ToList();//all student ids
 
-                List<StudentAttendance> studentAttendance = await appDbContext.StudentAttendance.Where(x => x.CenterId == centerId).ToListAsync(); //student id 
-                if (studentAttendance != null)
+                List<StudentAttendance> studentAttendance = await appDbContext.StudentAttendance.Where(x => x.CenterId == centerId && x.ScanDate.Value.Date==DateTime.Now.Date).ToListAsync(); //student id 
+                if (studentAttendance != null && studentAttendance.Count>0)
                 {
-                    List<int> studentofHavingAttendIds = studentAttendance.Select(x => x.StudentId.Value).ToList(); students = students.Where(x => !studentofHavingAttendIds.Contains(x.Id)).ToList();
+                    List<int> studentofHavingAttendIds = studentAttendance.Select(x => x.StudentId.Value).ToList(); 
+                    students = students.Where(x => !studentofHavingAttendIds.Contains(x.Id)).ToList();
                 }
                 else
                 {
@@ -472,7 +485,7 @@ namespace StudentAttendanceApiDAL.Repository
             try
             {
                 var targetYear = year;
-                var targetMonth =month; // August
+                var targetMonth = month; // August
 
                 var startDate = new DateTime(targetYear, targetMonth, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);

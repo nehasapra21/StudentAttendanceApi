@@ -13,6 +13,13 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Data.Common;
 using StudentAttendanceApi;
+using StudentAttendanceApi.FCM;
+using CorePush.Apple;
+using CorePush.Google;
+using StudentAttendanceApi.Services;
+using System.IO;
+using StudentAttendanceApi.ActivityLog;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +71,11 @@ builder.Services.AddAuthentication(au =>
     };
 });
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+             .AddCookie(options =>
+             {
+                 options.LoginPath = new PathString("/User");
+             });
 
 ///register services
 builder.Services.AddTransient<IStudentAttendanceManager, StudentAttendanceManager>();
@@ -92,8 +104,14 @@ builder.Services.AddTransient<IPanchayatManager, PanchayatManager>();
 builder.Services.AddTransient<IHolidaysRepository, HolidaysRepository>();
 builder.Services.AddTransient<IHolidaysManager, HolidaysManager>();
 // Add services to the container.
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddControllers();
+
+//builder.Services.AddControllersWithViews(options =>
+//{
+//    options.Filters.Add(typeof(UserActivityFilter));
+//});
 
 builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -134,6 +152,31 @@ builder.Services.AddSwaggerGen(c =>
                             }
                        });
 });
+
+//FCM notification\
+builder.Services.AddTransient<INotificationService, NotificationService>();
+builder.Services.AddHttpClient<FcmSender>();
+builder.Services.AddHttpClient<ApnSender>();
+
+// Configure strongly typed settings objects
+var appSettingsSection = builder.Configuration.GetSection("FcmNotification");
+builder.Services.Configure<FcmNotificationSetting>(appSettingsSection);
+
+//logging
+ var path = Directory.GetCurrentDirectory();
+
+//builder.Services.AddLogging(builder =>
+//{
+//    var logFilePath = $"{path}\\Logs\\api\\Log.txt"; // Customize the path as needed
+//                                                     //  var logFilePath = hostContext.Configuration["Serilog:FilePath"];
+
+//    Log.Logger = new LoggerConfiguration()
+//        .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day)
+//        .CreateLogger();
+
+//    builder.AddSerilog();
+//});
+//
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

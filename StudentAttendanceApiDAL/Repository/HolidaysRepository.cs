@@ -51,7 +51,7 @@ namespace StudentAttendanceApiDAL.Repository
                             appDbContext.Holidays.Add(hol);
                         }
                     }
-                    
+
                 }
                 await appDbContext.SaveChangesAsync();
 
@@ -75,13 +75,13 @@ namespace StudentAttendanceApiDAL.Repository
                                   join c in appDbContext.Center
                                   on h.CenterId equals c.Id
                                   where c.AssignedTeachers == teacherId &&
-                                  (h.StartDate.Value.Date >= DateTime.Now.Date&& h.EndDate.Value.Date <= DateTime.Now.Date)
+                                  (h.StartDate.Value.Date >= DateTime.Now.Date && h.EndDate.Value.Date <= DateTime.Now.Date)
                                   select new Holidays
                                   {
                                       Id = h.Id,
                                       Name = h.Name,
-                                      CenterId=c.Id,
-                                      Description=h.Description
+                                      CenterId = c.Id,
+                                      Description = h.Description
                                   }).ToListAsync();
 
                 logger.LogInformation($"DistrictRepository : GetAllHolidaysByTeacherId : End");
@@ -102,8 +102,8 @@ namespace StudentAttendanceApiDAL.Repository
             try
             {
 
-                holidays =await appDbContext.Holidays.AsNoTracking().Where(x=>x.StartDate.Value.Year==year).ToListAsync();
-             
+                holidays = await appDbContext.Holidays.AsNoTracking().Where(x => x.StartDate.Value.Year == year).ToListAsync();
+
                 logger.LogInformation($"DistrictRepository : GetAllHolidaysByYear : End");
                 return holidays.ToList();
             }
@@ -115,6 +115,33 @@ namespace StudentAttendanceApiDAL.Repository
             return holidays;
         }
 
+        public async Task<List<Holidays>> GetAllHolidays(int userId, int type)
+        {
+            logger.LogInformation($"DistrictRepository : GetAllHolidaysByYear : Started");
+            List<Holidays> holidays = new List<Holidays>();
+            try
+            {
+
+                if (type == 1)//Admin
+                {
+                    holidays = await appDbContext.Holidays.AsNoTracking().Where(x => x.CreatedBy == userId).ToListAsync();
+                }
+                else
+                {
+                    holidays = await appDbContext.Holidays.AsNoTracking().ToListAsync();
+                }
+
+
+                logger.LogInformation($"DistrictRepository : GetAllHolidaysByYear : End");
+                return holidays.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"DistrictRepository : GetAllHolidaysByYear ", ex);
+            }
+
+            return holidays;
+        }
 
         public async Task<List<Holidays>> GetAllHolidaysByCenterId(int centerId)
         {

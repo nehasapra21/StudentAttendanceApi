@@ -28,6 +28,8 @@ namespace StudentAttendanceApiDAL.Tables
         public int PanchayatId { get; set; }
         public int? VillageId { get; set; }
         [NotMapped]
+        public string RegionalAdminName { get; set; }
+        [NotMapped]
         public string DistrictName { get; set; }
         [NotMapped]
         public string VidhanSabhaName { get; set; }
@@ -45,14 +47,14 @@ namespace StudentAttendanceApiDAL.Tables
         [NotMapped]
         public string TeacherName { get; set; }
         [NotMapped]
-        public string RegionalAdminName { get; set; }
-        [NotMapped]
         public string RegionalAdminId { get; set; }
 
         [NotMapped]
         public int? TotalActiveStudents { get; set; }
         [NotMapped]
-        public int TotalPresentStudents { get; set; }
+        public int? TotalPresentStudents { get; set; }
+        [NotMapped]
+        public DateTime? ClassStartDate { get; set; }
         [NotMapped]
         public DateTime? ClassEndDate{ get; set; }
         [NotMapped]

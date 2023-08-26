@@ -37,7 +37,7 @@ namespace StudentAttendanceApiDAL.Repository
 
             try
             {
-                var classExists = appDbContext.Class.AsNoTracking().FirstOrDefaultAsync(x => x.ClassEnrolmentId == cls.ClassEnrolmentId && x.StartedDate.Value.Date == DateTime.Now.Date).Result;
+                var classExists = appDbContext.Class.AsNoTracking().FirstOrDefaultAsync(x => x.ClassEnrolmentId == cls.ClassEnrolmentId && x.StartedDate.Value.Date == DateTime.Now.Date && x.CenterId == cls.CenterId).Result;
                 if (classExists != null)
                 {
                     return null;
@@ -226,14 +226,18 @@ namespace StudentAttendanceApiDAL.Repository
                     await appDbContext.SaveChangesAsync();
 
                     //
-                    var studentAttendane = appDbContext.StudentAttendance.AsNoTracking().FirstOrDefaultAsync(x => x.ClassId == cls.Id).Result;
-                    if (studentAttendane != null)
+                    var center = appDbContext.Center.AsNoTracking().FirstOrDefaultAsync(x => x.Id == clasData.CenterId).Result;
+                    if (center != null)
                     {
-                        var student = appDbContext.Student.FirstOrDefaultAsync(x => x.Id == (studentAttendane.StudentId)).Result;
-                        if (student != null)
+                        List<int?> presentStudentIds = appDbContext.StudentAttendance.Where(x => x.CenterId == (center.Id)).Select(x => x.StudentId).ToList();
+                        List<int> studentIds = appDbContext.Student.Where(x => x.CenterId == (center.Id) && presentStudentIds.Contains(x.Id)).Select(x => x.Id).ToList();
+                        if (studentIds != null && studentIds.Count > 0)
                         {
-                            student.ActiveClassStatus = false;
-                            appDbContext.Student.Update(student);
+                            appDbContext.Student.Where(x => studentIds.Contains(x.Id)).ToList().ForEach(i =>
+                            {
+                                i.ActiveClassStatus = false;
+                            });
+
                             await appDbContext.SaveChangesAsync();
                         }
 
@@ -317,7 +321,7 @@ namespace StudentAttendanceApiDAL.Repository
                         appDbContext.RemoveRange(studentAttendance);
                     }
                 }
-              
+
 
                 await appDbContext.SaveChangesAsync();
 

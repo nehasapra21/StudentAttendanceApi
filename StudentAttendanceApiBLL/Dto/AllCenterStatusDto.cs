@@ -16,6 +16,8 @@ namespace StudentAttendanceApiBLL
         public string? CenterName { get; set; }
 
         public string? Date { get; set; }
+        public string? ClassStartDate { get; set; }
+        public string? ClassEndDate { get; set; }
 
         public bool? ClassStatus { get; set; }
         public bool? Status { get; set; }

@@ -13,8 +13,7 @@ namespace StudentAttendanceApiBLL.IManager
         Task<StudentDetailDto> GetStudentById(int id);
         Task<Student> GetStudentByCenterId(int centerId);
         Task<Student> UpdateStudentActiveOrInactive(int id,int status);
-        Task<StudentPresentClassDto> GetTotalStudentPresent();
-
+        Task<StudentPresentClassDto> GetTotalStudentPresent(int userId, int type);
     }
 
 }

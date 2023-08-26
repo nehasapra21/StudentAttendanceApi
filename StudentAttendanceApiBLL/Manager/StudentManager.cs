@@ -33,7 +33,7 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-    
+
         public async Task<Student> SaveStudent(Student student)
         {
             _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
@@ -44,11 +44,11 @@ namespace StudentAttendanceApiBLL.Manager
         public async Task<StudentDetailDto> GetStudentById(int id)
         {
             _logger.LogInformation($"UserManager : Bll : GetUser : Started");
-            Student student= await _studentRepository.GetStudentById(id);
+            Student student = await _studentRepository.GetStudentById(id);
             StudentDetailDto studentDetailDto = null;
-            if(student!=null)
+            if (student != null)
             {
-                studentDetailDto=new StudentDetailDto();
+                studentDetailDto = new StudentDetailDto();
                 studentDetailDto = StudentConvertor.ConvertStudentDetailDtoToStudentDto(student);
             }
             return studentDetailDto;
@@ -65,28 +65,44 @@ namespace StudentAttendanceApiBLL.Manager
         {
             _logger.LogInformation($"UserManager : Bll : UpdateStudentActiveOrInactive : Started");
 
-            return await _studentRepository.UpdateStudentActiveOrInactive(id,status);
+            return await _studentRepository.UpdateStudentActiveOrInactive(id, status);
         }
 
-  
 
-        public async Task<StudentPresentClassDto> GetTotalStudentPresent()
+
+        public async Task<StudentPresentClassDto> GetTotalStudentPresent(int userId, int type)
         {
             _logger.LogInformation($"UserManager : Bll : GetTotalStudentPresent : Started");
-            Dictionary<int, int> listOfStudents=await _studentRepository.GetTotalStudentPresent();
-            Dictionary<int, int> listOfClasses = await _studentRepository.GetActiveClass();
-            Dictionary<int, int> upcomingAndCompletedCount = await _studentRepository.GetTotalUpComingAndCompletedClass();
-            int cancelClassCount= await _studentRepository.GetCancelClassCount();
+            Dictionary<int, int> listOfStudents = null;
+            Dictionary<int, int> listOfClasses = null;
+            Dictionary<int, int> upcomingAndCompletedCount = null;
+            int cancelClassCount = 0;
+
+            if (userId == 0 && type == 0)
+            {
+                listOfStudents = await _studentRepository.GetTotalStudentPresent();
+                listOfClasses = await _studentRepository.GetActiveClass();
+                upcomingAndCompletedCount = await _studentRepository.GetTotalUpComingAndCompletedClass(0, 0);
+                cancelClassCount = await _studentRepository.GetCancelClassCount();
+            }
+            else
+            {
+                listOfStudents = await _studentRepository.GetTotalStudentPresent(userId, type);
+                listOfClasses = await _studentRepository.GetActiveClass(userId, type);
+                upcomingAndCompletedCount = await _studentRepository.GetTotalUpComingAndCompletedClass(userId, type);
+                cancelClassCount = await _studentRepository.GetCancelClassCount(userId, type);
+
+            }
             StudentPresentClassDto studentPresentClassDto = new StudentPresentClassDto();
             studentPresentClassDto.TotalStudents = listOfStudents.ToList()[0].Value;
-            studentPresentClassDto.TotalClasses= listOfClasses.ToList()[0].Value;
+            studentPresentClassDto.TotalClasses = listOfClasses.ToList()[0].Value;
             studentPresentClassDto.PresentStudents = listOfStudents.ToList()[0].Key;
             studentPresentClassDto.TotalActiveClasses = listOfClasses.ToList()[0].Key;
 
             studentPresentClassDto.CompletedClassCount = upcomingAndCompletedCount.ToList()[0].Key;
             studentPresentClassDto.UpComingClassCount = upcomingAndCompletedCount.ToList()[0].Value;
             studentPresentClassDto.CancelClassCount = cancelClassCount;
-          //  studentPresentClassDto.time= TimeZoneInfo.Local;
+            //  studentPresentClassDto.time= TimeZoneInfo.Local;
             return studentPresentClassDto;
         }
 

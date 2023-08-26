@@ -29,6 +29,13 @@ namespace StudentAttendanceApiBLL
         public string? WhatsApp { get; set; }
         public string? FullAddress { get; set; }
         public DateTime? JoiningDate { get; set; }
+        public string CenterName { get; set; }
+        public string TeacherName { get; set; }
+        public int CenterId { get; set; }
+        public int DistrictId { get; set; }
+        public int VidhanSabhaId { get; set; }
+        public int? VillageId { get; set; }
+        public int PanchayatId { get; set; }
     }
 
 }

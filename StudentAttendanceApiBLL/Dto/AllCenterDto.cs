@@ -29,13 +29,16 @@ namespace StudentAttendanceApiBLL
         public int? TotalActiveStudents { get; set; }
         public int? TotalStudents { get; set; }
         public string PanchayatName { get; set; }
+        public string VillageName { get; set; }
         public int VidhanSabhaId { get; set; }
-
+        public int? VillageId { get; set; }
         public int DistrictId { get; set; }
 
         public int PanchayatId { get; set; }
         public int? AssignedTeacher { get; set; }
         public string TeacherName { get; set; }
+        public int? AssignedRegionalAdmin { get; set; }
+        public string RegionalAdminName { get; set; }
 
 
     }

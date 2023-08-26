@@ -69,6 +69,16 @@ namespace StudentAttendanceApiBLL
             student.FatherName = studentDto.FatherName;
             student.JoiningDate = studentDto.JoiningDate;
             student.MotherName = studentDto.MotherName;
+            //student.CenterName = studentDto.CenterName;
+            //student.VidhanSabhaName = studentDto.VidhanSabhaName;
+            //student.PanchayatName = studentDto.PanchayatName;
+            //student.VillageName = studentDto.VillageName;
+            //student.DistrictName = studentDto.DistrictName;
+            student.CenterId = studentDto.CenterId;
+            student.TeacherName = studentDto.TeacherName;
+            student.CenterName = studentDto.CenterName;
+            //student.PanchayatId = studentDto.PanchayatId;
+            //student.VillageId = studentDto.VillageId;
             // student.ActiveClassStatus = studentDto.ActiveClassStatus;
 
             return student;

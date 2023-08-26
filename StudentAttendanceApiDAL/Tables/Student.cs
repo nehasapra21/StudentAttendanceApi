@@ -56,6 +56,20 @@ namespace StudentAttendanceApiDAL.Tables
         public int? classcount { get; set; }
         [NotMapped]
         public List<int> ListOfStudentIds { get; set; }
+        [NotMapped]
+        public string CenterName { get; set; }
+        [NotMapped]
+        public string TeacherName { get; set; }
+        //[NotMapped]
+        //public string DistrictName { get; set; }
+        //[NotMapped]
+        //public string VidhanSabhaName { get; set; }
+        //[NotMapped]
+        //public string VillageName { get; set; }
+        //[NotMapped]
+        //public string PanchayatName { get; set; }
+
+
 
     }
     

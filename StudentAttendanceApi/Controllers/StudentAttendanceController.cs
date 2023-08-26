@@ -93,29 +93,29 @@ namespace StudentAttendanceApi.Controllers
                 var studentAttendance = await _studentAttendanceManager.SaveAtuomaticStudentAttendance(studentAttend);
                 if (studentAttendance ==-1)
                 {
-                    return StatusCode(StatusCodes.Status200OK, new
+                    return StatusCode(StatusCodes.Status400BadRequest, new
                     {
                         status = true,
                         message = "Student attendance already exists",
-                        code = StatusCodes.Status200OK
+                        code = StatusCodes.Status400BadRequest
                     });
                 }
                 else if(studentAttendance ==0)
                 {
-                    return StatusCode(StatusCodes.Status200OK, new
+                    return StatusCode(StatusCodes.Status404NotFound, new
                     {
                         status = true,
                         message = "Student already inactive",
-                        code = StatusCodes.Status200OK
+                        code = StatusCodes.Status404NotFound
                     });
                 }
                 else if (studentAttendance == -2)
                 {
-                    return StatusCode(StatusCodes.Status200OK, new
+                    return StatusCode(StatusCodes.Status404NotFound, new
                     {
                         status = true,
                         message = "student not exists in center",
-                        code = StatusCodes.Status200OK
+                        code = StatusCodes.Status404NotFound
                     });
                 }
                 else
@@ -146,20 +146,20 @@ namespace StudentAttendanceApi.Controllers
                 var studentAttendance = await _studentAttendanceManager.SaveManualStudentAttendance(studentAttend);
                 if (studentAttendance == -1)
                 {
-                    return StatusCode(StatusCodes.Status200OK, new
+                    return StatusCode(StatusCodes.Status400BadRequest, new
                     {
                         status = true,
                         message = "Student attendance already exists",
-                        code = StatusCodes.Status200OK
+                        code = StatusCodes.Status400BadRequest
                     });
                 }
                 else if (studentAttendance == 0)
                 {
-                    return StatusCode(StatusCodes.Status200OK, new
+                    return StatusCode(StatusCodes.Status404NotFound, new
                     {
                         status = true,
                         message = "Manual attendance already exists with 6 times",
-                        code = StatusCodes.Status200OK
+                        code = StatusCodes.Status404NotFound
                     });
                 }
                 else
@@ -222,6 +222,7 @@ namespace StudentAttendanceApi.Controllers
             logger.LogInformation("UserController : SaveStudentAttendance : Started");
             try
             {
+                
                 var students = await _studentAttendanceManager.GetAllAbsentAttendance(centerId);
                
                 if (students != null)

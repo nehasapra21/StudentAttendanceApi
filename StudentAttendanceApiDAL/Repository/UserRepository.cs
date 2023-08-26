@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -18,17 +21,38 @@ namespace StudentAttendanceApiDAL.Repository
     public class UserRepository : IUserRepository
     {
         private IConfiguration configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AppDbContext appDbContext;
         private readonly ILogger logger;
 
-        public UserRepository(AppDbContext appDbContext, ILogger<UserRepository> logger, IConfiguration configuration)
+        public UserRepository(AppDbContext appDbContext, ILogger<UserRepository> logger, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             this.appDbContext = appDbContext;
             this.logger = logger;
             this.configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-       
+
+        public async Task<string> GetUserDeviceByUserId(int userId)
+        {
+            logger.LogInformation($"UserRepository : GetUserById : Started");
+
+            try
+            {
+                Users user = await appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
+                if (user != null)
+                {
+                    return user.DeviceId;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetUserById", ex);
+                throw ex;
+            }
+            return string.Empty;
+        }
 
         public async Task<Users> GetUserById(int userId)
         {
@@ -92,23 +116,9 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
-                    //user.Center = appDbContext.Center.FirstOrDefaultAsync(x => x.AssignedRegionalAdmin == user.Id).Result;
                     return user;
                 }
 
-                //if (user != null)
-                //{
-                //    List<Panchayat> listOfPanchayat =await appDbContext.Panchayat.AsNoTracking().Where(x => user.PanchayatId.Contains(x.Id.ToString())).ToListAsync();
-                //    if (listOfPanchayat != null)
-
-                //        user.PanchayatName = new List<string>();
-                //    foreach (var item in listOfPanchayat)
-                //    {
-                //        user.PanchayatName.Add(item.Name);
-                //    }
-
-                //  user.VidhanSabhaName=  appDbContext.VidhanSabha.AsNoTracking().FirstOrDefaultAsync(x => x.Id == user.VidhanSabhaId).Result.Name;
-                //}
                 logger.LogInformation($"UserRepository : GetUserById : End");
             }
             catch (Exception ex)
@@ -126,13 +136,34 @@ namespace StudentAttendanceApiDAL.Repository
             Users user = new Users();
             try
             {
-                user = await appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.PhoneNumber == userName && x.Password == password);
+                //await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                user = await appDbContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == userName && x.Password == password);
                 if (user != null)
                 {
+                    user.LastLoginTime = Convert.ToString(DateTime.Now);
+                    appDbContext.Update(user);
+                    await appDbContext.SaveChangesAsync();
                     ///Generate token for user
                     #region JWT
                     user.Token = CommonUtility.GenerateToken(configuration, user.Email, user.Name);
                     #endregion
+
+                    //save data
+                    //     var claims = new List<Claim>
+                    //         {
+                    //             new Claim("UserId", user.Id.ToString()),
+                    //             new Claim("UserName", user.Name)
+                    //         };
+
+                    //     var claimsIdentity = new ClaimsIdentity(
+                    //        claims,
+                    //        CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    //     await _httpContextAccessor.HttpContext.SignInAsync(
+                    //CookieAuthenticationDefaults.AuthenticationScheme,
+                    //new ClaimsPrincipal(claimsIdentity)
+
                 }
 
                 logger.LogInformation($"UserRepository : LoginUser : End");
@@ -195,6 +226,8 @@ namespace StudentAttendanceApiDAL.Repository
                     {
                         user.PanchayatId = Convert.ToInt32(user.ListOfPanchayatId[0]);
                     }
+
+
                     appDbContext.Users.Add(user);
                     await appDbContext.SaveChangesAsync();
                     if (user.Type == (int)Constant.Type.RegionalAdmin && user.ListOfPanchayatId != null && user.ListOfPanchayatId.Count > 0)
@@ -205,38 +238,7 @@ namespace StudentAttendanceApiDAL.Repository
                     }
                 }
 
-                #region Add list of panchayat in table (regionalAdminPanchayat)
-                //if (user.Type == (int)Constant.Type.RegionalAdmin)
-                //{
-                //    if (user.ListOfPanchayatId != null && user.ListOfPanchayatId.Count > 0)
-                //    {
-                //        if (user.Id == 0)
-                //        {
-                //            AddRegionalAdminPanchayat(user);
-                //            await appDbContext.SaveChangesAsync();
-                //        }
-                //        else
-                //        {
-                //            //Chcek same id exists in db
 
-                //            List<RegionalAdminPanchayat> list = await appDbContext.RegionalAdminPanchayat.Where(x => x.UsersId == user.Id).ToListAsync();
-
-                //            if (list != null)
-                //            {
-                //                //var listOfNew=list.Where(l => user.ListOfPanchayatId.Contains    (l.PanchayatId.Value)).ToList();
-
-                //                appDbContext.RemoveRange(list);
-                //                appDbContext.SaveChanges();
-                //            }
-
-                //            AddRegionalAdminPanchayat(user);
-                //            appDbContext.SaveChanges();
-                //        }
-                //    }
-                //}
-
-
-                #endregion
                 logger.LogInformation($"UserRepository : SaveLogin : Started");
             }
             catch (Exception ex)
@@ -290,6 +292,31 @@ namespace StudentAttendanceApiDAL.Repository
             return user;
         }
 
+
+        public async Task<Users> UpdateDeviceId(int userId, string deviceId)
+        {
+            logger.LogInformation($"UserRepository : SaveSuperAdmin : Started");
+            Users userVal = null;
+            try
+            {
+                userVal = appDbContext.Users.Where(x => x.Id == userId).FirstOrDefault();
+                if (userVal != null)
+                {
+                    userVal.DeviceId = deviceId;
+                    appDbContext.Update(userVal);
+                    await appDbContext.SaveChangesAsync();
+                }
+
+                logger.LogInformation($"UserRepository : SaveSuperAdmin : Started");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : SaveSuperAdmin ", ex);
+                throw ex;
+            }
+            return userVal;
+        }
+
         public async Task<string> CheckUserMobileNumber(string mobileNumber)
         {
             logger.LogInformation($"UserRepository : CheckUserMobileNumber : Started");
@@ -317,7 +344,7 @@ namespace StudentAttendanceApiDAL.Repository
 
             try
             {
-                users = await (from u in appDbContext.Users.Where(x =>  x.Type == 3 && x.Status.Value)
+                users = await (from u in appDbContext.Users.Where(x => x.Type == 3 && x.Status.Value)
                                select new Users
                                {
                                    Id = u.Id,
@@ -340,7 +367,7 @@ namespace StudentAttendanceApiDAL.Repository
             List<Users> users = new List<Users>();
             try
             {
-                users = await (from u in appDbContext.Users.Where(x=>x.AssignedTeacherStatus==false && x.Type == 3 && x.Status.Value)
+                users = await (from u in appDbContext.Users.Where(x => x.AssignedTeacherStatus == false && x.Type == 3 && x.Status.Value)
                                select new Users
                                {
                                    Id = u.Id,

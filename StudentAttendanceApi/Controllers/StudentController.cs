@@ -166,12 +166,12 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetTotalStudentPresent")]
-        public async Task<IActionResult> GetTotalStudentPresent()
+        public async Task<IActionResult> GetTotalStudentPresent(int userId=0,int type=0)
         {
             logger.LogInformation("UserController : GetTotalStudentPresent : Started");
             try
             {
-                var allClasses = await _studentManager.GetTotalStudentPresent();
+                var allClasses = await _studentManager.GetTotalStudentPresent(userId,type);
               
                 if (allClasses != null)
                 {

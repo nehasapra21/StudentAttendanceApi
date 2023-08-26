@@ -6,6 +6,7 @@ using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Model;
 using StudentAttendanceApiDAL.Tables;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -39,6 +40,7 @@ namespace StudentAttendanceApiDAL.Repository
                         student.LastClass = studentVal.LastClass;
                         student.ActiveClassStatus = studentVal.ActiveClassStatus;
                         student.Counter = studentVal.Counter;
+                        student.CreatedOn = DateTime.Now;
                         appDbContext.Entry(student).State = EntityState.Modified;
                     }
                 }
@@ -70,7 +72,40 @@ namespace StudentAttendanceApiDAL.Repository
             try
             {
                 student = await appDbContext.Student.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+                if (student != null)
+                {
+                    Center center = appDbContext.Center.Where(x => x.Id == student.CenterId).FirstOrDefault();
+                    if (center != null)
+                    {
+                        student.CenterName = center.CenterName;
+                        Users user = appDbContext.Users.Where(x => x.Id == center.AssignedTeachers).FirstOrDefault();
+                        if (user != null)
+                        {
+                            student.TeacherName = user.Name;
+                        }
+                    }
+                }
+                //if(student!=null)
+                //{
+                //    Center center = await appDbContext.Center.Include(x => x.District)
+                //                            .Include(x => x.VidhanSabha)
+                //                            .Include(x => x.Panchayat)
+                //                            .Include(x => x.Village).Where(x => x.Id == student.CenterId).FirstOrDefaultAsync();
+                //    if(center!=null)
+                //    {
+                //        student.CenterName = center.CenterName;
+                //        Users user = appDbContext.Users.Where(x => x.Id == center.AssignedTeachers).FirstOrDefault();
+                //        if(user!=null)
+                //        {
+                //            student.AssignedTeacher = user.Name;
+                //        }
 
+                //        student.DistrictName = center.District!=null?center.District.Name:string.Empty;
+                //        student.PanchayatName = center.Panchayat != null ? center.Panchayat.Name: string.Empty;
+                //        student.VidhanSabhaName = center.VidhanSabha!=null? center.VidhanSabha.Name:string.Empty;
+                //        student.VillageName = center.Village != null ? center.Village.Name : string.Empty;
+                //    }
+                //}
                 logger.LogInformation($"UserRepository : GetStudentById : End");
             }
             catch (Exception ex)
@@ -129,23 +164,38 @@ namespace StudentAttendanceApiDAL.Repository
             return studentVal;
         }
 
-        public async Task<Dictionary<int, int>> GetTotalStudentPresent()
+        public async Task<Dictionary<int, int>> GetTotalStudentPresent(int userId, int type)
         {
             logger.LogInformation($"UserRepository : GetTotalStudentPresent : Started");
             Dictionary<int, int> ClassData = new Dictionary<int, int>();
             Dictionary<int, int> totalPresentStudentData = new Dictionary<int, int>();
             try
             {
+                List<Student> students = null;
+                List<Student> totalStudents = null;
+                List<Student> presentStudents = null;
+                if (userId == 0 && type == 0)
+                {
+                    students = await appDbContext.Student.AsNoTracking().ToListAsync();
 
-                List<Student> students = await appDbContext.Student.AsNoTracking().ToListAsync();
+                    totalStudents = students.Where(x => x.Status.Value).ToList();
 
-                List<Student> totalStudents = students.Where(x => x.Status.Value).ToList();
+                    presentStudents = students.Where(x => x.ActiveClassStatus.Value).ToList();
 
-                List<Student> presentStudents = students.Where(x => x.ActiveClassStatus.Value).ToList();
+                }
+                else
+                {
+                    List<int> centerIds = appDbContext.Center.Where(x => x.AssignedRegionalAdmin == userId).Select(x => x.Id).ToList();
+
+                    students = await appDbContext.Student.Where(x => centerIds.Contains(x.CenterId)).AsNoTracking().ToListAsync();
+
+                    totalStudents = students.Where(x => x.Status.Value).ToList();
+
+                    presentStudents = students.Where(x => x.ActiveClassStatus.Value).ToList();
+
+                }
 
                 totalPresentStudentData.Add(presentStudents.Count(), totalStudents.Count());
-
-                await appDbContext.SaveChangesAsync();
 
                 logger.LogInformation($"UserRepository : UpdateStudentActive : Started");
             }
@@ -157,18 +207,31 @@ namespace StudentAttendanceApiDAL.Repository
             return totalPresentStudentData;
         }
 
-        public async Task<Dictionary<int, int>> GetActiveClass()
+        public async Task<Dictionary<int, int>> GetActiveClass(int userId, int type)
         {
             logger.LogInformation($"UserRepository : GetActiveClass : Started");
 
             Dictionary<int, int> ClassData = new Dictionary<int, int>();
             try
             {
-                int classes = appDbContext.Center.AsNoTracking().ToList().Count();
-                int activeClasses = appDbContext.Class.AsNoTracking().Where(x=>x.Status.Value==1 && x.StartedDate.Value.Date==DateTime.Now.Date).ToList().Count();
+                int classes = 0;
+                int activeClasses = 0;
 
+                if (userId == 0 && type == 0)
+                {
+                    classes = appDbContext.Center.AsNoTracking().ToList().Count();
+                    activeClasses = appDbContext.Class.AsNoTracking().Where(x => x.Status.Value == 1 && x.StartedDate.Value.Date == DateTime.Now.Date).ToList().Count();
+
+
+                }
+                else
+                {
+                    classes = appDbContext.Center.Where(x => x.AssignedRegionalAdmin == userId).AsNoTracking().ToList().Count();
+                    activeClasses = appDbContext.Class.AsNoTracking().Where(x => x.Status.Value == 1 && x.StartedDate.Value.Date == DateTime.Now.Date).ToList().Count();
+
+
+                }
                 ClassData.Add(activeClasses, classes);
-
                 logger.LogInformation($"UserRepository : GetAllClasses : End");
             }
             catch (Exception ex)
@@ -179,7 +242,7 @@ namespace StudentAttendanceApiDAL.Repository
             return ClassData;
         }
 
-        public async Task<Dictionary<int, int>> GetTotalUpComingAndCompletedClass()
+        public async Task<Dictionary<int, int>> GetTotalUpComingAndCompletedClass(int userId, int type)
         {
             logger.LogInformation($"UserRepository : GetActiveClass : Started");
 
@@ -191,15 +254,42 @@ namespace StudentAttendanceApiDAL.Repository
                 int upcomingCount = 0;
                 if (classes != null && classes.Count > 0)
                 {
+                    List<int> allCenterIds=new List<int>();
+                    if (userId == 0)
+                    {
+                        allCenterIds = appDbContext.Center.Select(x => x.Id).ToList();
+                    }
+                    else
+                    {
+                        allCenterIds = appDbContext.Center.Where(x => x.AssignedRegionalAdmin == userId).Select(x => x.Id).ToList();
+                    }
+
                     completedClassesCount = classes.Where(x => x.Status.Value == (int)Constant.ClassStatus.Completed).ToList().Count();
+
+
                     List<int> centerIds = classes.Select(x => x.CenterId).ToList();//41
 
-                    upcomingCount = appDbContext.Center.AsNoTracking().Where(x => !centerIds.Contains
-                                            (x.Id)).ToList().Count();//42
+                    if (userId == 0 && type == 0)
+                    {
+                        upcomingCount = appDbContext.Center.AsNoTracking().Where(x => !centerIds.Contains
+                                                (x.Id)).ToList().Count();//42
+                    }
+                    else
+                    {
+                        upcomingCount = appDbContext.Center.AsNoTracking().Where(x => !centerIds.Contains
+                                              (x.Id) && x.AssignedRegionalAdmin == userId).ToList().Count();//42
+                    }
                 }
                 else
                 {
-                    upcomingCount = appDbContext.Center.AsNoTracking().ToList().Count();
+                    if (userId == 0 && type == 0)
+                    {
+                        upcomingCount = appDbContext.Center.AsNoTracking().ToList().Count();
+                    }
+                    else
+                    {
+                        upcomingCount = appDbContext.Center.Where(x => x.AssignedRegionalAdmin == userId).AsNoTracking().ToList().Count();
+                    }
 
                 }
 
@@ -217,14 +307,28 @@ namespace StudentAttendanceApiDAL.Repository
             return ClassData;
         }
 
-        public async Task<int> GetCancelClassCount()
+        public async Task<int> GetCancelClassCount(int userId, int type)
         {
             logger.LogInformation($"UserRepository : GetActiveClass : Started");
             int cancelCount = 0;
             try
             {
-                cancelCount = appDbContext.ClassCancelTeacher.AsNoTracking().Where(
-                    x => x.StartingDate.Value.Date <= DateTime.Now.Date && x.EndingDate.Value.Date >= DateTime.Now.Date).ToList().Count();
+                if (userId == 0 && type == 0)
+                {
+                    cancelCount = appDbContext.ClassCancelTeacher.AsNoTracking().Where(
+                        x => x.StartingDate.Value.Date <= DateTime.Now.
+                        Date && x.EndingDate.Value.Date >= DateTime.Now.Date).ToList().Count();
+                }
+                else
+                {
+                    List<ClassCancelTeacher> classCancel = appDbContext.ClassCancelTeacher.AsNoTracking().Where(
+                     x => x.StartingDate.Value.Date <= DateTime.Now.
+                     Date && x.EndingDate.Value.Date >= DateTime.Now.Date).ToList();
+
+                    List<int> centerIds = appDbContext.Center.Where(x => x.AssignedRegionalAdmin == userId).Select(x => x.Id).ToList();
+
+                    cancelCount = classCancel.Where(x => centerIds.Contains(x.Id)).ToList().Count();
+                }
 
                 logger.LogInformation($"UserRepository : GetAllClasses : End");
             }

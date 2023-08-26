@@ -80,6 +80,8 @@ namespace StudentAttendanceApiBLL
             center.TeacherName = centerDto.TeacherName;
             center.AssignedTeacher = centerDto.AssignedTeachers;
             center.Date = centerDto.StartedDate.Value.ToString("yyyy-MM-dd'T'HH:mm:ss.fff");
+            center.ClassStartDate = centerDto.ClassStartDate!=null? centerDto.ClassStartDate.Value.ToString("yyyy-MM-dd'T'HH:mm:ss.fff"):null;
+            center.ClassEndDate = centerDto.ClassEndDate!=null?centerDto.ClassEndDate.Value.ToString("yyyy-MM-dd'T'HH:mm:ss.fff"):null;
             return center;
         }
 
@@ -96,6 +98,10 @@ namespace StudentAttendanceApiBLL
             center.DistrictName = centerDto.DistrictName;
             center.VidhanSabhaName = centerDto.VidhanSabhaName;
             center.PanchayatName = centerDto.PanchayatName;
+            center.VillageName = centerDto.VillageName;
+            center.VillageId = centerDto.VillageId;
+            center.AssignedRegionalAdmin = centerDto.AssignedRegionalAdmin;
+            center.RegionalAdminName = centerDto.RegionalAdminName;
             center.TotalStudents = centerDto.TotalStudents == null ? 0 : centerDto.TotalStudents;
             center.TotalPresentStudents = centerDto.TotalPresentStudents == null ? 0 : centerDto.TotalPresentStudents;
             center.TotalActiveStudents = centerDto.TotalActiveStudents == null ? 0 : centerDto.TotalActiveStudents;

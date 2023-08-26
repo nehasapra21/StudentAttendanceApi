@@ -20,6 +20,7 @@ namespace StudentAttendanceApiBLL
         [Required]
         public string? Password { get; set; }
         public string? Token { get; set; }
+        public string? DeviceId { get; set; }
         
         public string? Email { get; set; }
         [Required]
@@ -52,7 +53,7 @@ namespace StudentAttendanceApiBLL
         public bool? AssignedRegionalAdminStatus { get; set; }
         public string? GuardianName { get; set; }
         public string? GuardianNumber { get; set; }
-        public string ListOfPanchayatIds { get; set; }
+        public string? ListOfPanchayatIds { get; set; }
     }
 
 }

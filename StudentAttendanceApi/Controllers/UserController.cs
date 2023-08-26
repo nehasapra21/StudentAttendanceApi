@@ -98,15 +98,61 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+
         [Authorize]
+        [HttpPost("UpdateDeviceId")]
+        public async Task<IActionResult> UpdateDeviceId([FromForm] UserDeviceDto userDto)
+        {
+            logger.LogInformation("UserController : SaveSuperAdmin : Started");
+            try
+            {
+                var masterAdmin = await _userManager.UpdateDeviceId(userDto.userId, userDto.DeviceId);
+                if (masterAdmin != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = masterAdmin,
+                        message = "SuperAdmin save successfully",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "SuperAdmin doesn't save",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+
+
         [HttpPost("SaveUser")]
         public async Task<IActionResult> SaveUser([FromForm] UserDto userDto)
         {
             logger.LogInformation("UserController : SaveUser : Started");
             try
             {
-                
-                Users user=UserConvertor.ConvertUsertoToUser(userDto);
+                if (userDto.Type == 2 && userDto.ListOfPanchayatIds == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "ListOfPanchayatIds Parameter is missing",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+                Users user = UserConvertor.ConvertUsertoToUser(userDto);
                 var masterAdmin = await _userManager.SaveLogin(user);
                 if (masterAdmin != null)
                 {
@@ -300,7 +346,7 @@ namespace StudentAttendanceApi.Controllers
                         message = "List of regional admins",
                         code = StatusCodes.Status200OK
                     });
-                   
+
                 }
                 else
                 {

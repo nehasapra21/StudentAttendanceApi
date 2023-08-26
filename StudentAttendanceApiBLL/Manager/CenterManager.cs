@@ -63,11 +63,11 @@ namespace StudentAttendanceApiBLL.Manager
             return await _centerRepository.CheckCenterName(name);
         }
 
-        public async Task<List<AllCenterDto>> GetAllCenters()
+        public async Task<List<AllCenterDto>> GetAllCenters(int userId, int type)
         {
             _logger.LogInformation($"VillageManager : Bll : GetAllCenters : Started");
             List<AllCenterDto> list = null;
-            List<Center> centers = await _centerRepository.GetAllCenters();
+            List<Center> centers = await _centerRepository.GetAllCenters(userId,type);
             if (centers != null && centers.Count > 0)
             {
                 list=new List<AllCenterDto>();
@@ -80,11 +80,11 @@ namespace StudentAttendanceApiBLL.Manager
             return list;
         }
 
-        public async Task<List<AllCenterStatusDto>> GetStudentAttendanceOfCenter(int status)
+        public async Task<List<AllCenterStatusDto>> GetStudentAttendanceOfCenter(int status, int userId, int type)
         {
             _logger.LogInformation($"VillageManager : Bll : GetStudentAttendanceOfCenter : Started");
             List<AllCenterStatusDto> list = null;
-            List<Center> centers= await _centerRepository.GetStudentAttendanceOfCenter(status);
+            List<Center> centers= await _centerRepository.GetStudentAttendanceOfCenter(status,userId,type);
             if (centers != null && centers.Count > 0)
             {
                 list = new List<AllCenterStatusDto>();
