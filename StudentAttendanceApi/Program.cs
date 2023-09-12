@@ -103,6 +103,10 @@ builder.Services.AddTransient<IPanchayatManager, PanchayatManager>();
 
 builder.Services.AddTransient<IHolidaysRepository, HolidaysRepository>();
 builder.Services.AddTransient<IHolidaysManager, HolidaysManager>();
+
+builder.Services.AddTransient<ISchoolRepository, SchoolRepository>();
+builder.Services.AddTransient<ISchoolManager, SchoolManager>();
+
 // Add services to the container.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

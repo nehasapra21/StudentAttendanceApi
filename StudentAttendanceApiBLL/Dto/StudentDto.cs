@@ -53,6 +53,16 @@ namespace StudentAttendanceApiBLL
         public int? VillageId { get; set; }
         public string? Education { get; set; }
 
+        public string? FatherMobileNumber { get; set; }
+        public string? FatherOccupation { get; set; }
+        public string? MotherMobileNumber { get; set; }
+        public string? MotherOccupation { get; set; }
+        public string? Category { get; set; }
+        public bool? Bpl { get; set; }
+        [Required]
+        public int? SchoolId { get; set; }
+        public string? SchoolName { get; set; }
+
     }
     
 }

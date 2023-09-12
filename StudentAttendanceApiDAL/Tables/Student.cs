@@ -44,8 +44,18 @@ namespace StudentAttendanceApiDAL.Tables
         public int? VillageId { get; set; }
         public string? Education { get; set; }
 
+        public string? Category { get; set; }
+        public string? FatherMobileNumber { get; set; }
+        public string? FatherOccupation { get; set; }
+        public string? MotherMobileNumber { get; set; }
+        public string? MotherOccupation { get; set; }
+        public bool? Bpl { get; set; }
+        public int? SchoolId { get; set; }
+     
+
         public ICollection<StudentAttendance> StudentAttendances { get; set; }
-       
+        [NotMapped]
+        public string? SchoolName { get; set; }
         [NotMapped]
         public decimal AvgAttendance { get; set; }
         [NotMapped]
@@ -60,6 +70,7 @@ namespace StudentAttendanceApiDAL.Tables
         public string CenterName { get; set; }
         [NotMapped]
         public string TeacherName { get; set; }
+
         //[NotMapped]
         //public string DistrictName { get; set; }
         //[NotMapped]

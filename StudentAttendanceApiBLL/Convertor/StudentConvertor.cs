@@ -39,8 +39,15 @@ namespace StudentAttendanceApiBLL
             student.CenterId = studentDto.CenterId;
             student.FatherName = studentDto.FatherName;
             student.MotherName = studentDto.MotherName;
-           // student.ActiveClassStatus = studentDto.ActiveClassStatus;
-          
+            // student.ActiveClassStatus = studentDto.ActiveClassStatus;
+            student.FatherMobileNumber = studentDto.FatherMobileNumber;
+            student.FatherOccupation = studentDto.FatherOccupation;
+            student.MotherMobileNumber = studentDto.MotherMobileNumber;
+            student.MotherOccupation = studentDto.MotherOccupation;
+            student.Bpl = studentDto.Bpl;
+            student.Category = studentDto.Category;
+            student.SchoolId = studentDto.SchoolId;
+            student.SchoolName = studentDto.SchoolName;
             return student;
 
         }
@@ -80,7 +87,14 @@ namespace StudentAttendanceApiBLL
             //student.PanchayatId = studentDto.PanchayatId;
             //student.VillageId = studentDto.VillageId;
             // student.ActiveClassStatus = studentDto.ActiveClassStatus;
-
+            student.FatherMobileNumber = studentDto.FatherMobileNumber;
+            student.FatherOccupation = studentDto.FatherOccupation;
+            student.MotherMobileNumber = studentDto.MotherMobileNumber;
+            student.MotherOccupation = studentDto.MotherOccupation;
+            student.Bpl = studentDto.Bpl;
+            student.Category = studentDto.Category;
+            student.SchoolId = studentDto.SchoolId;
+            student.SchoolName = studentDto.SchoolName;
             return student;
 
         }

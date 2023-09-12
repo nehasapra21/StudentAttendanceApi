@@ -1,14 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Model;
 using StudentAttendanceApiDAL.Tables;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 
 namespace StudentAttendanceApiDAL.Repository
 {
@@ -36,6 +31,7 @@ namespace StudentAttendanceApiDAL.Repository
                     var studentVal = appDbContext.Student.AsNoTracking().FirstOrDefaultAsync(x => x.Id == student.Id).Result;
                     if (student != null)
                     {
+                        student.Bpl = false;
                         student.Status = studentVal.Status;
                         student.LastClass = studentVal.LastClass;
                         student.ActiveClassStatus = studentVal.ActiveClassStatus;
@@ -74,6 +70,12 @@ namespace StudentAttendanceApiDAL.Repository
                 student = await appDbContext.Student.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
                 if (student != null)
                 {
+                    School school = appDbContext.School.Where(x => x.Id == student.SchoolId).FirstOrDefault();
+                    if (school != null)
+                    {
+                        student.SchoolName = school.SchoolName;
+                    }
+
                     Center center = appDbContext.Center.Where(x => x.Id == student.CenterId).FirstOrDefault();
                     if (center != null)
                     {
@@ -254,7 +256,7 @@ namespace StudentAttendanceApiDAL.Repository
                 int upcomingCount = 0;
                 if (classes != null && classes.Count > 0)
                 {
-                    List<int> allCenterIds=new List<int>();
+                    List<int> allCenterIds = new List<int>();
                     if (userId == 0)
                     {
                         allCenterIds = appDbContext.Center.Select(x => x.Id).ToList();
@@ -292,9 +294,6 @@ namespace StudentAttendanceApiDAL.Repository
                     }
 
                 }
-
-
-
                 ClassData.Add(completedClassesCount, upcomingCount);
 
                 logger.LogInformation($"UserRepository : GetAllClasses : End");

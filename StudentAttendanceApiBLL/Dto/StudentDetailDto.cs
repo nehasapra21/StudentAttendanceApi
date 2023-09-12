@@ -36,6 +36,15 @@ namespace StudentAttendanceApiBLL
         public int VidhanSabhaId { get; set; }
         public int? VillageId { get; set; }
         public int PanchayatId { get; set; }
+
+        public string? FatherMobileNumber { get; set; }
+        public string? FatherOccupation { get; set; }
+        public string? MotherMobileNumber { get; set; }
+        public string? MotherOccupation { get; set; }
+        public string? Category { get; set; }
+        public bool? Bpl { get; set; }
+        public int? SchoolId { get; set; }
+        public string? SchoolName { get; set; }
     }
 
 }

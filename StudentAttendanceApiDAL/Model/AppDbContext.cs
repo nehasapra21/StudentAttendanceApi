@@ -25,6 +25,7 @@ namespace StudentAttendanceApiDAL.Model
         public DbSet<Users> Users { get; set; }
         public DbSet<CenterAssignUser> CenterAssignUser { get; set; }
         public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<School> School { get; set; }
         public DbSet<Center> Center { get; set; }
         public DbSet<Student> Student { get; set; }
         public DbSet<StudentAttendance> StudentAttendance { get; set; }
