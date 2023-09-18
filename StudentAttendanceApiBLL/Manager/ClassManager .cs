@@ -79,7 +79,6 @@ namespace StudentAttendanceApiBLL.Manager
             _logger.LogInformation($"UserManager : Bll : CancelClass : Started");
 
             //send notification
-
             string RegionalToken = string.Empty;
             string TeacherToken = string.Empty;
             ClassCancelTeacher classCancelTeacher = await _classRepository.CancelClassByTeacher(cls);

@@ -47,25 +47,22 @@ namespace StudentAttendanceApiBLL.NotificationData1
 
             }
 
+            if (notificationDto.RegionaladminStatus)
+            {
+                // JsonObject val = data;
+                //model.DeviceId = model.DeviceId + "," + notificationDto.RegionalToken + ",";
+                model.ListOfDeviceIds.Add(notificationDto.RegionalToken);
+            }
+
+            if (notificationDto.TeacherStatus)
+            {
+                // JsonObject val = data;
+                //model.DeviceId = model.DeviceId + "," + notificationDto.TeacherToken;
+                model.ListOfDeviceIds.Add(notificationDto.TeacherToken);
+            }
+
             if (notificationDto.Type == 1)
             {
-                if (notificationDto.RegionaladminStatus)
-                {
-                    // JsonObject val = data;
-                    //model.DeviceId = model.DeviceId + "," + notificationDto.RegionalToken + ",";
-                    model.ListOfDeviceIds.Add(notificationDto.RegionalToken);
-                }
-
-                if (notificationDto.TeacherStatus)
-                {
-                    // JsonObject val = data;
-                    //model.DeviceId = model.DeviceId + "," + notificationDto.TeacherToken;
-                    model.ListOfDeviceIds.Add(notificationDto.TeacherToken);
-                }
-                //model.DeviceId = "[" + model.DeviceId + "]";
-                //model.DeviceId =["cyFuSCbKRB6CsfcdWNt3_w:APA91bHU_2mlXUviESGwi99ONihhOotVY8Blhmr32zhQMZEhaTZaHnjwE09MLZ1q27Lv681WR68Htij5D60b0hOmxMCWwO1RrTVVTFa7XQQujA0L1nbW2OsTg3Zko0WZVwXRwL3W0bg_", "eDyN4W_gQh2-ZEMFbSR-RA:APA91bFVhWkPwMQfXPCj1iEWrV9kjmmtXDX4Cu4TbjM7iqIPbrzcHqj-WiWuNvSvGosvg4-AflOGB1wPQfZa2PdpX8_5MrWHb4adRWpTJ0tkH0fgrPLtJ8tEfY7u0WWhdBQL0uhjhE_z"]
-                //if (!string.IsNullOrEmpty(model.DeviceId)) { model.DeviceId.TrimEnd(','); }
-
                 // Create body
                 object1.Name = notificationDto.Name;
                 object1.CenterId = notificationDto.CenterId;
@@ -75,7 +72,17 @@ namespace StudentAttendanceApiBLL.NotificationData1
                 model.Title = "Class cancel by teacher";
                 model.Body = "Class "+ object1.Name + " cancel from " + object1.StartingDate + " to " + object1.EndingDate;
             }
+            else if (notificationDto.Type == 2)
+            {
+                // Create body
+                object1.Name = notificationDto.Name;
+                object1.CenterId = notificationDto.CenterId;
+                object1.StartingDate = notificationDto.StartingDate;
+                object1.EndingDate = notificationDto.EndingDate;
 
+                model.Title = "Holiday";
+                model.Body = "Holiday " + object1.Name + " start from " + object1.StartingDate + " to " + object1.EndingDate;
+            }
             return model;
         }
 

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using StudentAttendanceApi.FCM;
+using StudentAttendanceApi.Services;
 using StudentAttendanceApiBLL;
 using StudentAttendanceApiBLL.IManager;
 using StudentAttendanceApiBLL.Manager;
@@ -19,11 +21,13 @@ namespace StudentAttendanceApi.Controllers
     {
         private readonly ILogger<HolidaysController> logger;
         private readonly IHolidaysManager _holidaysManager;
+        private readonly INotificationService _notificationService;
 
-        public HolidaysController(IHolidaysManager holidaysManager, ILogger<HolidaysController> logger)
+        public HolidaysController(IHolidaysManager holidaysManager,INotificationService notificationService, ILogger<HolidaysController> logger)
         {
             this.logger = logger;
             this._holidaysManager = holidaysManager;
+            _notificationService = notificationService;
         }
 
         [HttpPost("SaveHolidays")]
@@ -33,9 +37,11 @@ namespace StudentAttendanceApi.Controllers
             try
             {
                 Holidays holidays= HolidaysConvertor.ConvertHolidaysDtoToHolidays(holidaysDto);
-                var masterAdmin = await _holidaysManager.SaveHolidays(holidays);
-                if (masterAdmin != null)
+                NotificationModel model = await _holidaysManager.SaveHolidays(holidays);
+              //  NotificationModel model = await _classManager.CancelClassByTeacher(cls);
+                if (model != null)
                 {
+                    ResponseModel response = await _notificationService.SendNotification(model);
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,

@@ -1,4 +1,5 @@
-﻿using StudentAttendanceApiDAL.Tables;
+﻿using StudentAttendanceApi.FCM;
+using StudentAttendanceApiDAL.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace StudentAttendanceApiBLL.IManager
 {
     public interface IHolidaysManager
     {
-        Task<Holidays> SaveHolidays(Holidays holidays);
+        Task<NotificationModel> SaveHolidays(Holidays holidays);
         Task<List<Holidays>> GetAllHolidaysByTeacherId(int teacherId);
         Task<List<Holidays>> GetAllHolidaysByYear(int year);
         Task<List<Holidays>> GetAllHolidaysByCenterId(int centerId);
