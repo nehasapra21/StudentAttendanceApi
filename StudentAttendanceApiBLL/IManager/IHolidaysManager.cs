@@ -15,8 +15,5 @@ namespace StudentAttendanceApiBLL.IManager
         Task<List<Holidays>> GetAllHolidaysByYear(int year);
         Task<List<Holidays>> GetAllHolidaysByCenterId(int centerId);
         Task<List<Holidays>> GetAllHolidays(int userId, int type);
-
-
     }
-
 }
