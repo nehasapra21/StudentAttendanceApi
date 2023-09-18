@@ -27,12 +27,12 @@ namespace StudentAttendanceApi.Controllers
 
         [Authorize]
         [HttpGet("GetAllVidhanSabha")]
-        public async Task<IActionResult> GetAllVidhanSabha()
+        public async Task<IActionResult> GetAllVidhanSabha(int offset=0, int limit=0)
         {
             logger.LogInformation("VidhanSabhaController : GetAllVidhanSabha : Started");
             try
             {
-                var vidhanSabha = await _vidhanSabhaManager.GetAllVidhanSabha();
+                var vidhanSabha = await _vidhanSabhaManager.GetAllVidhanSabha(offset,limit);
                 if (vidhanSabha != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new

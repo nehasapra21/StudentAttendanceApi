@@ -33,10 +33,10 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async Task<List<Panchayat>> GetAllPanchayat()
+        public async Task<List<Panchayat>> GetAllPanchayat(int offset, int limit)
         {
             _logger.LogInformation($"PanchayatManager : Bll : GetAllPanchayat : Started");
-            var panchayat = await _panchayatRepository.GetAllPanchayat();
+            var panchayat = await _panchayatRepository.GetAllPanchayat(offset,limit);
             _logger.LogInformation($"PanchayatManager : Bll : GetAllPanchayat : End");
             return panchayat;
         }

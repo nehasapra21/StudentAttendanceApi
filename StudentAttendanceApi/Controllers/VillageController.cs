@@ -26,12 +26,12 @@ namespace StudentAttendanceApi.Controllers
 
         [Authorize]
         [HttpGet("GetAllVillage")]
-        public async Task<IActionResult> GetAllVillage()
+        public async Task<IActionResult> GetAllVillage(int offset=0, int limit=0)
         {
             logger.LogInformation("VillageController : GetAllVillage : Started");
             try
             {
-               var villageVal=await _villageManager.GetAllVillage();
+               var villageVal=await _villageManager.GetAllVillage(offset,limit);
                 if (villageVal != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new

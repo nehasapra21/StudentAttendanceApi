@@ -1,6 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StudentAttendanceApi.FCM;
+using StudentAttendanceApiBLL.Dto;
 using StudentAttendanceApiBLL.IManager;
+using StudentAttendanceApiBLL.NotificationData;
+using StudentAttendanceApiBLL.NotificationData1;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Repository;
 using StudentAttendanceApiDAL.Tables;
@@ -19,15 +24,19 @@ namespace StudentAttendanceApiBLL.Manager
 
         private readonly ILogger _logger;
         private readonly IClassRepository _classRepository;
-
+        private readonly IUserRepository _userRepository;
+        private readonly ICenterRepository _centerRepository;
         #endregion
 
         #region | Controller |
 
-        public ClassManager(IClassRepository classRepository,
+        public ClassManager(IClassRepository classRepository, IUserRepository userRepository,
+            ICenterRepository centerRepository,
                                 ILogger<ClassManager> logger)
         {
             _classRepository = classRepository;
+            _userRepository = userRepository;
+            _centerRepository = centerRepository;
             _logger = logger;
         }
 
@@ -35,7 +44,7 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-    
+
         public async Task<Class> SaveClass(Class cls)
         {
             _logger.LogInformation($"UserManager : Bll : SaveClass : Started");
@@ -65,11 +74,38 @@ namespace StudentAttendanceApiBLL.Manager
             return await _classRepository.CancelClass(cls);
         }
 
-        public async Task<ClassCancelTeacher> CancelClassByTeacher(ClassCancelTeacher cls)
+        public async Task<NotificationModel> CancelClassByTeacher(ClassCancelTeacher cls)
         {
             _logger.LogInformation($"UserManager : Bll : CancelClass : Started");
 
-            return await _classRepository.CancelClassByTeacher(cls);
+            //send notification
+
+            string RegionalToken = string.Empty;
+            string TeacherToken = string.Empty;
+            ClassCancelTeacher classCancelTeacher = await _classRepository.CancelClassByTeacher(cls);
+            NotificationDto dto = new NotificationDto();
+            Center center = await _centerRepository.GetCenteryId(cls.CenterId);
+            if (center != null)
+            {
+                cls.center = center;
+                dto.TeacherStatus = true;
+                dto.RegionaladminStatus = true;
+                RegionalToken = await _userRepository.GetUserDeviceByUserId(cls.center.AssignedRegionalAdmin.Value);
+                TeacherToken = await _userRepository.GetUserDeviceByUserId(cls.center.AssignedTeachers.Value);
+            }
+        
+            dto.CenterId = cls.CenterId;
+            dto.StartingDate = cls.StartingDate;
+            dto.EndingDate = cls.EndingDate;
+            dto.RegionalToken = RegionalToken;
+            dto.TeacherToken = TeacherToken;
+            dto.Type = 1;
+            dto.SuperAdminStatus = true;
+           
+            SendNotificationClass sendNotification = new SendNotificationClass(_userRepository);
+            NotificationModel model =await sendNotification.SendNotificationType(dto, false);
+
+            return model;
         }
 
         public async Task<string> GetClassCurrentStatus(int centerId, int teacherId)
@@ -103,7 +139,7 @@ namespace StudentAttendanceApiBLL.Manager
         {
             _logger.LogInformation($"UserManager : Bll : CancelClass : Started");
             Class cls = await _classRepository.UpdateClassSubStatus(classDto.Id);
-            
+
             return cls;
         }
         #endregion

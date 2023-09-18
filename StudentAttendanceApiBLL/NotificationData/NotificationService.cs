@@ -5,9 +5,8 @@ using static StudentAttendanceApi.FCM.NotificationModel;
 using System.Net.Http.Headers;
 using System.Runtime;
 using CorePush.Google;
-using FirebaseAdmin.Messaging;
 
-namespace StudentAttendanceApi.Services
+namespace StudentAttendanceApiBLL.NotificationData
 {
     public interface INotificationService
     {
@@ -17,10 +16,11 @@ namespace StudentAttendanceApi.Services
     public class NotificationService : INotificationService
     {
         private readonly FcmNotificationSetting _fcmNotificationSetting;
-
-        public NotificationService(IOptions<FcmNotificationSetting> settings)
+        private readonly INotificationService _notificationService;
+        public NotificationService(IOptions<FcmNotificationSetting> settings, INotificationService notificationService)
         {
             _fcmNotificationSetting = settings.Value;
+            this._notificationService = notificationService;
         }
 
         public async Task<ResponseModel> SendNotification(NotificationModel notificationModel)
@@ -37,12 +37,6 @@ namespace StudentAttendanceApi.Services
                 };
                 HttpClient httpClient = new HttpClient();
 
-                List<string> registrationTokens = new List<string>
-        {
-            "token1",
-            "token2",
-            // Add more tokens here
-        };
                 string authorizationKey = string.Format("keyy={0}", settings.ServerKey);
                 string deviceToken = notificationModel.DeviceId;
 
@@ -59,40 +53,22 @@ namespace StudentAttendanceApi.Services
                 notification.Notification = dataPayload;
 
                 var fcm = new FcmSender(settings, httpClient);
-                List<string> responseVal = new List<string>();
+                var fcmSendResponse = await fcm.SendAsync(deviceToken, notification);
+
                 try
                 {
-
-                    if (notificationModel.ListOfDeviceIds.Count > 0)
+                    if (fcmSendResponse.IsSuccess())
                     {
-                        var i = 0;
-                        foreach (var item in notificationModel.ListOfDeviceIds)
-                        {
-                            i++;
-                            var fcmSendResponse = await fcm.SendAsync(item, notification);
-                            if (fcmSendResponse.IsSuccess())
-                            {
-                                responseVal.Add("Notification sent successfully");
-                            }
-                            else
-                            {
-                                responseVal.Add(fcmSendResponse.Results[0].Error);
-                            }
-                        }
-
+                        response.IsSuccess = true;
+                        response.Message = "Notification sent successfully";
+                        return response;
                     }
-                    //var fcmSendResponse = await fcm.SendAsync(deviceToken, notification);
-
-
-                    if (responseVal.Count > 0)
+                    else
                     {
-                        foreach (var item in responseVal)
-                        {
-                            response.Message = item;
-                            return response;
-                        }
+                        response.IsSuccess = false;
+                        response.Message = fcmSendResponse.Results[0].Error;
+                        return response;
                     }
-
                 }
                 catch (Exception ex)
                 {

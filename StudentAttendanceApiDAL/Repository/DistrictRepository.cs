@@ -23,13 +23,22 @@ namespace StudentAttendanceApiDAL.Repository
             this.logger = logger;
         }
 
-        public async Task<List<District>> GetAllDistrict()
+        public async Task<List<District>> GetAllDistrict(int offset, int limit)
         {
             logger.LogInformation($"DistrictRepository : GetAllDistrict : Started");
             List<District> district = new List<District>();
             try
             {
-                district = await appDbContext.District.AsNoTracking().ToListAsync();
+                if (offset == 0 && limit == 0)
+                {
+                    district = await appDbContext.District.AsNoTracking().ToListAsync();
+                }
+                else
+                {
+                    district = await appDbContext.District.AsNoTracking()
+                                                                       .Skip(offset)
+                                                                       .Take(limit).ToListAsync();
+                }
                 logger.LogInformation($"DistrictRepository : GetAllDistrict : End");
                 return district.ToList();
             }

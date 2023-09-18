@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 
 namespace StudentAttendanceApi.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class FileController : Controller
@@ -32,20 +31,20 @@ namespace StudentAttendanceApi.Controllers
         {
             _webHostEnvironment = webHostEnvironment;
             this.logger = logger;
-              _notificationService = notificationService;
+            _notificationService = notificationService;
             this._userManager = userManager;
         }
 
         [Route("SendNotification")]
         [HttpPost]
-        public async Task<IActionResult> SendNotification([FromForm]NotificationModel notificationModel)
+        public async Task<IActionResult> SendNotification([FromForm] NotificationModel notificationModel)
         {
             try
             {
-                notificationModel.DeviceId=await _userManager.GetUserDeviceByUserId(notificationModel.userId);
+                notificationModel.DeviceId = await _userManager.GetUserDeviceByUserId(notificationModel.userId);
 
-                ResponseModel result =await  _notificationService.SendNotification(notificationModel);
-                if(result!= null && result.IsSuccess)
+                ResponseModel result = await _notificationService.SendNotification(notificationModel);
+                if (result != null && result.IsSuccess)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
@@ -54,7 +53,8 @@ namespace StudentAttendanceApi.Controllers
                         code = StatusCodes.Status200OK
                     });
                 }
-                else{
+                else
+                {
                     return StatusCode(StatusCodes.Status404NotFound, new
                     {
                         status = false,
@@ -62,7 +62,7 @@ namespace StudentAttendanceApi.Controllers
                         code = StatusCodes.Status404NotFound
                     });
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -130,7 +130,7 @@ namespace StudentAttendanceApi.Controllers
         [HttpPost("UploadProfileImage")]
         public IActionResult UploadProfileImage([FromForm] List<IFormFile> files)
         {
-            logger.LogInformation("FileController : UploadProfileImage : Started"+_webHostEnvironment);
+            logger.LogInformation("FileController : UploadProfileImage : Started" + _webHostEnvironment);
             logger.LogInformation("FileController : UploadProfileImage : Started");
             ImagesDto fileUrls = new ImagesDto();
 
@@ -138,7 +138,7 @@ namespace StudentAttendanceApi.Controllers
             {
                 if (files.Count > 0)
                 {
-                    fileUrls =  FileApiUtilty.UploadFileInFolder(files, _webHostEnvironment);
+                    fileUrls = FileApiUtilty.UploadFileInFolder(files, _webHostEnvironment);
                     logger.LogInformation("FileController : UploadProfileImage : End");
                     if (fileUrls.FilePath != null)
                     {

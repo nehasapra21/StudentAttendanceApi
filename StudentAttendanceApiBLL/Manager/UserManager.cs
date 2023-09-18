@@ -216,6 +216,14 @@ namespace StudentAttendanceApiBLL.Manager
             }
             return regionalAdminDtos;
         }
+
+
+        public async Task<List<object>> SearchData(string type, string queryString)
+        {
+            _logger.LogInformation($"UserManager : Bll : SearchData : Started");
+
+            return await _userRepository.SearchData(type,queryString);
+        }
         #endregion
     }
 }

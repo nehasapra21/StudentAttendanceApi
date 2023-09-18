@@ -367,5 +367,41 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [HttpGet("SearchData")]
+        public async Task<IActionResult> SearchData(string type, string queryString)
+        {
+            logger.LogInformation("UserController : SearchData : Started");
+            try
+            {
+                var searchedData = await _userManager.SearchData(type,queryString);
+                if (searchedData != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = searchedData,
+                        message = "List of search data",
+                        code = StatusCodes.Status200OK
+                    });
+
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        message = "List of search data not found",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : GetAllRegionalAdmins ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
     }
 }

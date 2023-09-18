@@ -54,6 +54,65 @@ namespace StudentAttendanceApiDAL.Repository
             return string.Empty;
         }
 
+        //public async Task<string> GetUserTokenByUserId(int userId)
+        //{
+        //    logger.LogInformation($"UserRepository : GetUserTokenByUserId : Started");
+
+        //    string userToken = string.Empty;
+        //    Task<Users> user = new Task<Users>();
+        //    try
+        //    {
+        //        user = await appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId).Result;
+
+        //        if (user != null)
+        //        {
+        //            userToken = user.Token;
+        //        }
+
+        //        logger.LogInformation($"UserRepository : GetUserById : End");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.LogError(ex, $"UserRepository : GetUserById", ex);
+        //        throw ex;
+        //    }
+        //    return userToken;
+        //}
+
+        public async Task<List<string>> GetAllSuperAdminToken()
+        {
+            logger.LogInformation($"UserRepository : GetUserTokenByUserId : Started");
+
+            List<string> superAdminToken = null;
+            List<Users> user = new List<Users>();
+            try
+            {
+                superAdminToken = appDbContext.Users.AsNoTracking().Where(x => x.Type == 1).Select(x => x.DeviceId).ToList();
+
+                if (superAdminToken != null && superAdminToken.Count > 0)
+                {
+                    foreach (var item in superAdminToken)
+                    {
+                        if (item != null)
+                        {
+                            superAdminToken=new List<string>();
+                            superAdminToken.Add(item);
+                        }
+
+                    }
+                    return superAdminToken;
+                }
+
+                logger.LogInformation($"UserRepository : GetUserById : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetUserById", ex);
+                throw ex;
+            }
+            return null;
+        }
+
         public async Task<Users> GetUserById(int userId)
         {
             logger.LogInformation($"UserRepository : GetUserById : Started");
@@ -73,34 +132,7 @@ namespace StudentAttendanceApiDAL.Repository
                                                   .Where(x => x.Id == userId).FirstOrDefaultAsync();
 
                     user.Center = appDbContext.Center.Include(x => x.CenterAssignUser).FirstOrDefaultAsync(x => x.AssignedTeachers == user.Id).Result;
-                    //user = await (from u in appDbContext.Users
-                    //              join d in appDbContext.District
-                    //              on u.DistrictId equals d.Id
-                    //              join vid in appDbContext.VidhanSabha
-                    //              on u.VidhanSabhaId equals vid.Id
-                    //              into emp
-                    //              from Village in emp.DefaultIfEmpty()
-                    //              where u.Id == userId
-                    //              select new Users
-                    //              {
-                    //                  Id = u.Id,
-                    //                  EnrolmentRollId = u.EnrolmentRollId,
-                    //                  Name = u.Name,
-                    //                  Age = u.Age,
-                    //                  Gender = u.Gender,
-                    //                  DateOfBirth = u.DateOfBirth,
-                    //                  PhoneNumber = u.PhoneNumber,
-                    //                  WhatsApp = u.WhatsApp,
-                    //                  GuardianName = u.GuardianName,
-                    //                  GuardianNumber = u.GuardianNumber,
-                    //                  DistrictId = d.Id,
-                    //                  DistrictName = d.Name,
-                    //                  VidhanSabhaId = u.VidhanSabhaId,
-                    //                  Education = u.Education,
-                    //                  PanchayatId = u.PanchayatId,
-                    //                  VillageId = Village.Id,
-                    //                  VillageName = Village == null ? string.Empty : Village.Name,
-                    //              }).AsNoTracking().FirstOrDefaultAsync();
+
                 }
                 else if (user != null && user.Type == (int)Constant.Type.RegionalAdmin)
                 {
@@ -376,51 +408,6 @@ namespace StudentAttendanceApiDAL.Repository
                                    AssignedTeacherStatus = u.AssignedTeacherStatus
                                }).OrderByDescending(x => x.Id).ToListAsync();
 
-                //users = await (from u in appDbContext.Users
-
-                //               where u.Type == (int)Constant.Type.Teacher
-                //               select new Users
-                //               {
-                //                   Id = u.Id,
-                //                   EnrolmentRollId = u.EnrolmentRollId,
-                //                   Name = u.Name,
-                //                   Age = u.Age,
-                //                   Gender = u.Gender,
-                //                   DateOfBirth = u.DateOfBirth,
-                //                   PhoneNumber = u.PhoneNumber,
-                //                   WhatsApp = u.WhatsApp,
-                //                   GuardianName = u.GuardianName,
-                //                   GuardianNumber = u.GuardianNumber,
-                //                   DistrictId = d.Id,
-                //                   DistrictName = d.Name,
-                //                   VidhanSabhaId = u.VidhanSabhaId,
-                //                   Education = u.Education,
-                //                   PanchayatId = u.PanchayatId,
-                //                   VillageId = Village.Id,
-                //                   VillageName = Village == null ? string.Empty : Village.Name,
-                //                   CenterName = Center == null ? string.Empty : Center.CenterName,
-                //                   //CenterName=c.CenterName,
-                //                   AssignedTeacherStatus = u.AssignedTeacherStatus,
-                //                   EnrollmentDate = u.EnrollmentDate
-                //               }).AsNoTracking().ToListAsync();
-
-                //if (users != null)
-                //{
-                //    foreach (var user in users)
-                //    {
-                //        List<Panchayat> listOfPanchayat = await appDbContext.Panchayat.AsNoTracking().Where(x => user.PanchayatId.Contains(x.Id.ToString())).ToListAsync();
-                //        if (listOfPanchayat != null)
-
-                //            user.PanchayatName = new List<string>();
-                //        foreach (var item in listOfPanchayat)
-                //        {
-                //            user.PanchayatName.Add(item.Name);
-                //        }
-
-                //        user.VidhanSabhaName = appDbContext.VidhanSabha.AsNoTracking().FirstOrDefaultAsync(x => x.Id == user.VidhanSabhaId).Result.Name;
-                //    }
-
-                //}
 
                 logger.LogInformation($"UserRepository : GetAllTeachers : End");
             }
@@ -449,70 +436,6 @@ namespace StudentAttendanceApiDAL.Repository
                                }).OrderByDescending(x => x.Id).ToListAsync();
 
 
-                //var test = appDbContext.Users.Include(x=>x.District)
-                //                              .Include(x=>x.VidhanSabha)
-                //                              .Include(x=>x.Panchayat)
-                //                              .Include(x=>x.Village)
-                //                              .Where(x=>x.Type==2 && x.Id==17).ToList();
-
-                //users = await (from u in appDbContext.Users
-                //               join c in appDbContext.Center
-                //               on u.Id equals c.AssignedRegionalAdmin
-                //               into jts
-                //               from Center in jts.DefaultIfEmpty()
-                //               join d in appDbContext.District
-                //               on u.DistrictId equals d.Id
-                //               join vid in appDbContext.VidhanSabha
-                //               on u.VidhanSabhaId equals vid.Id
-                //               into emp
-                //               from Village in emp.DefaultIfEmpty()
-                //               where u.Type == (int)Constant.Type.RegionalAdmin
-                //               select new Users
-                //               {
-                //                   Id = u.Id,
-                //                   Type = u.Type,
-                //                   EnrolmentRollId = u.EnrolmentRollId,
-                //                   Name = u.Name,
-                //                   Age = u.Age,
-                //                   Gender = u.Gender,
-                //                   DateOfBirth = u.DateOfBirth,
-                //                   PhoneNumber = u.PhoneNumber,
-                //                   WhatsApp = u.WhatsApp,
-                //                   GuardianName = u.GuardianName,
-                //                   GuardianNumber = u.GuardianNumber,
-                //                   DistrictId = d.Id,
-                //                   DistrictName = d.Name,
-                //                   VidhanSabhaId = u.VidhanSabhaId,
-                //                   Education = u.Education,
-                //                   PanchayatId = u.PanchayatId,
-                //                   VillageId=u.VillageId,
-                //                   VillageName = Village == null ? string.Empty : Village.Name,
-                //                   CenterName= Center == null?string.Empty: Center.CenterName,
-                //                   AssignedTeacherStatus = u.AssignedTeacherStatus,
-                //                   EnrollmentDate = u.EnrollmentDate
-                //               }).AsNoTracking().ToListAsync();
-
-
-
-                //if (users != null)
-                //{
-                //    foreach (var user in users)
-                //    {
-                //        //Center center = appDbContext.Center.Where(x => x.AssignedTeachers == user.Id);
-                //        List<Panchayat> listOfPanchayat = await appDbContext.Panchayat.AsNoTracking().Where(x => user.PanchayatId.Contains(x.Id.ToString())).ToListAsync();
-                //        if (listOfPanchayat != null)
-
-                //            user.PanchayatName = new List<string>();
-                //        foreach (var item in listOfPanchayat)
-                //        {
-                //            user.PanchayatName.Add(item.Name);
-                //        }
-
-                //        user.VidhanSabhaName = appDbContext.VidhanSabha.AsNoTracking().FirstOrDefaultAsync(x => x.Id == user.VidhanSabhaId).Result.Name;
-                //    }
-
-                //}
-
                 logger.LogInformation($"UserRepository : GetAllRegionalAdmins : End");
             }
             catch (Exception ex)
@@ -521,6 +444,87 @@ namespace StudentAttendanceApiDAL.Repository
                 throw ex;
             }
             return users;
+        }
+
+        public async Task<List<object>> SearchData(string type, string queryString)
+        {
+            logger.LogInformation($"UserRepository : SearchData : Started");
+
+            List<object> objectList = new List<object>();
+            try
+            {
+                if (type == "Users")
+                {
+                    List<Users> users = await appDbContext.Users.Where(x => x.Name.Contains(queryString)).AsNoTracking().ToListAsync();
+                    objectList = users.Select(user => (object)user).ToList();
+                    //users
+                }
+                else if (type == "Student")
+                {
+                    List<Student> users = await appDbContext.Student.Where(x => x.FullName.Contains(queryString)).AsNoTracking().ToListAsync();
+                    objectList = users.Select(user => (object)user).ToList();
+                    //users
+                }
+                else if (type == "District")
+                {
+                    List<District> district = await appDbContext.District.Where(x => x.Name.Contains(queryString)).AsNoTracking().ToListAsync();
+                    objectList = district.Select(user => (object)user).ToList();
+                    //users
+                }
+                else if (type == "Panchayat")
+                {
+                    List<Panchayat> Panchayat = await appDbContext.Panchayat.Where(x => x.Name.Contains(queryString)).AsNoTracking().ToListAsync();
+                    objectList = Panchayat.Select(user => (object)user).ToList();
+                    //users
+                }
+                else if (type == "VidhanSabha")
+                {
+                    List<VidhanSabha> vidhanSabha = await appDbContext.VidhanSabha.Where(x => x.Name.Contains(queryString)).AsNoTracking().ToListAsync();
+                    objectList = vidhanSabha.Select(user => (object)user).ToList();
+                    //users
+                }
+                else if (type == "Village")
+                {
+                    List<Village> village = await appDbContext.Village.Where(x => x.Name.Contains(queryString)).AsNoTracking().ToListAsync();
+                    objectList = village.Select(user => (object)user).ToList();
+                    //users
+                }
+                else if (type == "Center")
+                {
+                    List<Center> center = await appDbContext.Center.Where(x => x.CenterName.Contains(queryString)).AsNoTracking().ToListAsync();
+                    objectList = center.Select(user => (object)user).ToList();
+                    //users
+                }
+                else if (type == "School")
+                {
+                    List<School> school = await appDbContext.School.Where(x => x.SchoolName.Contains(queryString)).AsNoTracking().ToListAsync();
+                    objectList = school.Select(user => (object)user).ToList();
+                    //users
+                }
+                else if (type == "Class")
+                {
+                    List<Class> classs = await appDbContext.Class.Where(x => x.Name.Contains(queryString)).AsNoTracking().ToListAsync();
+                    objectList = classs.Select(user => (object)user).ToList();
+                    //users
+                }
+                else if (type == "Teacher")
+                {
+                    List<Teacher> teacher = await appDbContext.Teacher.Where(x => x.FullName.Contains(queryString)).AsNoTracking().ToListAsync();
+                    objectList = teacher.Select(user => (object)user).ToList();
+                    //users
+                }
+                else
+                {
+                    return objectList;
+                }
+                logger.LogInformation($"UserRepository : SearchData : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : SearchData", ex);
+                throw ex;
+            }
+            return objectList;
         }
 
         public string GenerateToken(Users user)

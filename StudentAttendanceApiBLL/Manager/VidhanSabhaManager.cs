@@ -33,10 +33,10 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async Task<List<VidhanSabha>> GetAllVidhanSabha()
+        public async Task<List<VidhanSabha>> GetAllVidhanSabha(int offset, int limit)
         {
             _logger.LogInformation($"VidhanSabhaManager : Bll : GetAllVidhanSabha : Started");
-            var vidhanSabha = await _vidhanRepository.GetAllVidhanSabha();
+            var vidhanSabha = await _vidhanRepository.GetAllVidhanSabha(offset,limit);
             _logger.LogInformation($"VidhanSabhaManager : Bll : GetAllVidhanSabha : End");
             return vidhanSabha;
         }

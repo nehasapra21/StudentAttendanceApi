@@ -5,30 +5,36 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StudentAttendanceApi.FCM;
+using StudentAttendanceApi.Services;
 using StudentAttendanceApiBLL;
 using StudentAttendanceApiBLL.IManager;
 using StudentAttendanceApiBLL.Manager;
+using StudentAttendanceApiBLL.NotificationData;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Repository;
 using StudentAttendanceApiDAL.Tables;
 using System.Net;
 using System.Text;
 using System.Text.Json.Nodes;
+using System.Web.Http.Results;
+using INotificationService = StudentAttendanceApi.Services.INotificationService;
 
 namespace StudentAttendanceApi.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ClassController : ControllerBase
     {
         private readonly ILogger<ClassController> logger;
         private readonly IClassManager _classManager;
+        private readonly INotificationService _notificationService;
 
-        public ClassController(IClassManager classManager, ILogger<ClassController> logger)
+        public ClassController(IClassManager classManager, INotificationService notificationService, ILogger<ClassController> logger)
         {
             this.logger = logger;
             this._classManager = classManager;
+            _notificationService = notificationService;
         }
 
 
@@ -180,15 +186,33 @@ namespace StudentAttendanceApi.Controllers
             try
             {
                 ClassCancelTeacher cls = ClassConvertor.ConvertClassToClassCancelTeacherDto(classDto);
-                var classData = await _classManager.CancelClassByTeacher(cls);
-                if (classData != null)
+                NotificationModel model = await _classManager.CancelClassByTeacher(cls);
+                if (model != null)
                 {
-                    return StatusCode(StatusCodes.Status200OK, new
+                    ResponseModel response = await _notificationService.SendNotification(model);
+                    if (response != null && response.IsSuccess)
                     {
-                        status = true,
-                        message = "Class cancelled",
-                        code = StatusCodes.Status200OK
-                    });
+                        return StatusCode(StatusCodes.Status200OK, new
+                        {
+                            status = true,
+                            message = "Class cancelled",
+                            Notification = response.Message,
+                            code = StatusCodes.Status200OK
+                        }); ;
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status200OK, new
+                        {
+                            status = true,
+                            message = "Class cancelled",
+                            Notification = response.Message,
+                            code = StatusCodes.Status200OK
+                        });
+
+                    }
+
+                  
                 }
                 else
                 {
@@ -257,7 +281,7 @@ namespace StudentAttendanceApi.Controllers
                 ContentResult contentResult = new ContentResult();
                 contentResult.Content = classData;
                 contentResult.ContentType = "application/json";
-              
+
                 return contentResult;
 
             }
@@ -284,7 +308,7 @@ namespace StudentAttendanceApi.Controllers
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,
-                        data= classData,
+                        data = classData,
                         message = "class detail exists",
                         code = StatusCodes.Status200OK
                     });

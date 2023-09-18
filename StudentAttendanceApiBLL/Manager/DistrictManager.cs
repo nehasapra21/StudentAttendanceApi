@@ -33,10 +33,10 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async Task<List<District>> GetAllDistrict()
+        public async Task<List<District>> GetAllDistrict(int offset, int limit)
         {
             _logger.LogInformation($"DitrictManager : Bll : GetAllDistrict : Started");
-            var district = await _districtRepository.GetAllDistrict();
+            var district = await _districtRepository.GetAllDistrict(offset,limit);
             _logger.LogInformation($"DitrictManager : Bll : GetAllDistrict : End");
             return district;
         }

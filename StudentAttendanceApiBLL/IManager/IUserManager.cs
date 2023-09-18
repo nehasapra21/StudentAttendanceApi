@@ -20,6 +20,7 @@ namespace StudentAttendanceApiBLL.IManager
         Task<List<TeacherDto>> GetAllUnAssignedTeacher();
         Task<List<RegionalAdminDto>> GetAllRegionalAdmins();
         Task<Users> UpdateDeviceId(int userId,string deviceId);
+        Task<List<object>> SearchData(string type, string queryString);
     }
 
 }

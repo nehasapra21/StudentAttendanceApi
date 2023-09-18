@@ -20,5 +20,9 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<List<Users>> GetAllUnAssignedTeacher();
         Task<List<Users>> GetAllRegionalAdmins();
         Task<Users> UpdateDeviceId(int userId, string deviceId);
+        Task<List<object>> SearchData(string type, string queryString);
+        //string GetUserTokenByUserId(int userId);
+        Task<List<string>> GetAllSuperAdminToken();
+
     }
 }

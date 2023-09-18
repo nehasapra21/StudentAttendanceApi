@@ -12,7 +12,6 @@ using StudentAttendanceApiDAL.Tables;
 
 namespace StudentAttendanceApi.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DistrictController : ControllerBase
@@ -26,20 +25,19 @@ namespace StudentAttendanceApi.Controllers
             this._districtManager = districtManager;
         }
 
-        [Authorize]
         [HttpGet("GetAllDistrict")]
-        public async Task<IActionResult> GetAllDistrict()
+        public async Task<IActionResult> GetAllDistrict(int offset = 0, int limit = 0)
         {
             logger.LogInformation("DistrictController : GetAllDistrict : Started");
             try
             {
-                List<District> allDistricts = await _districtManager.GetAllDistrict();
-               
+                List<District> allDistricts = await _districtManager.GetAllDistrict(offset, limit);
+
                 if (allDistricts != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
-                        status=true,
+                        status = true,
                         message = "List of district",
                         data = allDistricts,
                         code = StatusCodes.Status200OK
@@ -132,6 +130,6 @@ namespace StudentAttendanceApi.Controllers
         //        return StatusCode(StatusCodes.Status501NotImplemented, "error");
         //    }
         //}
-    
+
     }
 }

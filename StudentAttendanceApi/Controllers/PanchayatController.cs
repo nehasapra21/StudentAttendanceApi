@@ -28,12 +28,12 @@ namespace StudentAttendanceApi.Controllers
 
         [Authorize]
         [HttpGet("GetAllPanchayat")]
-        public async Task<IActionResult> GetAllPanchayat()
+        public async Task<IActionResult> GetAllPanchayat(int offset=0, int limit=0)
         {
             logger.LogInformation("PanchayatController : GetAllPanchayat : Started");
             try
             {
-                var panchayat = await _panchayatManager.GetAllPanchayat();
+                var panchayat = await _panchayatManager.GetAllPanchayat(offset,limit);
                 if (panchayat != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new

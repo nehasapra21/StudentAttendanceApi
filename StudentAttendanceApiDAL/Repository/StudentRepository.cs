@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Model;
 using StudentAttendanceApiDAL.Tables;
+using static StudentAttendanceApiDAL.Constant;
 
 namespace StudentAttendanceApiDAL.Repository
 {
@@ -70,6 +72,7 @@ namespace StudentAttendanceApiDAL.Repository
                 student = await appDbContext.Student.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
                 if (student != null)
                 {
+                    student.FatherOccupation = Enum.GetName(typeof(FatherOccupation), Convert.ToInt32(student.FatherOccupation));
                     School school = appDbContext.School.Where(x => x.Id == student.SchoolId).FirstOrDefault();
                     if (school != null)
                     {
@@ -87,27 +90,7 @@ namespace StudentAttendanceApiDAL.Repository
                         }
                     }
                 }
-                //if(student!=null)
-                //{
-                //    Center center = await appDbContext.Center.Include(x => x.District)
-                //                            .Include(x => x.VidhanSabha)
-                //                            .Include(x => x.Panchayat)
-                //                            .Include(x => x.Village).Where(x => x.Id == student.CenterId).FirstOrDefaultAsync();
-                //    if(center!=null)
-                //    {
-                //        student.CenterName = center.CenterName;
-                //        Users user = appDbContext.Users.Where(x => x.Id == center.AssignedTeachers).FirstOrDefault();
-                //        if(user!=null)
-                //        {
-                //            student.AssignedTeacher = user.Name;
-                //        }
-
-                //        student.DistrictName = center.District!=null?center.District.Name:string.Empty;
-                //        student.PanchayatName = center.Panchayat != null ? center.Panchayat.Name: string.Empty;
-                //        student.VidhanSabhaName = center.VidhanSabha!=null? center.VidhanSabha.Name:string.Empty;
-                //        student.VillageName = center.Village != null ? center.Village.Name : string.Empty;
-                //    }
-                //}
+               
                 logger.LogInformation($"UserRepository : GetStudentById : End");
             }
             catch (Exception ex)

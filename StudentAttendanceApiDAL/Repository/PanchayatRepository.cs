@@ -23,30 +23,59 @@ namespace StudentAttendanceApiDAL.Repository
             this.logger = logger;
         }
 
-        public async Task<List<Panchayat>> GetAllPanchayat()
+        public async Task<List<Panchayat>> GetAllPanchayat(int offset, int limit)
         {
             logger.LogInformation($"PanchayatRepository : GetAllVidhanSabha : Started");
             List<Panchayat> panchayat = new List<Panchayat>();
             try
             {
-                panchayat = await (from p in appDbContext.Panchayat
-                                    join v in appDbContext.VidhanSabha
-                                 on p.VidhanSabhaId equals v.Id
-                                   join d in appDbContext.District
-                                   on p.DistrictId equals d.Id
-                                   select new Panchayat
-                                    {
-                                        Id = p.Id,
-                                        PanchayatGuidId = p.PanchayatGuidId,
-                                        Name = p.Name,
-                                        DistrictId = p.DistrictId,
-                                        DistrictName = d.Name,
-                                        VidhanSabhaId = p.VidhanSabhaId,
-                                        VidhanSabhaName =v.Name,
-                                        CreatedOn = p.CreatedOn,
-                                        CreatedBy = p.CreatedBy,
-                                        Status = p.Status
-                                    }).ToListAsync();
+                if (offset == 0 && limit == 0)
+                {
+                    panchayat = await (from p in appDbContext.Panchayat
+                                       join v in appDbContext.VidhanSabha
+                                    on p.VidhanSabhaId equals v.Id
+                                       join d in appDbContext.District
+                                       on p.DistrictId equals d.Id
+                                       select new Panchayat
+                                       {
+                                           Id = p.Id,
+                                           PanchayatGuidId = p.PanchayatGuidId,
+                                           Name = p.Name,
+                                           DistrictId = p.DistrictId,
+                                           DistrictName = d.Name,
+                                           VidhanSabhaId = p.VidhanSabhaId,
+                                           VidhanSabhaName = v.Name,
+                                           CreatedOn = p.CreatedOn,
+                                           CreatedBy = p.CreatedBy,
+                                           Status = p.Status
+                                       }).AsNoTracking().ToListAsync();
+                }
+                else
+                {
+                    panchayat = await (from p in appDbContext.Panchayat
+                                       join v in appDbContext.VidhanSabha
+                                    on p.VidhanSabhaId equals v.Id
+                                       join d in appDbContext.District
+                                       on p.DistrictId equals d.Id
+                                       select new Panchayat
+                                       {
+                                           Id = p.Id,
+                                           PanchayatGuidId = p.PanchayatGuidId,
+                                           Name = p.Name,
+                                           DistrictId = p.DistrictId,
+                                           DistrictName = d.Name,
+                                           VidhanSabhaId = p.VidhanSabhaId,
+                                           VidhanSabhaName = v.Name,
+                                           CreatedOn = p.CreatedOn,
+                                           CreatedBy = p.CreatedBy,
+                                           Status = p.Status
+                                       })
+                                       .AsNoTracking()
+                                       .Skip(offset)
+                                       .Take(limit)
+                                       .ToListAsync();
+
+                }
                 logger.LogInformation($"PanchayatRepository : GetAllVidhanSabha : End");
                 return panchayat.ToList();
             }
@@ -87,11 +116,11 @@ namespace StudentAttendanceApiDAL.Repository
             return panchayat;
         }
 
-        public async Task<Panchayat> GetPanchayatByDistrictAndVidhanSabhaId(int districtId,int vidhanSabhaId)
+        public async Task<Panchayat> GetPanchayatByDistrictAndVidhanSabhaId(int districtId, int vidhanSabhaId)
         {
             logger.LogInformation($"VidhanSabhaRepository : GetPanchayatByDistrictAndVidhanSabhaId : Started");
 
-            var panchayat = await appDbContext.Panchayat.AsNoTracking().FirstOrDefaultAsync(x => x.DistrictId == districtId && x.VidhanSabhaId== vidhanSabhaId);
+            var panchayat = await appDbContext.Panchayat.AsNoTracking().FirstOrDefaultAsync(x => x.DistrictId == districtId && x.VidhanSabhaId == vidhanSabhaId);
 
             logger.LogInformation($"VidhanSabhaRepository : GetPanchayatByDistrictAndVidhanSabhaId : End");
 

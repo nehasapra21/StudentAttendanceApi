@@ -88,6 +88,9 @@ namespace StudentAttendanceApiDAL.Repository
 
             try
             {
+
+                //regional admin id from cls.user
+
                 Class clasVal = await appDbContext.Class.AsNoTracking().FirstOrDefaultAsync(x => x.Id == cls.Id);
                 if (clasVal != null)
                 {
@@ -123,6 +126,8 @@ namespace StudentAttendanceApiDAL.Repository
 
                 }
                 await appDbContext.SaveChangesAsync();
+
+               
 
                 logger.LogInformation($"UserRepository : SaveStudent : Started");
             }

@@ -9,7 +9,7 @@ namespace StudentAttendanceApiDAL.IRepository
 {
     public interface IVidhanSabhaRepository
     {
-        Task<List<VidhanSabha>> GetAllVidhanSabha();
+        Task<List<VidhanSabha>> GetAllVidhanSabha(int offset, int limit);
         Task<VidhanSabha> SaveVidhanSabha(VidhanSabha vidhanSabha);
         Task<VidhanSabha> GetVidhanSabhaByDistrictId(int districtId);
         Task<string> CheckVidhanSabhaName(string name);

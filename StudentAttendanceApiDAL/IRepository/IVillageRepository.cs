@@ -9,7 +9,7 @@ namespace StudentAttendanceApiDAL.IRepository
 {
     public interface IVillageRepository
     {
-        Task<List<Village>> GetAllVillage();
+        Task<List<Village>> GetAllVillage(int offset, int limit);
         Task<Village> SaveVillage(Village village);
         Task<Village> GetVillageByDistrictVidhanSabhaAndPanchId(int districtId, int vidhanSabhaId, int panchayatId);
         Task<string> CheckVillageName(string name);

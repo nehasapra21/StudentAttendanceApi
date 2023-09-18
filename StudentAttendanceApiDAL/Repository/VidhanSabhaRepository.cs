@@ -23,26 +23,51 @@ namespace StudentAttendanceApiDAL.Repository
             this.logger = logger;
         }
 
-        public async Task<List<VidhanSabha>> GetAllVidhanSabha()
+        public async Task<List<VidhanSabha>> GetAllVidhanSabha(int offset, int limit)
         {
             logger.LogInformation($"VidhanSabhaRepository : GetAllVidhanSabha : Started");
             List<VidhanSabha> vidanSabha = new List<VidhanSabha>();
             try
             {
-                vidanSabha = await (from v in appDbContext.VidhanSabha
-                                    join d in appDbContext.District
-                                 on v.DistrictId equals d.Id
-                                 select new VidhanSabha
-                                 {
-                                     Id = v.Id,
-                                     VidhanSabhaGuidId=v.VidhanSabhaGuidId,
-                                     Name = v.Name,
-                                     DistrictId = v.DistrictId,
-                                     DistrictName = d.Name,
-                                    CreatedOn=v.CreatedOn,
-                                    CreatedBy=v.CreatedBy,
-                                    Status=v.Status
-                                 }).ToListAsync();
+                if (offset == 0 && limit == 0)
+                {
+                    vidanSabha = await (from v in appDbContext.VidhanSabha
+                                        join d in appDbContext.District
+                                     on v.DistrictId equals d.Id
+                                        select new VidhanSabha
+                                        {
+                                            Id = v.Id,
+                                            VidhanSabhaGuidId = v.VidhanSabhaGuidId,
+                                            Name = v.Name,
+                                            DistrictId = v.DistrictId,
+                                            DistrictName = d.Name,
+                                            CreatedOn = v.CreatedOn,
+                                            CreatedBy = v.CreatedBy,
+                                            Status = v.Status
+                                        }).AsNoTracking().ToListAsync();
+                }
+                else
+                {
+                    vidanSabha = await (from v in appDbContext.VidhanSabha
+                                        join d in appDbContext.District
+                                     on v.DistrictId equals d.Id
+                                        select new VidhanSabha
+                                        {
+                                            Id = v.Id,
+                                            VidhanSabhaGuidId = v.VidhanSabhaGuidId,
+                                            Name = v.Name,
+                                            DistrictId = v.DistrictId,
+                                            DistrictName = d.Name,
+                                            CreatedOn = v.CreatedOn,
+                                            CreatedBy = v.CreatedBy,
+                                            Status = v.Status
+                                        })
+                                        .AsNoTracking()
+                                        .Skip(offset)
+                                        .Take(limit)
+                                        .ToListAsync();
+                }
+               
                 logger.LogInformation($"VidhanSabhaRepository : GetAllVidhanSabha : End");
                 return vidanSabha.ToList();
             }

@@ -26,7 +26,6 @@ namespace StudentAttendanceApi.Controllers
             this._studentManager = studentManager;
         }
 
-        [Authorize]
         [HttpPost("SaveStudent")]
         public async Task<IActionResult> SaveStudent([FromForm] StudentDto studentDto)
         {

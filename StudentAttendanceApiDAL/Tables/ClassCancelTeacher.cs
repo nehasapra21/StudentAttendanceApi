@@ -20,7 +20,8 @@ namespace StudentAttendanceApiDAL.Tables
         public DateTime? CreatedOn { get; set; }
         public int? UserId { get; set; }
         public string? Reason { get; set; }
-
+        [NotMapped]
+        public Center center { get; set; }
     }
     
 }

@@ -9,7 +9,7 @@ namespace StudentAttendanceApiDAL.IRepository
 {
     public interface IDistrictRepository
     {
-       public Task<List<District>> GetAllDistrict();
+       public Task<List<District>> GetAllDistrict(int offset, int limit);
        Task<District> SaveDistrict(District district);
         Task<string> CheckDistrictName(string name);
     }

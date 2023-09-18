@@ -9,7 +9,7 @@ namespace StudentAttendanceApiBLL.IManager
 {
     public interface IVillageManager
     {
-        Task<List<Village>> GetAllVillage();
+        Task<List<Village>> GetAllVillage(int offset, int limit);
         Task<Village> SaveVillage(Village village);
         Task<Village> GetVillageByDistrictVidhanSabhaAndPanchId(int districtId, int vidhanSabhaId, int PanchayatId);
         Task<string> CheckVillageName(string name);

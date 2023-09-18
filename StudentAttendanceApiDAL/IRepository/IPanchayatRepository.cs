@@ -9,7 +9,7 @@ namespace StudentAttendanceApiDAL.IRepository
 {
     public interface IPanchayatRepository
     {
-        Task<List<Panchayat>> GetAllPanchayat();
+        Task<List<Panchayat>> GetAllPanchayat(int offset, int limit);
         Task<Panchayat> SavePanchayat(Panchayat panchayat);
         Task<Panchayat> GetPanchayatByDistrictAndVidhanSabhaId(int districtId, int vidhanSabhaId);
         Task<string> CheckPanchayatName(string name);
