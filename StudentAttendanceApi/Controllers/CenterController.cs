@@ -14,7 +14,6 @@ using System.ComponentModel.DataAnnotations;
 namespace StudentAttendanceApi.Controllers
 {
 
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CenterController : ControllerBase

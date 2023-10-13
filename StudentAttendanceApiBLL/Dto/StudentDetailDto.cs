@@ -28,6 +28,7 @@ namespace StudentAttendanceApiBLL
         public string? ProfileImage { get; set; }
         public string? WhatsApp { get; set; }
         public string? FullAddress { get; set; }
+        public bool? Status { get; set; }
         public DateTime? JoiningDate { get; set; }
         public string CenterName { get; set; }
         public string TeacherName { get; set; }

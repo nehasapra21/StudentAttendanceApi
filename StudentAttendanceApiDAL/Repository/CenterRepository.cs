@@ -152,7 +152,7 @@ namespace StudentAttendanceApiDAL.Repository
             return center;
         }
 
-        public async Task<List<Center>> GetAllCenters(int userId,int type)
+        public async Task<List<Center>> GetAllCenters(int userId, int type)
         {
             logger.LogInformation($"UserRepository : GetAllCenters : Started");
 
@@ -214,7 +214,7 @@ namespace StudentAttendanceApiDAL.Repository
                                      //on c.VillageId equals vi.Id
                                      join vi in appDbContext.Village on c.VillageId equals vi.Id into villageGroup
                                      from village in villageGroup.DefaultIfEmpty()
-                                     where c.AssignedRegionalAdmin==userId
+                                     where c.AssignedRegionalAdmin == userId
                                      select new Center
                                      {
                                          Id = c.Id,
@@ -237,7 +237,7 @@ namespace StudentAttendanceApiDAL.Repository
                                          RegionalAdminName = appDbContext.Users.Where(x => x.Id == c.AssignedTeachers).FirstOrDefault().Name,
                                          TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id).AsNoTracking().ToList().Count,
 
-                                     }).OrderByDescending(x=>x.Id). ToListAsync();
+                                     }).OrderByDescending(x => x.Id).ToListAsync();
                 }
 
                 //if(centers!=null)
@@ -301,7 +301,7 @@ namespace StudentAttendanceApiDAL.Repository
         //    List<Center> centers = new List<Center>();
         //}
 
-        public async Task<List<Center>> GetStudentAttendanceOfCenter(int status,int userId,int type)
+        public async Task<List<Center>> GetStudentAttendanceOfCenter(int status, int userId, int type)
         {
             logger.LogInformation($"UserRepository : GetAllClasses : Started");
             List<Center> allCenters = new List<Center>();
@@ -421,7 +421,7 @@ namespace StudentAttendanceApiDAL.Repository
                             if (item.AssignedTeachers != null)
                             {
                                 center.AssignedTeachers = item.AssignedTeachers;
-                                if(item.AssignedTeachers!=0)
+                                if (item.AssignedTeachers != 0)
                                 {
                                     center.TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == item.AssignedTeachers).Name;
                                 }
@@ -449,12 +449,12 @@ namespace StudentAttendanceApiDAL.Repository
                 {
                     if (status == (int)(Constant.ClassStatus.Active) || status == (int)(Constant.ClassStatus.Completed))
                     {
-                        List<Class> classes = appDbContext.Class.AsNoTracking().Where(x => x.StartedDate.Value.Date == DateTime.Now.Date && x.Status.Value == status && x.UsersId==userId).ToList();
+                        List<Class> classes = appDbContext.Class.AsNoTracking().Where(x => x.StartedDate.Value.Date == DateTime.Now.Date && x.Status.Value == status && x.UsersId == userId).ToList();
                         List<int> centerIds = classes.Select(x => x.CenterId).ToList();
 
                         centers = await appDbContext.Center.AsNoTracking().Include(x => x.District)
                                                   .Include(x => x.VidhanSabha)
-                                                  .Include(x => x.Panchayat).Where(x => centerIds.Contains(x.Id)).Where(x=>x.AssignedRegionalAdmin==userId).ToListAsync();
+                                                  .Include(x => x.Panchayat).Where(x => centerIds.Contains(x.Id)).Where(x => x.AssignedRegionalAdmin == userId).ToListAsync();
                         foreach (var item in centers)
                         {
                             Center center = new Center();
@@ -508,7 +508,7 @@ namespace StudentAttendanceApiDAL.Repository
                                          on cen.VidhanSabhaId equals v.Id
                                          join p in appDbContext.Panchayat
                                           on cen.PanchayatId equals p.Id
-                                         where (cen.AssignedRegionalAdmin==userId && c.StartingDate.Value.Date <= DateTime.Now.Date && c.EndingDate.Value.Date >= DateTime.Now.Date)
+                                         where (cen.AssignedRegionalAdmin == userId && c.StartingDate.Value.Date <= DateTime.Now.Date && c.EndingDate.Value.Date >= DateTime.Now.Date)
                                          select cen).ToListAsync();
 
                         foreach (var item in centers)
@@ -544,7 +544,7 @@ namespace StudentAttendanceApiDAL.Repository
 
                         centers = await appDbContext.Center.AsNoTracking().Include(x => x.District)
                                                   .Include(x => x.VidhanSabha)
-                                                  .Include(x => x.Panchayat).Where(x => !centerIds.Contains(x.Id) && x.AssignedRegionalAdmin==userId).ToListAsync();
+                                                  .Include(x => x.Panchayat).Where(x => !centerIds.Contains(x.Id) && x.AssignedRegionalAdmin == userId).ToListAsync();
                         foreach (var item in centers)
                         {
                             Center center = new Center();

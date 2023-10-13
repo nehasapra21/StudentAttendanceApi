@@ -11,6 +11,7 @@ using StudentAttendanceApiDAL.Tables;
 
 namespace StudentAttendanceApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class VillageController : ControllerBase

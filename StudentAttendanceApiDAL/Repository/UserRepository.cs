@@ -122,6 +122,7 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 user = await appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
 
+
                 if (user != null && user.Type == (int)Constant.Type.Teacher)
                 {
                     user = await appDbContext.Users.Include(x => x.District)
@@ -368,7 +369,7 @@ namespace StudentAttendanceApiDAL.Repository
             return mobileNo;
         }
 
-        public async Task<List<Users>> GetAllTeachers()
+        public async Task<List<Users>> GetAllTeachers(int userId)
         {
             logger.LogInformation($"UserRepository : GetRegisteredTeachers : Started");
 
@@ -376,13 +377,29 @@ namespace StudentAttendanceApiDAL.Repository
 
             try
             {
-                users = await (from u in appDbContext.Users.Where(x => x.Type == 3 && x.Status.Value)
-                               select new Users
-                               {
-                                   Id = u.Id,
-                                   Name = u.Name,
-                                   AssignedTeacherStatus = u.AssignedTeacherStatus
-                               }).OrderByDescending(x => x.Id).ToListAsync();
+                if (userId == 0)
+                {
+                    users = await (from u in appDbContext.Users.Where(x => x.Type == 3 && x.Status.Value)
+                                   select new Users
+                                   {
+                                       Id = u.Id,
+                                       Name = u.Name,
+                                       AssignedTeacherStatus = u.AssignedTeacherStatus
+                                   }).OrderBy(x => x.Name).ToListAsync();
+                }
+                else
+                {
+                    List<int> userIds=appDbContext.Center.Where(x => x.AssignedRegionalAdmin == userId).Select(x=>x.AssignedTeachers.Value).ToList();
+
+                    users = await (from u in appDbContext.Users.Where(x => x.Type == 3 && x.Status.Value)
+                                   select new Users
+                                   {
+                                       Id = u.Id,
+                                       Name = u.Name,
+                                       AssignedTeacherStatus = u.AssignedTeacherStatus
+                                   }).OrderBy(x => x.Name).ToListAsync();
+                    users = users.Where(x => userIds.Contains(x.Id)).ToList();
+                }
                 logger.LogInformation($"UserRepository : GetRegisteredTeachers : End");
             }
             catch (Exception ex)
@@ -405,7 +422,8 @@ namespace StudentAttendanceApiDAL.Repository
                                    Id = u.Id,
                                    Name = u.Name,
                                    Picture = u.Picture,
-                                   AssignedTeacherStatus = u.AssignedTeacherStatus
+                                   AssignedTeacherStatus = u.AssignedTeacherStatus,
+                                   PhoneNumber = u.PhoneNumber
                                }).OrderByDescending(x => x.Id).ToListAsync();
 
 

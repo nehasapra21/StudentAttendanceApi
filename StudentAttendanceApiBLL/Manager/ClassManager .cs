@@ -74,7 +74,7 @@ namespace StudentAttendanceApiBLL.Manager
             return await _classRepository.CancelClass(cls);
         }
 
-        public async Task<NotificationModel> CancelClassByTeacher(ClassCancelTeacher cls)
+        public async Task<ClassCancelTeacher> CancelClassByTeacher(ClassCancelTeacher cls)
         {
             _logger.LogInformation($"UserManager : Bll : CancelClass : Started");
 
@@ -82,29 +82,29 @@ namespace StudentAttendanceApiBLL.Manager
             string RegionalToken = string.Empty;
             string TeacherToken = string.Empty;
             ClassCancelTeacher classCancelTeacher = await _classRepository.CancelClassByTeacher(cls);
-            NotificationDto dto = new NotificationDto();
-            Center center = await _centerRepository.GetCenteryId(cls.CenterId);
-            if (center != null)
-            {
-                cls.center = center;
-                dto.TeacherStatus = true;
-                dto.RegionaladminStatus = true;
-                RegionalToken = await _userRepository.GetUserDeviceByUserId(cls.center.AssignedRegionalAdmin.Value);
-                TeacherToken = await _userRepository.GetUserDeviceByUserId(cls.center.AssignedTeachers.Value);
-            }
+            //NotificationDto dto = new NotificationDto();
+            //Center center = await _centerRepository.GetCenteryId(cls.CenterId);
+            //if (center != null)
+            //{
+            //    cls.center = center;
+            //    dto.TeacherStatus = true;
+            //    dto.RegionaladminStatus = true;
+            //    RegionalToken = await _userRepository.GetUserDeviceByUserId(cls.center.AssignedRegionalAdmin.Value);
+            //    TeacherToken = await _userRepository.GetUserDeviceByUserId(cls.center.AssignedTeachers.Value);
+            //}
         
-            dto.CenterId = cls.CenterId;
-            dto.StartingDate = cls.StartingDate;
-            dto.EndingDate = cls.EndingDate;
-            dto.RegionalToken = RegionalToken;
-            dto.TeacherToken = TeacherToken;
-            dto.Type = 1;
-            dto.SuperAdminStatus = true;
+            //dto.CenterId = cls.CenterId;
+            //dto.StartingDate = cls.StartingDate;
+            //dto.EndingDate = cls.EndingDate;
+            //dto.RegionalToken = RegionalToken;
+            //dto.TeacherToken = TeacherToken;
+            //dto.Type = 1;
+            //dto.SuperAdminStatus = true;
            
-            SendNotificationClass sendNotification = new SendNotificationClass(_userRepository);
-            NotificationModel model =await sendNotification.SendNotificationType(dto, false);
+            //SendNotificationClass sendNotification = new SendNotificationClass(_userRepository);
+            //NotificationModel model =await sendNotification.SendNotificationType(dto, false);
 
-            return model;
+            return classCancelTeacher;
         }
 
         public async Task<string> GetClassCurrentStatus(int centerId, int teacherId)

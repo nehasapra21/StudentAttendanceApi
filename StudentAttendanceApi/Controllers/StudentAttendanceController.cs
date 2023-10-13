@@ -102,11 +102,11 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else if(studentAttendance ==0)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new
+                    return StatusCode(StatusCodes.Status406NotAcceptable, new
                     {
                         status = true,
                         message = "Student already inactive",
-                        code = StatusCodes.Status404NotFound
+                        code = StatusCodes.Status406NotAcceptable
                     });
                 }
                 else if (studentAttendance == -2)

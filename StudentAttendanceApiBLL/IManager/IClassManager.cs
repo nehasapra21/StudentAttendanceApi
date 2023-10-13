@@ -16,7 +16,7 @@ namespace StudentAttendanceApiBLL.IManager
         Task<Class> UpdateEndClassTime(Class cls);
         Task<Dictionary<int, int>> GetActiveClass();
         Task<Class> CancelClass(Class cls);
-        Task<NotificationModel> CancelClassByTeacher(ClassCancelTeacher cls);
+        Task<ClassCancelTeacher> CancelClassByTeacher(ClassCancelTeacher cls);
         Task<string> GetClassCurrentStatus(int centerId, int teacherId);
         Task<Class> DeleteClassByTeacherId(int teacherId);
         Task<ClassLiveDetailDto> GetLiveClassDetail(int teacherId);

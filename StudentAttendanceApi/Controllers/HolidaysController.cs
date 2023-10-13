@@ -37,11 +37,11 @@ namespace StudentAttendanceApi.Controllers
             try
             {
                 Holidays holidays= HolidaysConvertor.ConvertHolidaysDtoToHolidays(holidaysDto);
-                NotificationModel model = await _holidaysManager.SaveHolidays(holidays);
+                var model = await _holidaysManager.SaveHolidays(holidays);
               //  NotificationModel model = await _classManager.CancelClassByTeacher(cls);
                 if (model != null)
                 {
-                    ResponseModel response = await _notificationService.SendNotification(model);
+                    //ResponseModel response = await _notificationService.SendNotification(model);
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,

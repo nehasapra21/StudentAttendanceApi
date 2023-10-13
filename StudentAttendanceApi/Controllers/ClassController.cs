@@ -22,6 +22,7 @@ using INotificationService = StudentAttendanceApi.Services.INotificationService;
 
 namespace StudentAttendanceApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ClassController : ControllerBase
@@ -186,33 +187,50 @@ namespace StudentAttendanceApi.Controllers
             try
             {
                 ClassCancelTeacher cls = ClassConvertor.ConvertClassToClassCancelTeacherDto(classDto);
-                NotificationModel model = await _classManager.CancelClassByTeacher(cls);
-                if (model != null)
+                ClassCancelTeacher response = await _classManager.CancelClassByTeacher(cls);
+                if (response != null)
                 {
-                    ResponseModel response = await _notificationService.SendNotification(model);
-                    if (response != null && response.IsSuccess)
-                    {
-                        return StatusCode(StatusCodes.Status200OK, new
-                        {
-                            status = true,
-                            message = "Class cancelled",
-                            Notification = response.Message,
-                            code = StatusCodes.Status200OK
-                        }); ;
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status200OK, new
-                        {
-                            status = true,
-                            message = "Class cancelled",
-                            Notification = response.Message,
-                            code = StatusCodes.Status200OK
-                        });
+                    //ResponseModel response = await _notificationService.SendNotification(model);
+                    //if (response != null && response.IsSuccess)
+                    //{
+                    //    return StatusCode(StatusCodes.Status200OK, new
+                    //    {
+                    //        status = true,
+                    //        message = "Class cancelled",
+                    //        Notification = response.Message,
+                    //        code = StatusCodes.Status200OK
+                    //    }); ;
+                    //}
+                    //else
+                    //{
+                    //    return StatusCode(StatusCodes.Status200OK, new
+                    //    {
+                    //        status = true,
+                    //        message = "Class cancelled",
+                    //        Notification = response.Message,
+                    //        code = StatusCodes.Status200OK
+                    //    });
 
-                    }
+                    //}
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        message = "Class cancelled",
+                        code = StatusCodes.Status200OK
+                    }); ;
+                    //}
+                    //else
+                    //{
+                    //    return StatusCode(StatusCodes.Status200OK, new
+                    //    {
+                    //        status = true,
+                    //        message = "Class cancelled",
+                    //        Notification = response.Message,
+                    //        code = StatusCodes.Status200OK
+                    //    });
 
-                  
+                    //}
+
                 }
                 else
                 {

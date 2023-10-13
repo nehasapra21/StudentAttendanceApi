@@ -10,7 +10,7 @@ namespace StudentAttendanceApiBLL.IManager
 {
     public interface IHolidaysManager
     {
-        Task<NotificationModel> SaveHolidays(Holidays holidays);
+        Task<Holidays> SaveHolidays(Holidays holidays);
         Task<List<Holidays>> GetAllHolidaysByTeacherId(int teacherId);
         Task<List<Holidays>> GetAllHolidaysByYear(int year);
         Task<List<Holidays>> GetAllHolidaysByCenterId(int centerId);

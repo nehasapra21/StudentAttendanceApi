@@ -39,33 +39,33 @@ namespace StudentAttendanceApiBLL.Manager
         #region | Public Methods |
 
     
-        public async Task<NotificationModel> SaveHolidays(Holidays holidays)
+        public async Task<Holidays> SaveHolidays(Holidays holidays)
         {
             _logger.LogInformation($"UserManager : Bll : SaveHolidays : Started");
             NotificationDto dto = new NotificationDto();
             string RegionalToken = string.Empty;
             string TeacherToken = string.Empty;
             Holidays holidays1= await _holidaysRepository.SaveHolidays(holidays);
-            Center center = await _centerRepository.GetCenteryId(holidays1.CenterId.Value);
-            if (center != null)
-            {
-                dto.TeacherStatus = true;
-                dto.RegionaladminStatus = true;
-                RegionalToken = await _userRepository.GetUserDeviceByUserId(center.AssignedRegionalAdmin.Value);
-                TeacherToken = await _userRepository.GetUserDeviceByUserId(center.AssignedTeachers.Value);
-            }
-            dto.CenterId = holidays1.CenterId;
-            dto.StartingDate = holidays1.StartDate;
-            dto.EndingDate = holidays1.EndDate;
-            dto.RegionalToken = RegionalToken;
-            dto.TeacherToken = TeacherToken;
-            dto.Type = 2;
-            dto.SuperAdminStatus = true;
+            //Center center = await _centerRepository.GetCenteryId(holidays1.CenterId.Value);
+            //if (center != null)
+            //{
+            //    dto.TeacherStatus = true;
+            //    dto.RegionaladminStatus = true;
+            //    RegionalToken = await _userRepository.GetUserDeviceByUserId(center.AssignedRegionalAdmin.Value);
+            //    TeacherToken = await _userRepository.GetUserDeviceByUserId(center.AssignedTeachers.Value);
+            //}
+            //dto.CenterId = holidays1.CenterId;
+            //dto.StartingDate = holidays1.StartDate;
+            //dto.EndingDate = holidays1.EndDate;
+            //dto.RegionalToken = RegionalToken;
+            //dto.TeacherToken = TeacherToken;
+            //dto.Type = 2;
+            //dto.SuperAdminStatus = true;
 
-            SendNotificationClass sendNotification = new SendNotificationClass(_userRepository);
-            NotificationModel model = await sendNotification.SendNotificationType(dto, false);
+            //SendNotificationClass sendNotification = new SendNotificationClass(_userRepository);
+            //NotificationModel model = await sendNotification.SendNotificationType(dto, false);
 
-            return model;
+            return holidays1;
         }
 
         public async Task<List<Holidays>> GetAllHolidaysByTeacherId(int teacherId)

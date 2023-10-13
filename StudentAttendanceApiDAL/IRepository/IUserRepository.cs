@@ -16,7 +16,7 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<Users> GetUserById(int userId);
         Task<string> GetUserDeviceByUserId(int userId);
         Task<string> CheckUserMobileNumber(string mobileNumber);
-        Task<List<Users>> GetAllTeachers();
+        Task<List<Users>> GetAllTeachers(int userId);
         Task<List<Users>> GetAllUnAssignedTeacher();
         Task<List<Users>> GetAllRegionalAdmins();
         Task<Users> UpdateDeviceId(int userId, string deviceId);

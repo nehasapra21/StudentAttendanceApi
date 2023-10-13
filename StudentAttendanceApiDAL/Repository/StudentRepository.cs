@@ -72,7 +72,8 @@ namespace StudentAttendanceApiDAL.Repository
                 student = await appDbContext.Student.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
                 if (student != null)
                 {
-                    student.FatherOccupation = Enum.GetName(typeof(FatherOccupation), Convert.ToInt32(student.FatherOccupation));
+                    //student.FatherOccupation = Enum.GetName(typeof(FatherOccupation), Convert.ToInt32(student.FatherOccupation));
+                    student.FatherOccupation = student.FatherOccupation;
                     School school = appDbContext.School.Where(x => x.Id == student.SchoolId).FirstOrDefault();
                     if (school != null)
                     {

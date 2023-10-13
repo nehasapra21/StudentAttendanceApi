@@ -9,14 +9,12 @@ using System.Threading.Tasks;
 
 namespace StudentAttendanceApiBLL
 {
-    public class TeacherDto
+    public class StudentActiveDto
     {
-        
+        [Required]
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public bool? Assigned { get; set; }
-        public string? Profile { get; set; }
-        public string? PhoneNumber{ get; set; }
+        [Required]
+        public int Status{ get; set; }
     }
-
+    
 }

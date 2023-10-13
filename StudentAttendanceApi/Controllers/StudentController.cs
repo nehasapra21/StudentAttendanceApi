@@ -12,7 +12,7 @@ using StudentAttendanceApiDAL.Tables;
 
 namespace StudentAttendanceApi.Controllers
 {
-
+    
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
@@ -128,12 +128,12 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpPost("UpdateStudentActiveOrInactive")]
-        public async Task<IActionResult> UpdateStudentActiveOrInactive(int id, int status)
+        public async Task<IActionResult> UpdateStudentActiveOrInactive([FromForm]  StudentActiveDto studentActiveDto)
         {
             logger.LogInformation("UserController : UpdateStudentActiveOrInactive : Started");
             try
             {
-                var student = await _studentManager.UpdateStudentActiveOrInactive(id, status);
+                var student = await _studentManager.UpdateStudentActiveOrInactive(studentActiveDto.Id, studentActiveDto.Status);
                 if (student != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new

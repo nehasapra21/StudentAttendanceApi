@@ -183,7 +183,7 @@ namespace StudentAttendanceApi.Controllers
         }
 
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetUserById")]
         public async Task<IActionResult> GetUserById(int userId)
         {
@@ -257,12 +257,12 @@ namespace StudentAttendanceApi.Controllers
 
         [Authorize]
         [HttpGet("GetAllTeachers")]
-        public async Task<IActionResult> GetAllTeachers()
+        public async Task<IActionResult> GetAllTeachers(int userId = 0)
         {
             logger.LogInformation("UserController : GetRegisteredTeachers : Started");
             try
             {
-                var allTeachers = await _userManager.GetAllTeachers();
+                var allTeachers = await _userManager.GetAllTeachers(userId);
                 if (allTeachers != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
@@ -292,7 +292,7 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetAllUnAssignedTeacher")]
         public async Task<IActionResult> GetAllUnAssignedTeacher()
         {

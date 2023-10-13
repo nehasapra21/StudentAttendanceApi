@@ -20,6 +20,7 @@ using StudentAttendanceApi.Services;
 using System.IO;
 using StudentAttendanceApi.ActivityLog;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Org.BouncyCastle.Ocsp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,6 +98,8 @@ builder.Services.AddTransient<IVidhanSabhaManager, VidhanSabhaManager>();
 builder.Services.AddTransient<IVillageRepository, VillageRepository>();
 builder.Services.AddTransient<IVillageManager, VillageManager>();
 builder.Services.AddTransient<IDistrictRepository, DistrictRepository>(); builder.Services.AddTransient<IDistrictManager, DistrictManager>();
+
+builder.Services.AddTransient<IAnnouncementRepository, AnnouncementRepository>(); builder.Services.AddTransient<IAnnouncementManager, AnnouncementManager>();
 
 builder.Services.AddTransient<IPanchayatRepository, PanchayatRepository>();
 builder.Services.AddTransient<IPanchayatManager, PanchayatManager>();
@@ -180,7 +183,32 @@ builder.Services.Configure<FcmNotificationSetting>(appSettingsSection);
 
 //    builder.AddSerilog();
 //});
+//\
+
+//rest identity coloumn of table
+//DBCC CHECKIDENT('[tablename]', RESEED, 0);
+//GO
+
+
 //
+//delete from school
+//delete from student
+//delete studentattendance
+//delete from center
+//delete from useractivitylog
+//delete from users where id not in (1)
+//delete from concern
+//delete from CenterAssignUser
+//delete from ClassCancelByTeacher
+//delete from TeacherActivityLog
+//delete from Holidays
+//delete from Class
+//delete from ClassDetail
+
+//delete from RegionalAdminPanchayat
+//delete from RegionalAdmin
+//delete from center
+
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

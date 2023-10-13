@@ -39,8 +39,8 @@ namespace StudentAttendanceApiBLL.Manager
             _logger.LogInformation($"UserManager : Bll : LoginSuperAdmin : Started");
 
             string pass = EncryptionUtility.GetHashPassword(password);
-            Users user=await _userRepository.LoginUser(name, pass);
-            if(user!=null)
+            Users user = await _userRepository.LoginUser(name, pass);
+            if (user != null)
             {
 
                 user.Password = null;
@@ -48,16 +48,30 @@ namespace StudentAttendanceApiBLL.Manager
             return user;
         }
 
-        public async Task<Users> UpdateDeviceId(int userId,string deviceId)
+        public async Task<Users> UpdateDeviceId(int userId, string deviceId)
         {
             _logger.LogInformation($"UserManager : Bll : LoginSuperAdmin : Started");
 
             return await _userRepository.UpdateDeviceId(userId, deviceId);
         }
-        
+
+        public async Task<List<string>> GetPassword(List<string> names)
+        {
+            List<string> strings = new List<string>();
+            if (names.Count > 0)
+            {
+                foreach (var item in names)
+                {
+                    string pass = EncryptionUtility.GetHashPassword(item);
+                    strings.Add(pass);
+                }
+            }
+            return strings;
+        }
+
         public async Task<UserDto> SaveLogin(Users user)
         {
-           
+
             _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
 
             if (user.Id == 0)
@@ -73,15 +87,16 @@ namespace StudentAttendanceApiBLL.Manager
                 }
                 string pass = string.Empty;
                 pass = EncryptionUtility.GetHashPassword(user.Password);
+
                 user.Password = pass;
             }
-            
-           
-            Users saveUser= await _userRepository.SaveLogin(user);
+
+
+            Users saveUser = await _userRepository.SaveLogin(user);
             UserDto userDto = new UserDto();
-            if(saveUser!=null)
+            if (saveUser != null)
             {
-                userDto=UserConvertor.ConvertUserToUserDto(saveUser);
+                userDto = UserConvertor.ConvertUserToUserDto(saveUser);
             }
 
             return userDto;
@@ -120,16 +135,17 @@ namespace StudentAttendanceApiBLL.Manager
             RegionalAdminDetailDto regionalAdminDetailDto = null;
             TeacherDetailDto teacherDetailDto = null;
             Users user = await _userRepository.GetUserById(userId);
+
             if (user != null)
             {
-                if(user.Type==(int)Constant.Type.Teacher)
+                if (user.Type == (int)Constant.Type.Teacher)
                 {
                     teacherDetailDto = new TeacherDetailDto();
                     teacherDetailDto = UserConvertor.ConvertUserToTeacherDetailDto(user);
-                  
+
                     return teacherDetailDto;
                 }
-                else if(user.Type == (int)Constant.Type.RegionalAdmin)
+                else if (user.Type == (int)Constant.Type.RegionalAdmin)
                 {
                     regionalAdminDetailDto = new RegionalAdminDetailDto();
                     regionalAdminDetailDto = UserConvertor.ConvertUserToRegionalAdminDetailDto(user);
@@ -137,11 +153,11 @@ namespace StudentAttendanceApiBLL.Manager
                 }
                 else
                 {
-                    superAdminDetailDto=new SuperAdminDetailDto();
+                    superAdminDetailDto = new SuperAdminDetailDto();
                     superAdminDetailDto = UserConvertor.ConvertUserToSuperAdminDetailDto(user);
                     return superAdminDetailDto;
                 }
-               
+
                 //userDto.CenterEnrollmentDate = user.Center!=null?user.Center.StartedDate:null;
             }
             return null;
@@ -151,7 +167,7 @@ namespace StudentAttendanceApiBLL.Manager
         {
             _logger.LogInformation($"UserManager : Bll : CheckUserMobileNumber : Started");
 
-            
+
             return await _userRepository.CheckUserMobileNumber(mobileNumber);
         }
         public async Task<string> GetUserDeviceByUserId(int userId)
@@ -162,12 +178,12 @@ namespace StudentAttendanceApiBLL.Manager
             return await _userRepository.GetUserDeviceByUserId(userId);
 
         }
-        public async Task<List<TeacherDto>> GetAllTeachers()
+        public async Task<List<TeacherDto>> GetAllTeachers(int userId)
         {
             _logger.LogInformation($"UserManager : Bll : GetAssignedTeachers : Started");
-            List<Users> users = await _userRepository.GetAllTeachers();
+            List<Users> users = await _userRepository.GetAllTeachers(userId);
             List<TeacherDto> teacher = null;
-            if (users!=null)
+            if (users != null)
             {
                 teacher = new List<TeacherDto>();
                 foreach (var item in users)
@@ -176,7 +192,7 @@ namespace StudentAttendanceApiBLL.Manager
                     teacherDto.Id = item.Id;
                     teacherDto.Name = item.Name;
                     teacherDto.Profile = item.Picture;
-                    teacherDto.Assigned = item.AssignedTeacherStatus==null?false:item.AssignedTeacherStatus;
+                    teacherDto.Assigned = item.AssignedTeacherStatus == null ? false : item.AssignedTeacherStatus;
                     teacher.Add(teacherDto);
                 }
             };
@@ -197,6 +213,7 @@ namespace StudentAttendanceApiBLL.Manager
                 teacherDto.Name = item.Name;
                 teacherDto.Profile = item.Picture;
                 teacherDto.Assigned = item.AssignedTeacherStatus;
+                teacherDto.PhoneNumber = item.PhoneNumber;
                 teacher.Add(teacherDto);
             }
             return teacher;
@@ -222,7 +239,7 @@ namespace StudentAttendanceApiBLL.Manager
         {
             _logger.LogInformation($"UserManager : Bll : SearchData : Started");
 
-            return await _userRepository.SearchData(type,queryString);
+            return await _userRepository.SearchData(type, queryString);
         }
         #endregion
     }

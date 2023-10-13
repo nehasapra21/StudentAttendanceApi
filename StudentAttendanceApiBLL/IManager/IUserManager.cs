@@ -16,11 +16,12 @@ namespace StudentAttendanceApiBLL.IManager
         Task<object> GetUserById(int userId);
         Task<string> GetUserDeviceByUserId(int userId);
         Task<string> CheckUserMobileNumber(string mobileNumber);
-        Task<List<TeacherDto>> GetAllTeachers();
+        Task<List<TeacherDto>> GetAllTeachers(int userId);
         Task<List<TeacherDto>> GetAllUnAssignedTeacher();
         Task<List<RegionalAdminDto>> GetAllRegionalAdmins();
         Task<Users> UpdateDeviceId(int userId,string deviceId);
         Task<List<object>> SearchData(string type, string queryString);
+        Task<List<string>> GetPassword(List<string> names);
     }
 
 }
