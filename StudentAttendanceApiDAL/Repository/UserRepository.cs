@@ -384,7 +384,8 @@ namespace StudentAttendanceApiDAL.Repository
                                    {
                                        Id = u.Id,
                                        Name = u.Name,
-                                       AssignedTeacherStatus = u.AssignedTeacherStatus
+                                       AssignedTeacherStatus = u.AssignedTeacherStatus,
+                                       PhoneNumber=u.PhoneNumber
                                    }).OrderBy(x => x.Name).ToListAsync();
                 }
                 else
