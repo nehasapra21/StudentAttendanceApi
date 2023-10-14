@@ -192,6 +192,7 @@ namespace StudentAttendanceApiBLL.Manager
                     teacherDto.Id = item.Id;
                     teacherDto.Name = item.Name;
                     teacherDto.Profile = item.Picture;
+                    teacherDto.PhoneNumber = item.PhoneNumber;
                     teacherDto.Assigned = item.AssignedTeacherStatus == null ? false : item.AssignedTeacherStatus;
                     teacher.Add(teacherDto);
                 }

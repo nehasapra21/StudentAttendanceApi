@@ -1,6 +1,5 @@
 ﻿
 using Api.Utility;
-using ExcelDataReader;
 using FakeNewApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
