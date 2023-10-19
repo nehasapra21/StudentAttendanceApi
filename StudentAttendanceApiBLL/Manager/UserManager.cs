@@ -68,179 +68,188 @@ namespace StudentAttendanceApiBLL.Manager
             }
             return strings;
         }
-
-        public async Task<UserDto> SaveLogin(Users user)
+        public async Task<string> GetPasswordVal(string password)
         {
+            List<string> strings = new List<string>();
 
-            _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
+            string pass = EncryptionUtility.GetHashPassword(password);
+          
+            return password;
+        }
 
-            if (user.Id == 0)
+    public async Task<UserDto> SaveLogin(Users user)
+    {
+
+        _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
+
+        if (user.Id == 0)
+        {
+            user.EnrolmentRollId = user.Name.Substring(0, 2) + "-" + user.DateOfBirth + "-";
+            if (user.Gender == Constant.Gender.Male.ToString())
             {
-                user.EnrolmentRollId = user.Name.Substring(0, 2) + "-" + user.DateOfBirth + "-";
-                if (user.Gender == Constant.Gender.Male.ToString())
-                {
-                    user.EnrolmentRollId = user.EnrolmentRollId + "M";
-                }
-                else
-                {
-                    user.EnrolmentRollId = user.EnrolmentRollId + "F";
-                }
-                string pass = string.Empty;
-                pass = EncryptionUtility.GetHashPassword(user.Password);
+                user.EnrolmentRollId = user.EnrolmentRollId + "M";
+            }
+            else
+            {
+                user.EnrolmentRollId = user.EnrolmentRollId + "F";
+            }
+            string pass = string.Empty;
+            pass = EncryptionUtility.GetHashPassword(user.Password);
 
-                user.Password = pass;
+            user.Password = pass;
+        }
+
+
+        Users saveUser = await _userRepository.SaveLogin(user);
+        UserDto userDto = new UserDto();
+        if (saveUser != null)
+        {
+            userDto = UserConvertor.ConvertUserToUserDto(saveUser);
+        }
+
+        return userDto;
+    }
+
+    //public async Task<Users> SaveSuperAdmin(Users user)
+    //{
+    //    _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
+
+    //    if (user.Id == 0)
+    //    {
+    //        user.EnrolmentRollId = user.Name.Substring(0, 2) + "-" + user.DateOfBirth + "-";
+    //        if (user.Gender == Constant.Gender.Male.ToString())
+    //        {
+    //            user.EnrolmentRollId = user.EnrolmentRollId + "M";
+    //        }
+    //        else
+    //        {
+    //            user.EnrolmentRollId = user.EnrolmentRollId + "F";
+    //        }
+    //    }
+    //    string pass = string.Empty;
+    //    if (user.Id == 0)
+    //    {
+    //        pass = EncryptionUtility.GetHashPassword(user.Password);
+    //        user.Password = pass;
+    //    }
+    //    return await _userRepository.SaveLogin(user);
+    //}
+
+    public async Task<object> GetUserById(int userId)
+    {
+        _logger.LogInformation($"UserManager : Bll : GetUserById : Started");
+
+        SuperAdminDetailDto superAdminDetailDto = null;
+        RegionalAdminDetailDto regionalAdminDetailDto = null;
+        TeacherDetailDto teacherDetailDto = null;
+        Users user = await _userRepository.GetUserById(userId);
+
+        if (user != null)
+        {
+            if (user.Type == (int)Constant.Type.Teacher)
+            {
+                teacherDetailDto = new TeacherDetailDto();
+                teacherDetailDto = UserConvertor.ConvertUserToTeacherDetailDto(user);
+
+                return teacherDetailDto;
+            }
+            else if (user.Type == (int)Constant.Type.RegionalAdmin)
+            {
+                regionalAdminDetailDto = new RegionalAdminDetailDto();
+                regionalAdminDetailDto = UserConvertor.ConvertUserToRegionalAdminDetailDto(user);
+                return regionalAdminDetailDto;
+            }
+            else
+            {
+                superAdminDetailDto = new SuperAdminDetailDto();
+                superAdminDetailDto = UserConvertor.ConvertUserToSuperAdminDetailDto(user);
+                return superAdminDetailDto;
             }
 
-
-            Users saveUser = await _userRepository.SaveLogin(user);
-            UserDto userDto = new UserDto();
-            if (saveUser != null)
-            {
-                userDto = UserConvertor.ConvertUserToUserDto(saveUser);
-            }
-
-            return userDto;
+            //userDto.CenterEnrollmentDate = user.Center!=null?user.Center.StartedDate:null;
         }
+        return null;
+    }
 
-        //public async Task<Users> SaveSuperAdmin(Users user)
-        //{
-        //    _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
+    public async Task<string> CheckUserMobileNumber(string mobileNumber)
+    {
+        _logger.LogInformation($"UserManager : Bll : CheckUserMobileNumber : Started");
 
-        //    if (user.Id == 0)
-        //    {
-        //        user.EnrolmentRollId = user.Name.Substring(0, 2) + "-" + user.DateOfBirth + "-";
-        //        if (user.Gender == Constant.Gender.Male.ToString())
-        //        {
-        //            user.EnrolmentRollId = user.EnrolmentRollId + "M";
-        //        }
-        //        else
-        //        {
-        //            user.EnrolmentRollId = user.EnrolmentRollId + "F";
-        //        }
-        //    }
-        //    string pass = string.Empty;
-        //    if (user.Id == 0)
-        //    {
-        //        pass = EncryptionUtility.GetHashPassword(user.Password);
-        //        user.Password = pass;
-        //    }
-        //    return await _userRepository.SaveLogin(user);
-        //}
 
-        public async Task<object> GetUserById(int userId)
+        return await _userRepository.CheckUserMobileNumber(mobileNumber);
+    }
+    public async Task<string> GetUserDeviceByUserId(int userId)
+    {
+        _logger.LogInformation($"UserManager : Bll : CheckUserMobileNumber : Started");
+
+
+        return await _userRepository.GetUserDeviceByUserId(userId);
+
+    }
+    public async Task<List<TeacherDto>> GetAllTeachers(int userId)
+    {
+        _logger.LogInformation($"UserManager : Bll : GetAssignedTeachers : Started");
+        List<Users> users = await _userRepository.GetAllTeachers(userId);
+        List<TeacherDto> teacher = null;
+        if (users != null)
         {
-            _logger.LogInformation($"UserManager : Bll : GetUserById : Started");
-
-            SuperAdminDetailDto superAdminDetailDto = null;
-            RegionalAdminDetailDto regionalAdminDetailDto = null;
-            TeacherDetailDto teacherDetailDto = null;
-            Users user = await _userRepository.GetUserById(userId);
-
-            if (user != null)
-            {
-                if (user.Type == (int)Constant.Type.Teacher)
-                {
-                    teacherDetailDto = new TeacherDetailDto();
-                    teacherDetailDto = UserConvertor.ConvertUserToTeacherDetailDto(user);
-
-                    return teacherDetailDto;
-                }
-                else if (user.Type == (int)Constant.Type.RegionalAdmin)
-                {
-                    regionalAdminDetailDto = new RegionalAdminDetailDto();
-                    regionalAdminDetailDto = UserConvertor.ConvertUserToRegionalAdminDetailDto(user);
-                    return regionalAdminDetailDto;
-                }
-                else
-                {
-                    superAdminDetailDto = new SuperAdminDetailDto();
-                    superAdminDetailDto = UserConvertor.ConvertUserToSuperAdminDetailDto(user);
-                    return superAdminDetailDto;
-                }
-
-                //userDto.CenterEnrollmentDate = user.Center!=null?user.Center.StartedDate:null;
-            }
-            return null;
-        }
-
-        public async Task<string> CheckUserMobileNumber(string mobileNumber)
-        {
-            _logger.LogInformation($"UserManager : Bll : CheckUserMobileNumber : Started");
-
-
-            return await _userRepository.CheckUserMobileNumber(mobileNumber);
-        }
-        public async Task<string> GetUserDeviceByUserId(int userId)
-        {
-            _logger.LogInformation($"UserManager : Bll : CheckUserMobileNumber : Started");
-
-
-            return await _userRepository.GetUserDeviceByUserId(userId);
-
-        }
-        public async Task<List<TeacherDto>> GetAllTeachers(int userId)
-        {
-            _logger.LogInformation($"UserManager : Bll : GetAssignedTeachers : Started");
-            List<Users> users = await _userRepository.GetAllTeachers(userId);
-            List<TeacherDto> teacher = null;
-            if (users != null)
-            {
-                teacher = new List<TeacherDto>();
-                foreach (var item in users)
-                {
-                    TeacherDto teacherDto = new TeacherDto();
-                    teacherDto.Id = item.Id;
-                    teacherDto.Name = item.Name;
-                    teacherDto.Profile = item.Picture;
-                    teacherDto.Assigned = item.AssignedTeacherStatus == null ? false : item.AssignedTeacherStatus;
-                    teacher.Add(teacherDto);
-                }
-            };
-
-            return teacher;
-        }
-
-
-        public async Task<List<TeacherDto>> GetAllUnAssignedTeacher()
-        {
-            _logger.LogInformation($"UserManager : Bll : GetAllTeachers : Started");
-            List<TeacherDto> teacher = new List<TeacherDto>();
-            List<Users> users = await _userRepository.GetAllUnAssignedTeacher();
+            teacher = new List<TeacherDto>();
             foreach (var item in users)
             {
                 TeacherDto teacherDto = new TeacherDto();
                 teacherDto.Id = item.Id;
                 teacherDto.Name = item.Name;
                 teacherDto.Profile = item.Picture;
-                teacherDto.Assigned = item.AssignedTeacherStatus;
                 teacherDto.PhoneNumber = item.PhoneNumber;
+                teacherDto.Assigned = item.AssignedTeacherStatus == null ? false : item.AssignedTeacherStatus;
                 teacher.Add(teacherDto);
             }
-            return teacher;
-        }
-        public async Task<List<RegionalAdminDto>> GetAllRegionalAdmins()
-        {
-            _logger.LogInformation($"UserManager : Bll : GetAllRegionalAdmins : Started");
-            List<RegionalAdminDto> regionalAdminDtos = new List<RegionalAdminDto>();
-            List<Users> users = await _userRepository.GetAllRegionalAdmins();
-            foreach (var item in users)
-            {
-                RegionalAdminDto regionalAdminDto = new RegionalAdminDto();
-                regionalAdminDto.Id = item.Id;
-                regionalAdminDto.Name = item.Name;
-                regionalAdminDto.Profile = item.Picture;
-                regionalAdminDtos.Add(regionalAdminDto);
-            }
-            return regionalAdminDtos;
-        }
+        };
 
-
-        public async Task<List<object>> SearchData(string type, string queryString)
-        {
-            _logger.LogInformation($"UserManager : Bll : SearchData : Started");
-
-            return await _userRepository.SearchData(type, queryString);
-        }
-        #endregion
+        return teacher;
     }
+
+
+    public async Task<List<TeacherDto>> GetAllUnAssignedTeacher()
+    {
+        _logger.LogInformation($"UserManager : Bll : GetAllTeachers : Started");
+        List<TeacherDto> teacher = new List<TeacherDto>();
+        List<Users> users = await _userRepository.GetAllUnAssignedTeacher();
+        foreach (var item in users)
+        {
+            TeacherDto teacherDto = new TeacherDto();
+            teacherDto.Id = item.Id;
+            teacherDto.Name = item.Name;
+            teacherDto.Profile = item.Picture;
+            teacherDto.Assigned = item.AssignedTeacherStatus;
+            teacherDto.PhoneNumber = item.PhoneNumber;
+            teacher.Add(teacherDto);
+        }
+        return teacher;
+    }
+    public async Task<List<RegionalAdminDto>> GetAllRegionalAdmins()
+    {
+        _logger.LogInformation($"UserManager : Bll : GetAllRegionalAdmins : Started");
+        List<RegionalAdminDto> regionalAdminDtos = new List<RegionalAdminDto>();
+        List<Users> users = await _userRepository.GetAllRegionalAdmins();
+        foreach (var item in users)
+        {
+            RegionalAdminDto regionalAdminDto = new RegionalAdminDto();
+            regionalAdminDto.Id = item.Id;
+            regionalAdminDto.Name = item.Name;
+            regionalAdminDto.Profile = item.Picture;
+            regionalAdminDtos.Add(regionalAdminDto);
+        }
+        return regionalAdminDtos;
+    }
+
+
+    public async Task<List<object>> SearchData(string type, string queryString)
+    {
+        _logger.LogInformation($"UserManager : Bll : SearchData : Started");
+
+        return await _userRepository.SearchData(type, queryString);
+    }
+    #endregion
+}
 }

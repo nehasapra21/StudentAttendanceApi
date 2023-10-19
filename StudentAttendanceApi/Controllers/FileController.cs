@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StudentAttendanceApi.FCM;
 using StudentAttendanceApi.Services;
+using StudentAttendanceApiBLL;
 using StudentAttendanceApiBLL.IManager;
 using StudentAttendanceApiDAL.Tables;
 using System;
@@ -186,96 +187,225 @@ namespace StudentAttendanceApi.Controllers
 
         }
 
-        //[HttpPost("UploadExcelData")]
-        //public async Task<IActionResult> UploadExcelData([FromForm] List<IFormFile> files)
-        //{
-        //    logger.LogInformation("FileController : UploadExcelData : Started" + _webHostEnvironment);
-        //    logger.LogInformation("FileController : UploadExcelData : Started");
-        //    ImagesDto fileUrls = new ImagesDto();
-        //    List<string> str = new List<string>(0);
-        //    try
-        //    {
-        //        foreach (var file in files)
-        //        {
-        //            var list = new List<ExcelDto>();
-        //            DataSet dsexcelRecords = new DataSet();
-        //            IExcelDataReader reader = null;
-        //            Stream FileStream = null;
+        [HttpPost("UploadExcelData")]
+        public async Task<IActionResult> UploadExcelData([FromForm] List<IFormFile> files)
+        {
+            logger.LogInformation("FileController : UploadExcelData : Started" + _webHostEnvironment);
+            logger.LogInformation("FileController : UploadExcelData : Started");
+            ImagesDto fileUrls = new ImagesDto();
+            List<string> str = new List<string>(0);
+            try
+            {
+                foreach (var file in files)
+                {
+                    var list = new List<ExcelDto>();
+                    DataSet dsexcelRecords = new DataSet();
+                    IExcelDataReader reader = null;
+                    Stream FileStream = null;
 
-        //            // Create the Directory if it is not exist
-        //            string dirPath = Path.Combine(_webHostEnvironment.WebRootPath, "ReceivedReports");
-        //            if (!Directory.Exists(dirPath))
-        //            {
-        //                Directory.CreateDirectory(dirPath);
-        //            }
+                    // Create the Directory if it is not exist
+                    string dirPath = Path.Combine(_webHostEnvironment.WebRootPath, "ReceivedReports");
+                    if (!Directory.Exists(dirPath))
+                    {
+                        Directory.CreateDirectory(dirPath);
+                    }
 
-        //            string dataFileName = Path.GetFileName(file.FileName);
+                    string dataFileName = Path.GetFileName(file.FileName);
 
-        //            string extension = Path.GetExtension(dataFileName);
+                    string extension = Path.GetExtension(dataFileName);
 
-        //            string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+                    string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
 
-        //            // Make a Copy of the Posted File from the Received HTTP Request
-        //            string saveToPath = Path.Combine(dirPath, dataFileName);
+                    // Make a Copy of the Posted File from the Received HTTP Request
+                    string saveToPath = Path.Combine(dirPath, dataFileName);
 
-        //            using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
-        //            {
-        //                file.CopyTo(stream);
-        //            }
+                    using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
 
-        //            // read the excel file
-        //            using (var stream = new FileStream(saveToPath, FileMode.Open))
-        //            {
-        //                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-        //                if (extension == ".xls")
-        //                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
-        //                else
-        //                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                    // read the excel file
+                    using (var stream = new FileStream(saveToPath, FileMode.Open))
+                    {
+                        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                        if (extension == ".xls")
+                            reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                        else
+                            reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
 
-        //                DataSet ds = new DataSet();
-        //                ds = reader.AsDataSet();
-        //                reader.Close();
+                        DataSet ds = new DataSet();
+                        ds = reader.AsDataSet();
+                        reader.Close();
 
-        //                if (ds != null && ds.Tables.Count > 0)
-        //                {
-        //                    // Read the the Table
-        //                    DataTable serviceDetails = ds.Tables[0];
-        //                    List<string> name = new List<string>();
-        //                    serviceDetails.Rows.RemoveAt(0);
-        //                    for (int i = 1; i < serviceDetails.Rows.Count; i++)
-        //                    {
-        //                        ExcelDto details = new ExcelDto();
-        //                        details.Name = serviceDetails.Rows[i][0].ToString();
-        //                        details.Password = serviceDetails.Rows[i][1].ToString();
-        //                        name.Add(details.Password);
-        //                        // Add the record in Database
-        //                        // await context.CustomerResponseDetails.AddAsync(details);
-        //                        //await context.SaveChangesAsync();
-        //                    }
-        //                    str = await _userManager.GetPassword(name);
-        //                }
-        //            }
-        //        }
-        //        return StatusCode(StatusCodes.Status200OK, new
-        //        {
-        //            status = false,
-        //            data= str,
-        //            error = "File url not found",
-        //            code = StatusCodes.Status204NoContent
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.LogError(ex, $"FileController : UploadProfileImage ", ex);
-        //        return StatusCode(StatusCodes.Status404NotFound, new
-        //        {
-        //            status = false,
-        //            type = ex.GetType().FullName,
-        //            error = ex.InnerException.Message,
-        //            code = StatusCodes.Status404NotFound
-        //        });
-        //    }
-        //}
+                        if (ds != null && ds.Tables.Count > 0)
+                        {
+                            // Read the the Table
+                            DataTable serviceDetails = ds.Tables[0];
+                            List<string> name = new List<string>();
+                            serviceDetails.Rows.RemoveAt(0);
+                            for (int i = 1; i < serviceDetails.Rows.Count; i++)
+                            {
+                                ExcelDto details = new ExcelDto();
+                                details.Name = serviceDetails.Rows[i][0].ToString();
+                                details.Password = serviceDetails.Rows[i][1].ToString();
+                                name.Add(details.Password);
+                                // Add the record in Database
+                                // await context.CustomerResponseDetails.AddAsync(details);
+                                //await context.SaveChangesAsync();
+                            }
+                            str = await _userManager.GetPassword(name);
+                        }
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new
+                {
+                    status = false,
+                    data = str,
+                    error = "File url not found",
+                    code = StatusCodes.Status204NoContent
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"FileController : UploadProfileImage ", ex);
+                return StatusCode(StatusCodes.Status404NotFound, new
+                {
+                    status = false,
+                    type = ex.GetType().FullName,
+                    error = ex.InnerException.Message,
+                    code = StatusCodes.Status404NotFound
+                });
+            }
+        }
+
+
+        [HttpPost("ImportUserData")]
+        public async Task<IActionResult> ImportUserData([FromForm] List<IFormFile> files)
+        {
+            logger.LogInformation("FileController : UploadExcelData : Started" + _webHostEnvironment);
+            logger.LogInformation("FileController : UploadExcelData : Started");
+            ImagesDto fileUrls = new ImagesDto();
+            List<string> str = new List<string>(0);
+            try
+            {
+                foreach (var file in files)
+                {
+                    var list = new List<ExcelDto>();
+                    DataSet dsexcelRecords = new DataSet();
+                    IExcelDataReader reader = null;
+                    Stream FileStream = null;
+
+                    // Create the Directory if it is not exist
+                    string dirPath = Path.Combine(_webHostEnvironment.WebRootPath, "ReceivedReports");
+                    if (!Directory.Exists(dirPath))
+                    {
+                        Directory.CreateDirectory(dirPath);
+                    }
+
+                    string dataFileName = Path.GetFileName(file.FileName);
+
+                    string extension = Path.GetExtension(dataFileName);
+
+                    string[] allowedExtsnions = new string[] { ".xls", ".xlsx" };
+
+                    // Make a Copy of the Posted File from the Received HTTP Request
+                    string saveToPath = Path.Combine(dirPath, dataFileName);
+
+                    using (FileStream stream = new FileStream(saveToPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    // read the excel file
+                    using (var stream = new FileStream(saveToPath, FileMode.Open))
+                    {
+                        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                        if (extension == ".xls")
+                            reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                        else
+                            reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+                        DataSet ds = new DataSet();
+                        ds = reader.AsDataSet();
+                        reader.Close();
+
+                        if (ds != null && ds.Tables.Count > 0)
+                        {
+                            // Read the the Table
+                            DataTable serviceDetails = ds.Tables[0];
+                            List<string> name = new List<string>();
+                            List<ExcelDto> exportList = new List<ExcelDto>();
+                            //serviceDetails.Rows.RemoveAt(0);
+
+                            for (int i = 1; i <=serviceDetails.Rows.Count; i++)
+                            {
+                                if (i != 0)
+                                {
+                                    UserDto details = new UserDto();
+
+                                    details.Id = Convert.ToInt32(serviceDetails.Rows[i][0].ToString());
+                                    details.EnrolmentRollId = serviceDetails.Rows[i][1].ToString();
+                                    details.Name = serviceDetails.Rows[i][2].ToString();
+                                    details.Type = Convert.ToInt32(serviceDetails.Rows[i][4].ToString());
+                                    details.Email = serviceDetails.Rows[i][5].ToString();
+                                    details.Password = await _userManager.GetPasswordVal(serviceDetails.Rows[i][5].ToString());
+
+                                    details.Age = Convert.ToInt32(serviceDetails.Rows[i][6].ToString());
+                                    details.Gender = serviceDetails.Rows[i][7].ToString();
+                                    details.DateOfBirth = serviceDetails.Rows[i][8].ToString();
+                                    details.PhoneNumber = serviceDetails.Rows[i][9].ToString();
+                                    details.WhatsApp = serviceDetails.Rows[i][10].ToString();
+                                    details.CreatedOn = Convert.ToDateTime(serviceDetails.Rows[i][11].ToString());
+                                    details.CreatedBy = Convert.ToInt32(serviceDetails.Rows[i][12].ToString());
+                                    details.Status = Convert.ToBoolean(serviceDetails.Rows[i][13].ToString());
+                                    details.RoleId = Convert.ToInt32(serviceDetails.Rows[i][14].ToString());
+                                    details.Picture = serviceDetails.Rows[i][15].ToString();
+                                    details.LastLoginTime = serviceDetails.Rows[i][16].ToString();
+                                    details.Contact = serviceDetails.Rows[i][17].ToString();
+                                    details.FullAddress = serviceDetails.Rows[i][1].ToString();
+                                    details.DistrictId = Convert.ToInt32(serviceDetails.Rows[i][18].ToString());
+                                    details.VidhanSabhaId = Convert.ToInt32(serviceDetails.Rows[i][19].ToString());
+                                    details.ListOfPanchayatIds = serviceDetails.Rows[i][20].ToString();
+                                    details.VillageId = Convert.ToInt32(serviceDetails.Rows[i][21].ToString());
+                                    details.AssignedTeacherStatus = Convert.ToBoolean(serviceDetails.Rows[i][22].ToString());
+                                    details.AssignedRegionalAdminStatus = Convert.ToBoolean(serviceDetails.Rows[i][23].ToString());
+                                    details.EnrollmentDate = Convert.ToDateTime(serviceDetails.Rows[i][24].ToString());
+                                    details.GuardianName = Convert.ToString(serviceDetails.Rows[i][25].ToString());
+                                    details.Education = Convert.ToString(serviceDetails.Rows[i][26].ToString());
+                                    details.DeviceId = serviceDetails.Rows[i][27].ToString();
+
+                                    Users user = UserConvertor.ConvertUsertoToUser(details);
+                                    _userManager.SaveLogin(user);
+                                }
+                                // Add the record in Database
+                                // await context.CustomerResponseDetails.AddAsync(details);
+                                //await context.SaveChangesAsync();
+                            }
+
+                            str = await _userManager.GetPassword(name);
+                        }
+                    }
+                }
+                return StatusCode(StatusCodes.Status200OK, new
+                {
+                    status = false,
+                    data = str,
+                    error = "File url not found",
+                    code = StatusCodes.Status204NoContent
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"FileController : UploadProfileImage ", ex);
+                return StatusCode(StatusCodes.Status404NotFound, new
+                {
+                    status = false,
+                    type = ex.GetType().FullName,
+                    error = ex.InnerException.Message,
+                    code = StatusCodes.Status404NotFound
+                });
+            }
+        }
 
         //[HttpGet("DownloadFile")]
         //public async Task<byte[]> DownloadFile(string filePath)

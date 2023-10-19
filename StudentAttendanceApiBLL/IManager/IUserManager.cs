@@ -22,6 +22,7 @@ namespace StudentAttendanceApiBLL.IManager
         Task<Users> UpdateDeviceId(int userId,string deviceId);
         Task<List<object>> SearchData(string type, string queryString);
         Task<List<string>> GetPassword(List<string> names);
+        Task<string> GetPasswordVal(string names);
     }
 
 }
