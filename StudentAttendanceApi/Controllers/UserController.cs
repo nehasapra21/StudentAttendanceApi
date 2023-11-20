@@ -183,7 +183,7 @@ namespace StudentAttendanceApi.Controllers
         }
 
 
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetUserById")]
         public async Task<IActionResult> GetUserById(int userId)
         {
@@ -292,7 +292,7 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetAllUnAssignedTeacher")]
         public async Task<IActionResult> GetAllUnAssignedTeacher()
         {
@@ -367,6 +367,7 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("SearchData")]
         public async Task<IActionResult> SearchData(string type, string queryString)
         {

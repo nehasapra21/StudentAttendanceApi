@@ -399,6 +399,7 @@ namespace StudentAttendanceApiDAL.Repository
                                        Name = u.Name,
                                        AssignedTeacherStatus = u.AssignedTeacherStatus,
                                           PhoneNumber = u.PhoneNumber
+
                                    }).OrderBy(x => x.Name).ToListAsync();
                     users = users.Where(x => userIds.Contains(x.Id)).ToList();
                 }

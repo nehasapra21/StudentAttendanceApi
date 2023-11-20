@@ -185,26 +185,26 @@ namespace StudentAttendanceApiBLL.Manager
 
         return await _userRepository.GetUserDeviceByUserId(userId);
 
-    }
-    public async Task<List<TeacherDto>> GetAllTeachers(int userId)
-    {
-        _logger.LogInformation($"UserManager : Bll : GetAssignedTeachers : Started");
-        List<Users> users = await _userRepository.GetAllTeachers(userId);
-        List<TeacherDto> teacher = null;
-        if (users != null)
+        }
+        public async Task<List<TeacherDto>> GetAllTeachers(int userId)
         {
-            teacher = new List<TeacherDto>();
-            foreach (var item in users)
+            _logger.LogInformation($"UserManager : Bll : GetAssignedTeachers : Started");
+            List<Users> users = await _userRepository.GetAllTeachers(userId);
+            List<TeacherDto> teacher = null;
+            if (users != null)
             {
-                TeacherDto teacherDto = new TeacherDto();
-                teacherDto.Id = item.Id;
-                teacherDto.Name = item.Name;
-                teacherDto.Profile = item.Picture;
-                teacherDto.PhoneNumber = item.PhoneNumber;
-                teacherDto.Assigned = item.AssignedTeacherStatus == null ? false : item.AssignedTeacherStatus;
-                teacher.Add(teacherDto);
-            }
-        };
+                teacher = new List<TeacherDto>();
+                foreach (var item in users)
+                {
+                    TeacherDto teacherDto = new TeacherDto();
+                    teacherDto.Id = item.Id;
+                    teacherDto.Name = item.Name;
+                    teacherDto.Profile = item.Picture;
+                    teacherDto.PhoneNumber = item.PhoneNumber;
+                    teacherDto.Assigned = item.AssignedTeacherStatus == null ? false : item.AssignedTeacherStatus;
+                    teacher.Add(teacherDto);
+                }
+            };
 
         return teacher;
     }

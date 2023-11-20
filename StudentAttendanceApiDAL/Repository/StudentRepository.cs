@@ -91,7 +91,7 @@ namespace StudentAttendanceApiDAL.Repository
                         }
                     }
                 }
-               
+
                 logger.LogInformation($"UserRepository : GetStudentById : End");
             }
             catch (Exception ex)
@@ -157,22 +157,24 @@ namespace StudentAttendanceApiDAL.Repository
             Dictionary<int, int> totalPresentStudentData = new Dictionary<int, int>();
             try
             {
-                List<Student> students = null;
-                List<Student> totalStudents = null;
-                List<Student> presentStudents = null;
-                if (userId == 0 && type == 0)
+                List<Student> students = new List<Student>();
+                List<Student> totalStudents = new List<Student>();
+                List<Student> presentStudents = new List<Student>();
+
+                int? TypeValue = appDbContext.Users.FirstOrDefault(x => x.Id == userId).Type;
+
+                if (TypeValue == 1)
                 {
                     students = await appDbContext.Student.AsNoTracking().ToListAsync();
 
                     totalStudents = students.Where(x => x.Status.Value).ToList();
 
                     presentStudents = students.Where(x => x.ActiveClassStatus.Value).ToList();
-
                 }
-                else
+                else if (TypeValue == 2)
                 {
-                    List<int> centerIds = appDbContext.Center.Where(x => x.AssignedRegionalAdmin == userId).Select(x => x.Id).ToList();
 
+                    List<int> centerIds = appDbContext.Center.Where(x => x.AssignedRegionalAdmin == userId).Select(x => x.Id).ToList();
                     students = await appDbContext.Student.Where(x => centerIds.Contains(x.CenterId)).AsNoTracking().ToListAsync();
 
                     totalStudents = students.Where(x => x.Status.Value).ToList();
@@ -181,8 +183,10 @@ namespace StudentAttendanceApiDAL.Repository
 
                 }
 
-                totalPresentStudentData.Add(presentStudents.Count(), totalStudents.Count());
-
+                if (totalPresentStudentData != null)
+                {
+                    totalPresentStudentData.Add(presentStudents.Count(), totalStudents.Count());
+                }
                 logger.LogInformation($"UserRepository : UpdateStudentActive : Started");
             }
             catch (Exception ex)
@@ -203,7 +207,9 @@ namespace StudentAttendanceApiDAL.Repository
                 int classes = 0;
                 int activeClasses = 0;
 
-                if (userId == 0 && type == 0)
+                int? TypeValue = appDbContext.Users.FirstOrDefault(x => x.Id == userId).Type;
+
+                if (TypeValue == 1)
                 {
                     classes = appDbContext.Center.AsNoTracking().ToList().Count();
                     activeClasses = appDbContext.Class.AsNoTracking().Where(x => x.Status.Value == 1 && x.StartedDate.Value.Date == DateTime.Now.Date).ToList().Count();
@@ -217,7 +223,10 @@ namespace StudentAttendanceApiDAL.Repository
 
 
                 }
-                ClassData.Add(activeClasses, classes);
+                if (ClassData != null)
+                {
+                    ClassData.Add(activeClasses, classes);
+                }
                 logger.LogInformation($"UserRepository : GetAllClasses : End");
             }
             catch (Exception ex)

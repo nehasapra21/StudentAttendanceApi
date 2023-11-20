@@ -17,7 +17,6 @@ using StudentAttendanceApiDAL.Tables;
 using System.Net;
 using System.Text;
 using System.Text.Json.Nodes;
-using System.Web.Http.Results;
 using INotificationService = StudentAttendanceApi.Services.INotificationService;
 
 namespace StudentAttendanceApi.Controllers
