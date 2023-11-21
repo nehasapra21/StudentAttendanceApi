@@ -162,6 +162,25 @@ namespace StudentAttendanceApiDAL.Repository
             return user;
         }
 
+        public async Task<Users> GetOnlyUserById(int userId)
+        {
+            logger.LogInformation($"UserRepository : GetUserById : Started");
+
+            Users user = new Users();
+            try
+            {
+                user = await appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
+
+                logger.LogInformation($"UserRepository : GetUserById : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetUserById", ex);
+                throw ex;
+            }
+            return user;
+        }
+
         public async Task<Users?> LoginUser(string userName, string password)
         {
             logger.LogInformation($"UserRepository : LoginUser : Started");
@@ -218,14 +237,14 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 if (user.Id > 0)
                 {
-                    var userVal = appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == user.Id).Result;
-                    if (userVal != null)
-                    {
-                        user.EnrolmentRollId = userVal.EnrolmentRollId;
-                        user.Password = userVal.Password;
-                        user.CreatedOn = userVal.CreatedOn;
-                        user.Status = userVal.Status;
-                    }
+                    //var userVal = appDbContext.Users.FirstOrDefaultAsync(x => x.Id == user.Id).Result;
+                    //if (userVal != null)
+                    //{
+                    //    user.EnrolmentRollId = userVal.EnrolmentRollId;
+                    //    user.Password = userVal.Password;
+                    //    user.CreatedOn = userVal.CreatedOn;
+                    //    user.Status = userVal.Status;
+                    //}
                     if (user.Type == (int)Constant.Type.Teacher && user.ListOfPanchayatId != null && user.ListOfPanchayatId.Count == 1)
                     {
                         user.PanchayatId = Convert.ToInt32(user.ListOfPanchayatId[0]);

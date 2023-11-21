@@ -50,9 +50,8 @@ namespace StudentAttendanceApiBLL
 
         }
 
-        public static Users ConvertUpdateUsertoToUser(UserDto masterAdminDto)
+        public static Users ConvertUpdateUsertoToUser(UserDto masterAdminDto,Users masterAdmin)
         {
-            Users masterAdmin = new Users();
             masterAdmin.Id = masterAdminDto.Id;
             masterAdmin.DateOfBirth = masterAdminDto.DateOfBirth;
             masterAdmin.GuardianName = masterAdminDto.GuardianName;

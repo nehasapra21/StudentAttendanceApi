@@ -13,6 +13,7 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<Users?> LoginUser(string name, string password);
         Task<Users> SaveLogin(Users user);
         Task<Users> SaveSuperAdmin(Users users);
+        Task<Users> GetOnlyUserById(int userId);
         Task<Users> GetUserById(int userId);
         Task<string> GetUserDeviceByUserId(int userId);
         Task<string> CheckUserMobileNumber(string mobileNumber);

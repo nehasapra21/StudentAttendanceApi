@@ -98,23 +98,29 @@ namespace StudentAttendanceApiBLL.Manager
 
                 userDto.Password = pass;
 
-                
+                user = UserConvertor.ConvertUsertoToUser(userDto);
             }
             else
             {
-                user = await _userRepository.GetUserById(userDto.Id);
-                if(user!=null)
+                user = await _userRepository.GetOnlyUserById(userDto.Id);
+                if (user != null)
                 {
                     userDto.Type = user.Type;
+                    if (userDto.Type == 1)//superadmin can chnage anything
+                    {
+                        userDto.EnrolmentRollId = user.EnrolmentRollId;
+                        userDto.Password = user.Password;
+                        userDto.CreatedOn = user.CreatedOn;
+                        userDto.Status = user.Status;
+                        user = UserConvertor.ConvertUsertoToUser(userDto);
+                    }
+                    else
+                    {
+                        user = UserConvertor.ConvertUpdateUsertoToUser(userDto, user);
+                    }
+
                 }
-                if(userDto.Type==1)//superadmin can chnage anything
-                {
-                    user = UserConvertor.ConvertUsertoToUser(userDto);
-                }
-                else
-                {
-                    user = UserConvertor.ConvertUpdateUsertoToUser(userDto);
-                }
+                
             }
 
             Users saveUser = await _userRepository.SaveLogin(user);
