@@ -139,6 +139,7 @@ namespace StudentAttendanceApi.Controllers
         [HttpPost("SaveManualStudentAttendance")]
         public async Task<IActionResult> SaveManualStudentAttendance([FromForm] StudentAttendanceDto studentAttendanceDto)
         {
+            //manual attendance column value should not null
             logger.LogInformation("UserController : SaveStudentAttendance : Started");
             try
             {

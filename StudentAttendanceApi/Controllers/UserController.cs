@@ -61,15 +61,15 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("SaveSuperAdmin")]
         public async Task<IActionResult> SaveSuperAdmin([FromForm] SuperAdminDto superAdminDto)
         {
             logger.LogInformation("UserController : SaveSuperAdmin : Started");
             try
             {
-                Users user = UserConvertor.ConvertSuperAdminUsertoToSuperAdminUser(superAdminDto);
-                var masterAdmin = await _userManager.SaveLogin(user);
+                UserDto userDto = UserConvertor.ConvertSuperAdminUsertoToUserDto(superAdminDto);
+                var masterAdmin = await _userManager.SaveLogin(userDto);
                 if (masterAdmin != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
@@ -152,8 +152,9 @@ namespace StudentAttendanceApi.Controllers
                         code = StatusCodes.Status404NotFound
                     });
                 }
-                Users user = UserConvertor.ConvertUsertoToUser(userDto);
-                var masterAdmin = await _userManager.SaveLogin(user);
+
+             
+                var masterAdmin = await _userManager.SaveLogin(userDto);
                 if (masterAdmin != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new

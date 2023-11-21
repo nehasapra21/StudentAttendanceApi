@@ -34,7 +34,7 @@ namespace StudentAttendanceApiBLL
             masterAdmin.CreatedOn = masterAdminDto.CreatedOn;
             masterAdmin.DistrictId = masterAdminDto.DistrictId;
             masterAdmin.VidhanSabhaId = masterAdminDto.VidhanSabhaId;
-           // masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
+            // masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
             masterAdmin.VillageId = masterAdminDto.VillageId;
             masterAdmin.AssignedRegionalAdminStatus = masterAdminDto.AssignedRegionalAdminStatus;
             masterAdmin.AssignedTeacherStatus = masterAdminDto.AssignedTeacherStatus;
@@ -50,9 +50,53 @@ namespace StudentAttendanceApiBLL
 
         }
 
+        public static Users ConvertUpdateUsertoToUser(UserDto masterAdminDto)
+        {
+            Users masterAdmin = new Users();
+            masterAdmin.Id = masterAdminDto.Id;
+            masterAdmin.DateOfBirth = masterAdminDto.DateOfBirth;
+            masterAdmin.GuardianName = masterAdminDto.GuardianName;
+            masterAdmin.GuardianNumber = masterAdminDto.GuardianNumber;
+            masterAdmin.Email = masterAdminDto.Email;
+            return masterAdmin;
+        }
+
         public static Users ConvertSuperAdminUsertoToSuperAdminUser(SuperAdminDto masterAdminDto)
         {
             Users masterAdmin = new Users();
+            masterAdmin.Id = masterAdminDto.Id;
+            masterAdmin.EnrolmentRollId = masterAdminDto.EnrolmentRollId;
+            masterAdmin.Name = masterAdminDto.Name;
+            masterAdmin.Token = masterAdminDto.Token;
+            masterAdmin.FullAddress = masterAdminDto.FullAddress;
+            masterAdmin.Status = masterAdminDto.Status;
+            masterAdmin.Age = masterAdminDto.Age;
+            masterAdmin.Gender = masterAdminDto.Gender;
+            masterAdmin.DateOfBirth = masterAdminDto.DateOfBirth;
+            masterAdmin.PhoneNumber = masterAdminDto.PhoneNumber;
+            masterAdmin.WhatsApp = masterAdminDto.WhatsApp;
+            masterAdmin.Email = masterAdminDto.Email;
+            masterAdmin.Contact = masterAdminDto.Contact;
+            masterAdmin.RoleId = masterAdminDto.RoleId;
+            masterAdmin.Picture = masterAdminDto.Picture;
+            masterAdmin.LastLoginTime = masterAdminDto.LastLoginTime;
+            masterAdmin.Password = masterAdminDto.Password;
+            masterAdmin.Type = masterAdminDto.Type;
+            masterAdmin.CreatedBy = masterAdminDto.CreatedBy;
+            masterAdmin.CreatedOn = masterAdminDto.CreatedOn;
+            masterAdmin.EnrollmentDate = masterAdminDto.EnrollmentDate;
+            //masterAdmin.DistrictId = masterAdminDto.DistrictId;
+            //masterAdmin.VidhanSabhaId = masterAdminDto.VidhanSabhaId;
+            //masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
+            //masterAdmin.VillageId = masterAdminDto.VillageId;
+            //masterAdmin.CenterId = masterAdminDto.CenterId;
+            return masterAdmin;
+
+        }
+
+        public static UserDto ConvertSuperAdminUsertoToUserDto(SuperAdminDto masterAdminDto)
+        {
+            UserDto masterAdmin = new UserDto();
             masterAdmin.Id = masterAdminDto.Id;
             masterAdmin.EnrolmentRollId = masterAdminDto.EnrolmentRollId;
             masterAdmin.Name = masterAdminDto.Name;
@@ -107,7 +151,7 @@ namespace StudentAttendanceApiBLL
             masterAdmin.CreatedOn = masterAdminDto.CreatedOn;
             masterAdmin.DistrictId = masterAdminDto.DistrictId;
             masterAdmin.VidhanSabhaId = masterAdminDto.VidhanSabhaId;
-           // masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
+            // masterAdmin.PanchayatId = masterAdminDto.PanchayatId;
             masterAdmin.VillageId = masterAdminDto.VillageId;
             masterAdmin.AssignedRegionalAdminStatus = masterAdminDto.AssignedRegionalAdminStatus;
             masterAdmin.AssignedTeacherStatus = masterAdminDto.AssignedTeacherStatus;
@@ -199,11 +243,11 @@ namespace StudentAttendanceApiBLL
             masterAdmin.VillageId = masterAdminDto.VillageId;
 
             masterAdmin.DistrictName = masterAdminDto.District != null ? masterAdminDto.District.Name : string.Empty;
-            
+
             masterAdmin.VidhanSabhaName = (masterAdminDto.VidhanSabha != null) ? masterAdminDto.VidhanSabha.Name : string.Empty;
 
             masterAdmin.VillageName = (masterAdminDto.Village != null) ? masterAdminDto.Village.Name : string.Empty;
-            if(masterAdminDto.CenterAssignUser!=null)
+            if (masterAdminDto.CenterAssignUser != null)
             {
                 masterAdmin.AssignedDate = masterAdminDto.CenterAssignUser.Date;
             }
@@ -264,7 +308,7 @@ namespace StudentAttendanceApiBLL
             masterAdmin.VidhanSabhaId = masterAdminDto.VidhanSabhaId;
             masterAdmin.VillageId = masterAdminDto.VillageId;
             masterAdmin.DistrictName = masterAdminDto.District != null ? masterAdminDto.District.Name : string.Empty;
-            masterAdmin.PanchayatName = (masterAdminDto.Panchayat != null)? masterAdminDto.Panchayat.Name : string.Empty;
+            masterAdmin.PanchayatName = (masterAdminDto.Panchayat != null) ? masterAdminDto.Panchayat.Name : string.Empty;
             masterAdmin.VidhanSabhaName = (masterAdminDto.VidhanSabha != null) ? masterAdminDto.VidhanSabha.Name : string.Empty;
 
             masterAdmin.VillageName = (masterAdminDto.Village != null) ? masterAdminDto.Village.Name : string.Empty;

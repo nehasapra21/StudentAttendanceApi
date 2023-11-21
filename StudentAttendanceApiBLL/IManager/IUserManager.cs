@@ -11,7 +11,7 @@ namespace StudentAttendanceApiBLL.IManager
     public interface IUserManager
     {
         Task<Users> LoginUser(string name, string password);
-        Task<UserDto> SaveLogin(Users user);
+        Task<UserDto> SaveLogin(UserDto user);
         //Task<Users> SaveSuperAdmin(Users users);
         Task<object> GetUserById(int userId);
         Task<string> GetUserDeviceByUserId(int userId);
