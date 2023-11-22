@@ -61,7 +61,7 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("SaveSuperAdmin")]
         public async Task<IActionResult> SaveSuperAdmin([FromForm] SuperAdminDto superAdminDto)
         {
@@ -136,7 +136,7 @@ namespace StudentAttendanceApi.Controllers
         }
 
 
-
+        [Authorize]
         [HttpPost("SaveUser")]
         public async Task<IActionResult> SaveUser([FromForm] UserDto userDto)
         {
@@ -183,6 +183,41 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost("UpdateSuperAdminUser")]
+        public async Task<IActionResult> UpdateSuperAdminUser([FromForm] UserDto userDto)
+        {
+            logger.LogInformation("UserController : SaveUser : Started");
+            try
+            {
+                var masterAdmin = await _userManager.UpdateSuperAdminUser(userDto);
+                if (masterAdmin != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = masterAdmin,
+                        message = "Data save successfully",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "data doesn't save",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
 
         [Authorize]
         [HttpGet("GetUserById")]

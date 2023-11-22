@@ -74,11 +74,14 @@ namespace StudentAttendanceApiBLL
             center.PanchayatId = centerDto.PanchayatId;
             center.DistrictName = centerDto.DistrictName;
             center.VidhanSabhaName = centerDto.VidhanSabhaName;
+            center.VillageName = centerDto.VillageName;
             center.PanchayatName = centerDto.PanchayatName;
             center.TotalPresentStudents = centerDto.TotalPresentStudents;
             center.TotalStudents = centerDto.TotalStudents;
             center.TeacherName = centerDto.TeacherName;
             center.AssignedTeacher = centerDto.AssignedTeachers;
+            center.AssignedRegionalAdmin = centerDto.AssignedRegionalAdmin;
+            center.RegionalAdminName = centerDto.RegionalAdminName;
             center.Date = centerDto.StartedDate.Value.ToString("yyyy-MM-dd'T'HH:mm:ss.fff");
             center.ClassStartDate = centerDto.ClassStartDate!=null? centerDto.ClassStartDate.Value.ToString("yyyy-MM-dd'T'HH:mm:ss.fff"):null;
             center.ClassEndDate = centerDto.ClassEndDate!=null?centerDto.ClassEndDate.Value.ToString("yyyy-MM-dd'T'HH:mm:ss.fff"):null;

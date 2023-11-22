@@ -120,7 +120,35 @@ namespace StudentAttendanceApiBLL.Manager
                     }
 
                 }
-                
+
+            }
+
+            Users saveUser = await _userRepository.SaveLogin(user);
+            UserDto saveUserDto = new UserDto();
+            if (saveUserDto != null)
+            {
+                saveUserDto = UserConvertor.ConvertUserToUserDto(saveUser);
+            }
+
+            return saveUserDto;
+        }
+
+        public async Task<UserDto> UpdateSuperAdminUser(UserDto userDto)
+        {
+            _logger.LogInformation($"UserManager : Bll : SaveSuperAdmin : Started");
+
+            Users user = null;
+            //Users user = UserConvertor.ConvertUsertoToUser(userDto);
+
+            user = await _userRepository.GetOnlyUserById(userDto.Id);
+            if (user != null)
+            {
+                userDto.Type = user.Type;
+                userDto.EnrolmentRollId = user.EnrolmentRollId;
+                userDto.Password = user.Password;
+                userDto.CreatedOn = user.CreatedOn;
+                userDto.Status = user.Status;
+                user = UserConvertor.ConvertUsertoToUser(userDto);
             }
 
             Users saveUser = await _userRepository.SaveLogin(user);

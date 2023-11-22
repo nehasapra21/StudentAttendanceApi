@@ -282,7 +282,7 @@ namespace StudentAttendanceApiDAL.Repository
                     center.RegionalAdminName = appDbContext.Users.AsNoTracking().FirstOrDefault(x => x.Id == center.AssignedRegionalAdmin).Name;
 
                     center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == center.Id).AsNoTracking().ToList().Count();
-
+                    
                     logger.LogInformation($"UserRepository : CheckDistrictName : End");
                 }
             }
@@ -349,12 +349,23 @@ namespace StudentAttendanceApiDAL.Repository
                                 center.AssignedTeachers = item.AssignedTeachers;
                                 center.TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == item.AssignedTeachers).Name;
                             }
+                            if (item.AssignedRegionalAdmin != null)
+                            {
+                                center.AssignedRegionalAdmin = item.AssignedRegionalAdmin;
+                                center.RegionalAdminName = appDbContext.Users.FirstOrDefault(x => x.Id == item.AssignedRegionalAdmin).Name;
+                            }
+                            if(item.VillageId>0)
+                            {
+                                center.VillageName=appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId).Name;
+                            }
                             center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == item.Id && x.Status.Value).AsNoTracking().ToList().Count;
                             center.PanchayatId = item.PanchayatId;
                             center.VidhanSabhaId = item.VidhanSabhaId;
                             center.DistrictId = item.DistrictId;
                             center.ClassStatus = item.ClassStatus;
                             center.CreatedDate = item.CreatedDate;
+                            center.VillageId = item.VillageId;
+                           // center.VillageName = item.Village != null ? item.Village.Name : string.Empty;
                             center.PanchayatName = item.Panchayat != null ? item.Panchayat.Name : string.Empty;
                             center.DistrictName = item.District != null ? item.District.Name : string.Empty;
                             center.VidhanSabhaName = item.VidhanSabha != null ? item.VidhanSabha.Name : string.Empty;
@@ -389,12 +400,23 @@ namespace StudentAttendanceApiDAL.Repository
                                 center.AssignedTeachers = item.AssignedTeachers;
                                 center.TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == item.AssignedTeachers).Name;
                             }
+                            if (item.AssignedRegionalAdmin != null)
+                            {
+                                center.AssignedRegionalAdmin = item.AssignedRegionalAdmin;
+                                center.RegionalAdminName = appDbContext.Users.FirstOrDefault(x => x.Id == item.AssignedRegionalAdmin).Name;
+                            }
+                            if (item.VillageId > 0)
+                            {
+                                center.VillageName = appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId).Name;
+                            }
                             center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == item.Id && x.Status.Value).AsNoTracking().ToList().Count;
                             center.PanchayatId = item.PanchayatId;
                             center.VidhanSabhaId = item.VidhanSabhaId;
                             center.DistrictId = item.DistrictId;
                             center.ClassStatus = item.ClassStatus;
                             center.CreatedDate = item.CreatedDate;
+                            center.VillageId = item.VillageId;
+                            //center.VillageName = item.Village != null ? item.Village.Name : string.Empty;
                             center.PanchayatName = item.Panchayat != null ? item.Panchayat.Name : string.Empty;
                             center.DistrictName = item.District != null ? item.District.Name : string.Empty;
                             center.VidhanSabhaName = item.VidhanSabha != null ? item.VidhanSabha.Name : string.Empty;
@@ -430,12 +452,23 @@ namespace StudentAttendanceApiDAL.Repository
                                     center.TeacherName = string.Empty;
                                 }
                             }
+                            if (item.AssignedRegionalAdmin != null)
+                            {
+                                center.AssignedRegionalAdmin = item.AssignedRegionalAdmin;
+                                center.RegionalAdminName = appDbContext.Users.FirstOrDefault(x => x.Id == item.AssignedRegionalAdmin).Name;
+                            }
+                            if (item.VillageId > 0)
+                            {
+                                center.VillageName = appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId).Name;
+                            }
                             center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == item.Id && x.Status.Value).AsNoTracking().ToList().Count;
                             center.PanchayatId = item.PanchayatId;
                             center.VidhanSabhaId = item.VidhanSabhaId;
                             center.DistrictId = item.DistrictId;
                             center.ClassStatus = item.ClassStatus;
                             center.CreatedDate = item.CreatedDate;
+                            center.VillageId = item.VillageId;
+                           // center.VillageName = item.Village != null ? item.Village.Name : string.Empty;
                             center.PanchayatName = item.Panchayat != null ? item.Panchayat.Name : string.Empty;
                             center.DistrictName = item.District != null ? item.District.Name : string.Empty;
                             center.VidhanSabhaName = item.VidhanSabha != null ? item.VidhanSabha.Name : string.Empty;
