@@ -70,7 +70,9 @@ namespace StudentAttendanceApiDAL.Tables
         public string CenterName { get; set; }
         [NotMapped]
         public string TeacherName { get; set; }
-        
+        [NotMapped]
+        public int TotalStudentCount { get; set; }
+
 
         //[NotMapped]
         //public string DistrictName { get; set; }

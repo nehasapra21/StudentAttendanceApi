@@ -2,18 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Model;
 using StudentAttendanceApiDAL.Tables;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-using System.Xml.Linq;
 
 namespace StudentAttendanceApiDAL.Repository
 {
@@ -58,7 +51,6 @@ namespace StudentAttendanceApiDAL.Repository
                         {
                             cls.Status = classVal.Status;
                         }
-
                     }
                 }
                 await appDbContext.SaveChangesAsync();
