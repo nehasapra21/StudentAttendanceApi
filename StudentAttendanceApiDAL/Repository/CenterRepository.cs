@@ -354,9 +354,13 @@ namespace StudentAttendanceApiDAL.Repository
                                 center.AssignedRegionalAdmin = item.AssignedRegionalAdmin;
                                 center.RegionalAdminName = appDbContext.Users.FirstOrDefault(x => x.Id == item.AssignedRegionalAdmin).Name;
                             }
-                            if(item.VillageId>0)
+                            if (item.VillageId > 0)
                             {
-                                center.VillageName=appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId).Name;
+                                Village village = appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId);
+                                if (village != null)
+                                {
+                                    center.VillageName = village.Name;
+                                }
                             }
                             center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == item.Id && x.Status.Value).AsNoTracking().ToList().Count;
                             center.PanchayatId = item.PanchayatId;
@@ -407,7 +411,11 @@ namespace StudentAttendanceApiDAL.Repository
                             }
                             if (item.VillageId > 0)
                             {
-                                center.VillageName = appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId).Name;
+                                Village village = appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId);
+                                if (village != null)
+                                {
+                                    center.VillageName = village.Name;
+                                }
                             }
                             center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == item.Id && x.Status.Value).AsNoTracking().ToList().Count;
                             center.PanchayatId = item.PanchayatId;
@@ -459,7 +467,11 @@ namespace StudentAttendanceApiDAL.Repository
                             }
                             if (item.VillageId > 0)
                             {
-                                center.VillageName = appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId).Name;
+                                Village village = appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId);
+                                if (village != null)
+                                {
+                                    center.VillageName = village.Name;
+                                }
                             }
                             center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == item.Id && x.Status.Value).AsNoTracking().ToList().Count;
                             center.PanchayatId = item.PanchayatId;
@@ -517,6 +529,14 @@ namespace StudentAttendanceApiDAL.Repository
                                 center.AssignedTeachers = item.AssignedTeachers;
                                 center.TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == item.AssignedTeachers).Name;
                             }
+                            if (item.VillageId > 0)
+                            {
+                                Village village = appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId);
+                                if (village != null)
+                                {
+                                    center.VillageName = village.Name;
+                                }
+                            }
                             center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == item.Id && x.Status.Value).AsNoTracking().ToList().Count;
                             center.PanchayatId = item.PanchayatId;
                             center.VidhanSabhaId = item.VidhanSabhaId;
@@ -557,6 +577,14 @@ namespace StudentAttendanceApiDAL.Repository
                                 center.AssignedTeachers = item.AssignedTeachers;
                                 center.TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == item.AssignedTeachers).Name;
                             }
+                            if (item.VillageId > 0)
+                            {
+                                Village village = appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId);
+                                if (village != null)
+                                {
+                                    center.VillageName = village.Name;
+                                }
+                            }
                             center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == item.Id && x.Status.Value).AsNoTracking().ToList().Count;
                             center.PanchayatId = item.PanchayatId;
                             center.VidhanSabhaId = item.VidhanSabhaId;
@@ -590,6 +618,14 @@ namespace StudentAttendanceApiDAL.Repository
                             {
                                 center.AssignedTeachers = item.AssignedTeachers;
                                 center.TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == item.AssignedTeachers).Name;
+                            }
+                            if (item.VillageId > 0)
+                            {
+                                Village village = appDbContext.Village.FirstOrDefault(x => x.Id == item.VillageId);
+                                if (village != null)
+                                {
+                                    center.VillageName = village.Name;
+                                }
                             }
                             center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == item.Id && x.Status.Value).AsNoTracking().ToList().Count;
                             center.PanchayatId = item.PanchayatId;
