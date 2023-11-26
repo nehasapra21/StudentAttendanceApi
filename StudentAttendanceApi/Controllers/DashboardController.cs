@@ -3,11 +3,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Asn1.Ocsp;
 using StudentAttendanceApiBLL;
 using StudentAttendanceApiBLL.IManager;
 using StudentAttendanceApiBLL.Manager;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Tables;
+using System.Net.Http;
+using System.Text;
+using System;
+using System.Text.Json.Nodes;
+using System.Threading;
 
 namespace StudentAttendanceApi.Controllers
 {
@@ -31,15 +38,12 @@ namespace StudentAttendanceApi.Controllers
             logger.LogInformation("VillageController : GetAllVillage : Started");
             try
             {
-                dynamic classCountByMonth = await _dashboardManager.GetClassCountByMonth(centerId, month);
+                string classCountByMonth = await _dashboardManager.GetClassCountByMonth(centerId, month);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = classCountByMonth;
+                contentResult.ContentType = "application/json";
 
-                return StatusCode(StatusCodes.Status200OK, new
-                {
-                    status = true,
-                    message = "List of Gender ratio",
-                    data = classCountByMonth,
-                    code = StatusCodes.Status200OK
-                });
+                return contentResult;
             }
             catch (Exception ex)
             {
@@ -54,15 +58,13 @@ namespace StudentAttendanceApi.Controllers
             logger.LogInformation("VillageController : GetAllVillage : Started");
             try
             {
-                dynamic GenderRatio = await _dashboardManager.GetTotalGenderRatioByCenterId(centerId);
+                string GenderRatio = await _dashboardManager.GetTotalGenderRatioByCenterId(centerId);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = GenderRatio;
+                contentResult.ContentType = "application/json";
 
-                return StatusCode(StatusCodes.Status200OK, new
-                {
-                    status = true,
-                    message = "List of Gender ratio",
-                    data = GenderRatio,
-                    code = StatusCodes.Status200OK
-                });
+                return contentResult;
+               
             }
             catch (Exception ex)
             {
@@ -77,14 +79,19 @@ namespace StudentAttendanceApi.Controllers
             logger.LogInformation("VillageController : GetTotalStudentOfClass : Started");
             try
             {
-                dynamic GenderRatio = await _dashboardManager.GetTotalStudentOfClass(centerId);
-                return StatusCode(StatusCodes.Status200OK, new
-                {
-                    status = true,
-                    message = "List of Gender ratio",
-                    data = GenderRatio,
-                    code = StatusCodes.Status200OK
-                });
+                string GenderRatio = await _dashboardManager.GetTotalStudentOfClass(centerId);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = GenderRatio;
+                contentResult.ContentType = "application/json";
+
+                return contentResult;
+                //return StatusCode(StatusCodes.Status200OK, new
+                //{
+                //    status = true,
+                //    message = "List of Gender ratio",
+                //    data = contentResult.Content,
+                //    code = StatusCodes.Status200OK
+                //});
             }
             catch (Exception ex)
             {

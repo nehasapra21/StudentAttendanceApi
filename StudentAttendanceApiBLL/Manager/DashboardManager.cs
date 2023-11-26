@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using StudentAttendanceApiBLL.IManager;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Repository;
@@ -33,7 +34,7 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async  Task<dynamic> GetClassCountByMonth(int centerId, int month)
+        public async  Task<string> GetClassCountByMonth(int centerId, int month)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetClassCountByMonth : Started");
             string village = await _dashboardRepository.GetClassCountByMonth(centerId, month);
@@ -41,18 +42,18 @@ namespace StudentAttendanceApiBLL.Manager
             return village;
         }
 
-        public async Task<dynamic> GetTotalGenderRatioByCenterId(int centerId)
+        public async Task<string> GetTotalGenderRatioByCenterId(int centerId)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetTotalGenterRatioByCenterId : Started");
-            dynamic village = await _dashboardRepository.GetTotalGenderRatioByCenterId(centerId);
+            string village = await _dashboardRepository.GetTotalGenderRatioByCenterId(centerId);
             _logger.LogInformation($"DashboardManager : Bll : GetTotalGenterRatioByCenterId : End");
             return village;
         }
 
-        public async Task<dynamic> GetTotalStudentOfClass(int centerId)
+        public async Task<string> GetTotalStudentOfClass(int centerId)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentOfClass : Started");
-            dynamic village = await _dashboardRepository.GetTotalStudentOfClass(centerId);
+            string village = await _dashboardRepository.GetTotalStudentOfClass(centerId);
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentOfClass : End");
             return village;
         }

@@ -5,7 +5,6 @@ using static StudentAttendanceApi.FCM.NotificationModel;
 using System.Net.Http.Headers;
 using System.Runtime;
 using CorePush.Google;
-using FirebaseAdmin.Messaging;
 
 namespace StudentAttendanceApi.Services
 {

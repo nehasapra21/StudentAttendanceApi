@@ -1,16 +1,18 @@
-﻿using StudentAttendanceApiDAL.Tables;
+﻿using Newtonsoft.Json.Linq;
+using StudentAttendanceApiDAL.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace StudentAttendanceApiDAL.IRepository
 {
     public interface IDashboardRepository
     {
-        Task<dynamic> GetClassCountByMonth(int centerId, int month);
-        Task<dynamic> GetTotalGenderRatioByCenterId(int centerId);
-        Task<dynamic> GetTotalStudentOfClass(int centerId);
+        Task<string> GetClassCountByMonth(int centerId, int month);
+        Task<string> GetTotalGenderRatioByCenterId(int centerId);
+        Task<string> GetTotalStudentOfClass(int centerId);
     }
 }

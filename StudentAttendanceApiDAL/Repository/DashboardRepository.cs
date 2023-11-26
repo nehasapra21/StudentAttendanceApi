@@ -20,10 +20,12 @@ namespace StudentAttendanceApiDAL.Repository
             this.appDbContext = appDbContext;
             this.logger = logger;
         }
-        public async Task<dynamic> GetClassCountByMonth(int centerId, int month)
+        public async Task<string> GetClassCountByMonth(int centerId, int month)
         {
             logger.LogInformation($"DashboardRepository : GetTotalGenderRatioByCenterId : Started");
             dynamic rootJsonObject = new JObject();
+            rootJsonObject.Data = new JArray() as dynamic;
+            dynamic student = new JObject();
             try
             {
                 List<Class> classCount = await appDbContext.Class.Where(x => x.CenterId == centerId).ToListAsync();
@@ -37,9 +39,13 @@ namespace StudentAttendanceApiDAL.Repository
                 int classCancelTeacherCountVal = classCancelTeacherCount.Count;
 
                 rootJsonObject.Status = true;
-                rootJsonObject.HolidayCount = holidayCount;
-                rootJsonObject.ClassCount = classCountValue;
-                rootJsonObject.ClassCancelTeacherCount = classCancelTeacherCountVal;
+
+                student = new JObject();
+                student.HolidayCount = holidayCount;
+                student.ClassCount = classCountValue;
+                student.ClassCancelTeacherCount = classCancelTeacherCountVal;
+
+                rootJsonObject.Data.Add(student);
 
                 logger.LogInformation($"DashboardRepository : GetTotalGenderRatioByCenterId : End");
             }
@@ -48,12 +54,15 @@ namespace StudentAttendanceApiDAL.Repository
                 logger.LogError(ex, $"DashboardRepository : GetTotalGenderRatioByCenterId ", ex);
             }
 
-            return JsonConvert.SerializeObject(rootJsonObject);         }
+            return JsonConvert.SerializeObject(rootJsonObject);
+        }
 
-        public async Task<dynamic> GetTotalGenderRatioByCenterId(int centerId)
+        public async Task<string> GetTotalGenderRatioByCenterId(int centerId)
         {
             logger.LogInformation($"DashboardRepository : GetClassCountByMonth : Started");
             dynamic rootJsonObject = new JObject();
+            rootJsonObject.Data = new JArray() as dynamic;
+            dynamic student = new JObject();
             try
             {
 
@@ -65,9 +74,14 @@ namespace StudentAttendanceApiDAL.Repository
 
 
                 rootJsonObject.Status = true;
-                rootJsonObject.FeMaleCount = FeMaleCount;
-                rootJsonObject.MaleCount = MaleCount;
-                rootJsonObject.TotalStudentCount = TotalStudentCount;
+
+                student = new JObject();
+                student.FeMaleCount = FeMaleCount;
+                student.MaleCount = MaleCount;
+                student.TotalStudentCount = TotalStudentCount;
+                rootJsonObject.Data.Add(student);
+
+                
 
                 logger.LogInformation($"DashboardRepository : GetClassCountByMonth : End");
             }
@@ -79,54 +93,40 @@ namespace StudentAttendanceApiDAL.Repository
             return JsonConvert.SerializeObject(rootJsonObject);
         }
 
-        public async Task<dynamic> GetTotalStudentOfClass(int centerId)
+        public async Task<string> GetTotalStudentOfClass(int centerId)
         {
             logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : Started");
             dynamic rootJsonObject = new JObject();
-            rootJsonObject.Data = new JArray() as dynamic;
             dynamic student = new JObject();
-            string cleanJsonString = string.Empty;
-            JObject jsonObject = new JObject();
+            rootJsonObject.Data = new JArray() as dynamic;
             try
             {
-
-                List<Student> students = await (from s in appDbContext.Student //Left Data Source
+                var students = await (from s in appDbContext.Student //Left Data Source
                                                 where s.CenterId == centerId
-                                                group new
+                                                group s by new { s.Grade } into g
+                                                orderby g.Key.Grade
+                                                select new
                                                 {
-                                                    s
-                                                } by new
-                                                {
-                                                    s.Id,
-                                                    s.Grade,
-                                                    s.Gender
-                                                } into g
-                                                select new Student
-                                                {
-                                                    Id = g.Key.Id,
                                                     Grade = g.Key.Grade,
-                                                    Gender = g.Key.Gender,
-                                                    TotalStudentCount =g.Count()
-                                                }).OrderBy(x => x.Grade).ToListAsync();
+                                                    Total = g.Count(),
+                                                    FeMaleCount = g.Where(x=>x.Gender=="FeMale").Count(),
+                                                    MaleCount = g.Where(x => x.Gender == "Male").Count(),
+                                                }).ToListAsync();
+
+                rootJsonObject.Status = true;
+                rootJsonObject.TotalStudents = appDbContext.Student.Where(x => x.CenterId == centerId).Count();
 
                 foreach (var item in students)
                 {
                     student = new JObject();
                     student.Grade = item.Grade;
-                    student.Gender = item.Gender;
-                    student.TotalStudentCount = item.TotalStudentCount;
+                    student.FeMaleCount = item.FeMaleCount;
+                    student.MaleCount = item.MaleCount;
+                    student.TotalStudentCount = item.Total;
                     rootJsonObject.Data.Add(student);
                 }
-                rootJsonObject.Status = true;
-                // Remove backslashes
-                string JsonString = JsonConvert.SerializeObject(rootJsonObject);
-                // Remove backslashes
-                cleanJsonString = JsonString.Replace("\\", "");
-
-                 jsonObject = JsonConvert.DeserializeObject<JObject>(cleanJsonString);
-
-                // Access data as needed, for example:
-                JArray data = jsonObject["Data"] as JArray;
+               
+                
                 logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : End");
             }
             catch (Exception ex)
@@ -134,7 +134,7 @@ namespace StudentAttendanceApiDAL.Repository
                 logger.LogError(ex, $"DashboardRepository : GetTotalStudentOfClass ", ex);
             }
 
-            return jsonObject;
+            return JsonConvert.SerializeObject(rootJsonObject);
         }
     }
 }
