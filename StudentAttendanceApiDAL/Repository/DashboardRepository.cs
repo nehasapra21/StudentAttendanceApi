@@ -306,20 +306,39 @@ namespace StudentAttendanceApiDAL.Repository
                             break;
                     }
                 }
-                //var attendancestatus = students
-                //           .Any(sa => sa.id == centerId)
-                //           ? "data exists"
-                //           : "no record";
 
-                //foreach (var item in students)
-                //{
-                //    student = new JObject();
-                //    student.Category = item.Category;
-                //    student.TotalStudentCount = item.Total;
-                //    rootJsonObject.Data.Add(student);
-                //}
+                logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"DashboardRepository : GetTotalStudentOfClass ", ex);
+            }
 
+            return JsonConvert.SerializeObject(rootJsonObject);
+        }
 
+        public async Task<string> GetUserByFilter(int type, int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime date)
+        {
+            logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : Started");
+            dynamic rootJsonObject = new JObject();
+            dynamic student = new JObject();
+            try
+            {
+                List<Users> users = new List<Users>();
+                if (districtId ==0)
+                {
+                    users = appDbContext.Users.Where(x => x.Type == type && (x.CreatedOn.Value.Date <= date.Date && x.CreatedOn.Value.Date >= date.Date)).ToList();
+                }
+                rootJsonObject.Status = true;
+                if (type==2)
+                {
+                    rootJsonObject.RegionalAdminCount = users.Count();
+                }
+                else
+                {
+                    rootJsonObject.TeacherCount= users.Count();
+                }
+             
                 logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : End");
             }
             catch (Exception ex)

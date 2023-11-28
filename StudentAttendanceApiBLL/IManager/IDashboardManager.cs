@@ -17,5 +17,6 @@ namespace StudentAttendanceApiBLL.IManager
         Task<string> GetCenterDetailByMonth(int centerId, int month, int year);
         Task<string> GetTotalBpl(int centerId, bool BplValue);
         Task<string> GetTotalStudentCategoryOfClass(int centerId);
+       Task<string>  GetUserByFilter(int type, int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime date);
     }
 }

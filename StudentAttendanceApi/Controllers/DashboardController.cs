@@ -158,5 +158,26 @@ namespace StudentAttendanceApi.Controllers
         }
 
 
+
+        [HttpGet("GetUserByFilter")]
+        public async Task<IActionResult> GetUserByFilter(int type, int districtId,int vidhanSabhaId,int panchaytaId,int villageId, DateTime date)
+        {
+            logger.LogInformation("VillageController : GetCenterDetailByMonth : Started");
+            try
+            {
+                string GenderRatio = await _dashboardManager.GetUserByFilter(type, districtId, vidhanSabhaId, panchaytaId, villageId, date);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = GenderRatio;
+                contentResult.ContentType = "application/json";
+
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VillageController : GetTotalStudentOfClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
     }
 }

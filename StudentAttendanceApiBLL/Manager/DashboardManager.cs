@@ -34,7 +34,7 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async  Task<string> GetClassCountByMonth(int centerId, int month)
+        public async Task<string> GetClassCountByMonth(int centerId, int month)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetClassCountByMonth : Started");
             string village = await _dashboardRepository.GetClassCountByMonth(centerId, month);
@@ -61,7 +61,7 @@ namespace StudentAttendanceApiBLL.Manager
         public async Task<string> GetCenterDetailByMonth(int centerId, int month, int year)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetCenterDetailByMonth : Started");
-            string data = await _dashboardRepository.GetCenterDetailByMonth(centerId,month,year);
+            string data = await _dashboardRepository.GetCenterDetailByMonth(centerId, month, year);
             _logger.LogInformation($"DashboardManager : Bll : GetCenterDetailByMonth : End");
             return data;
         }
@@ -78,6 +78,15 @@ namespace StudentAttendanceApiBLL.Manager
         {
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : Started");
             string data = await _dashboardRepository.GetTotalStudentCategoryOfClass(centerId);
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
+            return data;
+        }
+
+        public async Task<string>
+        GetUserByFilter(int type, int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime date)
+        {
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : Started");
+            string data = await _dashboardRepository.GetUserByFilter(type, districtId, vidhanSabhaId, panchaytaId, villageId, date);
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
             return data;
         }
