@@ -152,6 +152,29 @@ namespace StudentAttendanceApiDAL.Repository
             return center;
         }
 
+        public async Task<bool> CheckCenterStatusByUserId(int userId)
+        {
+            logger.LogInformation($"UserRepository : CehckCenterStatusByUserId : Started");
+
+            bool status=false;
+            try
+            {
+                 Center center = await appDbContext.Center
+                                                  .Where(x => x.AssignedTeachers == userId).AsNoTracking().FirstOrDefaultAsync();
+
+                if (center != null)
+                {
+                    status = center.Status.Value;
+                    logger.LogInformation($"UserRepository : CheckDistrictName : End");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : CheckDistrictName", ex);
+            }
+            return status;
+        }
+
         public async Task<List<Center>> GetAllCenters(int userId, int type)
         {
             logger.LogInformation($"UserRepository : GetAllCenters : Started");
@@ -653,23 +676,37 @@ namespace StudentAttendanceApiDAL.Repository
             return allCenters;
         }
 
-        public async Task<List<Center>> GetAllCentersById(int districtId, int vidhanSabhaId, int panchayatId, int villageId)
+        public async Task<CenterLog> UpdateCenterActiveOrDeactive(CenterLog centerlog)
         {
-            logger.LogInformation($"UserRepository : GetAllCentersById : Started");
+            logger.LogInformation($"UserRepository : UpdateCenterActiveOrDeactive : Started");
 
-            List<Center> centers = new List<Center>();
+            CenterLog centerLog= new CenterLog();
             try
             {
-                // string? query = CreateSqlQuery(districtId, vidhanSabhaId, panchayatId, villageId);
-                //if (!string.IsNullOrEmpty(query))
-                //{
-                //    centers = await appDbContext.Center.AsNoTracking().ToListAsync();
-                //}
-                //else
-                //{
-                //    centers = await appDbContext.Center.AsNoTracking().ToListAsync();
-                //}
-                centers = await appDbContext.Center.AsNoTracking().ToListAsync();
+
+                if (centerlog.Id > 0)
+                {
+                    CenterLog centerLogVal = appDbContext.CenterLog.AsNoTracking().FirstOrDefaultAsync(x => x.CenterId == centerlog.CenterId).Result;
+                  
+                    appDbContext.Update(centerlog);
+                    await appDbContext.SaveChangesAsync();
+                }
+                else
+                {
+
+                    centerlog.CreatedOn = DateTime.Now;
+                    appDbContext.CenterLog.Add(centerlog);
+
+                    //update center active or deactive
+                    Center center = appDbContext.Center.Where(x => x.Id == centerlog.CenterId).FirstOrDefault();
+                    if(center!=null)
+                    {
+                        center.Status = centerlog.Status;
+                    }
+                    await appDbContext.SaveChangesAsync();
+                }
+
+              
                 logger.LogInformation($"UserRepository : GetAllCentersById : End");
             }
             catch (Exception ex)
@@ -677,7 +714,7 @@ namespace StudentAttendanceApiDAL.Repository
                 logger.LogError(ex, $"UserRepository : GetAllCentersById", ex);
                 throw ex;
             }
-            return centers;
+            return centerLog;
         }
 
 

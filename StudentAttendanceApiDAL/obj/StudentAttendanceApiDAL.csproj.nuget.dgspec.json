@@ -1,31 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Neha\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj": {}
+    "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj": {}
   },
   "projects": {
-    "D:\\Neha\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj": {
+    "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Neha\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj",
+        "projectUniqueName": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj",
         "projectName": "StudentAttendanceApiDAL",
-        "projectPath": "D:\\Neha\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj",
-        "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "D:\\Neha\\StudentAttendanceApi\\StudentAttendanceApiDAL\\obj\\",
+        "projectPath": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\StudentAttendanceApiDAL.csproj",
+        "packagesPath": "C:\\Users\\Nishant\\.nuget\\packages\\",
+        "outputPath": "C:\\Neha\\StudentAttendance\\StudentAttendanceApi\\StudentAttendanceApiDAL\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Nishant\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
           "https://rogue-wan.pkgs.visualstudio.com/_packaging/Onguard-Packages/nuget/v3/index.json": {}
         },
         "frameworks": {
@@ -43,49 +38,17 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "dependencies": {
-            "CorePush": {
-              "target": "Package",
-              "version": "[3.1.1, )"
-            },
-            "MicroElements.Swashbuckle.FluentValidation": {
-              "target": "Package",
-              "version": "[5.7.0, )"
-            },
-            "Microsoft.AspNetCore.DataProtection.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[6.0.19, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[6.0.19, )"
-            },
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[13.0.3, )"
-            },
-            "System.Data.SqlClient": {
-              "target": "Package",
-              "version": "[4.8.5, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.415\\RuntimeIdentifierGraph.json"
         }
       }
     }

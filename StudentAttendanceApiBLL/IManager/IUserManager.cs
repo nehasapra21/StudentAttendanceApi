@@ -10,7 +10,7 @@ namespace StudentAttendanceApiBLL.IManager
 {
     public interface IUserManager
     {
-        Task<Users> LoginUser(string name, string password);
+        Task<Dictionary<int, object>> LoginUser(string name, string password);
         Task<UserDto> SaveLogin(UserDto user);
         Task<UserDto> UpdateSuperAdminUser(UserDto user);
         Task<object> GetUserById(int userId);

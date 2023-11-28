@@ -243,29 +243,39 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-        //[Authorize]
-        //[HttpGet("GetAllCentersById")]
-        //public async Task<IActionResult> GetAllCentersById(int districtId, int vidhanSabhaId, int panchayatId, int villageId)
-        //{
-        //    logger.LogInformation("UserController : GetAllCentersById : Started");
-        //    try
-        //    {
-        //        var allCenters = await _centerManager.GetAllCentersById(districtId, vidhanSabhaId, panchayatId, villageId);
-        //        if (allCenters != null)
-        //        {
-        //            return Ok(allCenters);
-        //        }
-        //        else
-        //        {
-        //            return NotFound();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.LogError(ex, $"UserController : GetAllCentersById ", ex);
-        //        return StatusCode(StatusCodes.Status501NotImplemented, "error");
-        //    }
-        //}
+        [Authorize]
+        [HttpGet("UpdateCenterActiveOrDeactive")]
+        public async Task<IActionResult> UpdateCenterActiveOrDeactive(CenterLogDto centerLogDto)
+        {
+            logger.LogInformation("UserController : UpdateCenterActiveOrDeactive : Started");
+            try
+            {
+                var centerLog = await _centerManager.UpdateCenterActiveOrDeactive(centerLogDto);
+                if (centerLog != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        message = "Center status updated",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        message = "Center status not updated",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : UpdateCenterActiveOrDeactive ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+            }
+        }
 
     }
 }

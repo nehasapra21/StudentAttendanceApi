@@ -97,12 +97,13 @@ namespace StudentAttendanceApiBLL.Manager
             return list;
         }
 
-        public async Task<List<Center>> GetAllCentersById(int districtId, int vidhanSabhaId, int panchayatId, int villageId)
+        public async Task<CenterLog> UpdateCenterActiveOrDeactive(CenterLogDto centerLogDto)
         {
-            _logger.LogInformation($"VillageManager : Bll : GetAllCentersById : Started");
-
-            return await _centerRepository.GetAllCentersById(districtId, vidhanSabhaId, panchayatId, villageId);
+            _logger.LogInformation($"VillageManager : Bll : UpdateCenterActiveOrDeactive : Started");
+            CenterLog centerLog = CenterConvertor.ConvertCenterLogDtotoToCenterLog(centerLogDto);
+            return await _centerRepository.UpdateCenterActiveOrDeactive(centerLog);
         }
+
         public async Task<CenterDetailDto> GetCenterByUserId(int userId)
         {
             _logger.LogInformation($"VillageManager : Bll : GetAllCentersById : Started");

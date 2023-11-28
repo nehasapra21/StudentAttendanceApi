@@ -85,13 +85,7 @@ namespace StudentAttendanceApi.Controllers
                 contentResult.ContentType = "application/json";
 
                 return contentResult;
-                //return StatusCode(StatusCodes.Status200OK, new
-                //{
-                //    status = true,
-                //    message = "List of Gender ratio",
-                //    data = contentResult.Content,
-                //    code = StatusCodes.Status200OK
-                //});
+               
             }
             catch (Exception ex)
             {
@@ -99,6 +93,70 @@ namespace StudentAttendanceApi.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
+
+        [HttpGet("GetCenterDetailByMonth")]
+        public async Task<IActionResult> GetCenterDetailByMonth(int centerId, int month, int year)
+        {
+            logger.LogInformation("VillageController : GetCenterDetailByMonth : Started");
+            try
+            {
+                string GenderRatio = await _dashboardManager.GetCenterDetailByMonth(centerId,month,year);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = GenderRatio;
+                contentResult.ContentType = "application/json";
+
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VillageController : GetTotalStudentOfClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetTotalBpl")]
+        public async Task<IActionResult> GetTotalBpl(int centerId, bool BplValue)
+        {
+            logger.LogInformation("VillageController : GetTotalBpl : Started");
+            try
+            {
+                string BplData = await _dashboardManager.GetTotalBpl(centerId, BplValue);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = BplData;
+                contentResult.ContentType = "BplData/json";
+
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VillageController : GetTotalBpl ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetTotalStudentCategoryOfClass")]
+        public async Task<IActionResult> GetTotalStudentCategoryOfClass(int centerId)
+        {
+            logger.LogInformation("VillageController : GetTotalBpl : Started");
+            try
+            {
+                string categoryData = await _dashboardManager.GetTotalStudentCategoryOfClass(centerId);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = categoryData;
+                contentResult.ContentType = "BplData/json";
+
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VillageController : GetTotalBpl ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
 
     }
 }

@@ -8,7 +8,7 @@ using System.Web.Http.Filters;
 
 namespace StudentAttendanceApi.Authentication
 {
-    public class BasicAuthenticationAttribute:AuthorizationFilterAttribute
+    public class BasicAuthenticationAttribute : AuthorizationFilterAttribute
     {
         private const string Realm = "My Realm";
 
@@ -50,4 +50,5 @@ namespace StudentAttendanceApi.Authentication
                 }
             }
         }
+    }
 }

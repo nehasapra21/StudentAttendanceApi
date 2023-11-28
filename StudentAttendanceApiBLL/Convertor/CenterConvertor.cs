@@ -31,6 +31,20 @@ namespace StudentAttendanceApiBLL
 
         }
 
+        public static CenterLog ConvertCenterLogDtotoToCenterLog(CenterLogDto centerLogDto)
+        {
+            CenterLog center = new CenterLog();
+            center.Id = centerLogDto.Id;
+            center.CenterId = centerLogDto.CenterId;
+            center.UserId = centerLogDto.UserId;
+            center.Reason = centerLogDto.Reason;
+            center.CreatedBy = centerLogDto.CreatedBy;
+            center.CreatedOn = centerLogDto.CreatedOn;
+            center.Status= centerLogDto.Status;
+            return center;
+
+        }
+
         public static CenterDetailDto ConvertCentertoToCenterDetailDto(Center centerDto)
         {
             CenterDetailDto center = new CenterDetailDto();

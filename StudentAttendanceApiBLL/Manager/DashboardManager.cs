@@ -58,6 +58,29 @@ namespace StudentAttendanceApiBLL.Manager
             return village;
         }
 
+        public async Task<string> GetCenterDetailByMonth(int centerId, int month, int year)
+        {
+            _logger.LogInformation($"DashboardManager : Bll : GetCenterDetailByMonth : Started");
+            string data = await _dashboardRepository.GetCenterDetailByMonth(centerId,month,year);
+            _logger.LogInformation($"DashboardManager : Bll : GetCenterDetailByMonth : End");
+            return data;
+        }
+
+        public async Task<string> GetTotalBpl(int centerId, bool BplValue)
+        {
+            _logger.LogInformation($"DashboardManager : Bll : GetCenterDetailByMonth : Started");
+            string data = await _dashboardRepository.GetTotalBpl(centerId, BplValue);
+            _logger.LogInformation($"DashboardManager : Bll : GetCenterDetailByMonth : End");
+            return data;
+        }
+
+        public async Task<string> GetTotalStudentCategoryOfClass(int centerId)
+        {
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : Started");
+            string data = await _dashboardRepository.GetTotalStudentCategoryOfClass(centerId);
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
+            return data;
+        }
 
         #endregion
     }

@@ -8,6 +8,17 @@
             RegionalAdmin = 2,
             Teacher = 3
         }
+
+        public enum Category
+        {
+            General = 1,
+            OBC = 2,
+            SC = 3,
+            ST= 4,
+            EVS = 5,
+            Others = 6
+        }
+
         public enum Gender
         {
             FeMale = 1,

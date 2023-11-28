@@ -15,7 +15,7 @@ namespace StudentAttendanceApiBLL.IManager
         Task<CenterDetailDto> GetCenteryId(int centerId);
         Task<List<AllCenterStatusDto>> GetStudentAttendanceOfCenter(int status, int userId, int type);
         Task<CenterDetailDto> GetCenterByUserId(int userId);
-        Task<List<Center>> GetAllCentersById(int districtId, int vidhanSabhaId, int panchayatId, int villageId);
+        Task<CenterLog> UpdateCenterActiveOrDeactive(CenterLogDto centerLogDto);
     }
 
 }
