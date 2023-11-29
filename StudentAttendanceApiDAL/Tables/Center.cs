@@ -28,6 +28,8 @@ namespace StudentAttendanceApiDAL.Tables
         public int PanchayatId { get; set; }
         public int? VillageId { get; set; }
         [NotMapped]
+        public int TotalCenterCount { get; set; }
+        [NotMapped]
         public string RegionalAdminName { get; set; }
         [NotMapped]
         public string DistrictName { get; set; }
