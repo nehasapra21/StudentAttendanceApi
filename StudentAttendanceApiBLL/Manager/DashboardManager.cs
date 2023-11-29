@@ -83,10 +83,42 @@ namespace StudentAttendanceApiBLL.Manager
         }
 
         public async Task<string>
-        GetUserByFilter(int type, int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime date)
+        GetUserByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : Started");
-            string data = await _dashboardRepository.GetUserByFilter(type, districtId, vidhanSabhaId, panchaytaId, villageId, date);
+            string data = await _dashboardRepository.GetUserByFilter(districtId, vidhanSabhaId, panchaytaId, villageId, startDate,endDate);
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
+            return data;
+        }
+        public async Task<string>
+       GetTotalBplByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate)
+        {
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : Started");
+            string data = await _dashboardRepository.GetTotalBplByFilter(districtId, vidhanSabhaId, panchaytaId, villageId, startDate, endDate);
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
+            return data;
+        }
+
+        public async Task<string> GetTotalGenderRatioByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate)
+        {
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : Started");
+            string data = await _dashboardRepository.GetTotalGenderRatioByFilter(districtId, vidhanSabhaId, panchaytaId, villageId, startDate, endDate);
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
+            return data;
+        }
+
+        public async Task<string> GetTotalStudentCategoryOfClassByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate)
+        {
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : Started");
+            string data = await _dashboardRepository.GetTotalStudentCategoryOfClassByFilter(districtId, vidhanSabhaId, panchaytaId, villageId, startDate, endDate);
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
+            return data;
+        }
+
+        public async Task<string> GetTotalStudenGradetOfClassByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate)
+        {
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : Started");
+            string data = await _dashboardRepository.GetTotalStudenGradetOfClassByFilter(districtId, vidhanSabhaId, panchaytaId, villageId, startDate, endDate);
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
             return data;
         }

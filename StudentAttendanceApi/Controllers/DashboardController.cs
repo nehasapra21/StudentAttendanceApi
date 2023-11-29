@@ -157,15 +157,97 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
-
-
         [HttpGet("GetUserByFilter")]
-        public async Task<IActionResult> GetUserByFilter(int type, int districtId,int vidhanSabhaId,int panchaytaId,int villageId, DateTime date)
+        public async Task<IActionResult> GetUserByFilter(int districtId,int vidhanSabhaId,int panchaytaId,int villageId, DateTime startDate, DateTime endDate)
         {
             logger.LogInformation("VillageController : GetCenterDetailByMonth : Started");
             try
             {
-                string GenderRatio = await _dashboardManager.GetUserByFilter(type, districtId, vidhanSabhaId, panchaytaId, villageId, date);
+                string userData = await _dashboardManager.GetUserByFilter(districtId, vidhanSabhaId, panchaytaId, villageId, startDate,endDate);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = userData;
+                contentResult.ContentType = "application/json";
+
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VillageController : GetTotalStudentOfClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetTotalBplByFilter")]
+        public async Task<IActionResult> GetTotalBplByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate)
+        {
+            logger.LogInformation("VillageController : GetCenterDetailByMonth : Started");
+            try
+            {
+                string BplData = await _dashboardManager.GetTotalBplByFilter(districtId, vidhanSabhaId, panchaytaId, villageId, startDate, endDate);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = BplData;
+                contentResult.ContentType = "application/json";
+
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VillageController : GetTotalStudentOfClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetTotalGenderRatioByFilter")]
+        public async Task<IActionResult> GetTotalGenderRatioByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate)
+        {
+            logger.LogInformation("VillageController : GetCenterDetailByMonth : Started");
+            try
+            {
+                string GenderRatio = await _dashboardManager.GetTotalGenderRatioByFilter(districtId, vidhanSabhaId, panchaytaId, villageId, startDate, endDate);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = GenderRatio;
+                contentResult.ContentType = "application/json";
+
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VillageController : GetTotalStudentOfClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetTotalStudentCategoryOfClassByFilter")]
+        public async Task<IActionResult> GetTotalStudentCategoryOfClassByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate)
+        {
+            logger.LogInformation("VillageController : GetCenterDetailByMonth : Started");
+            try
+            {
+                string GenderRatio = await _dashboardManager.GetTotalStudentCategoryOfClassByFilter(districtId, vidhanSabhaId, panchaytaId, villageId, startDate, endDate);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = GenderRatio;
+                contentResult.ContentType = "application/json";
+
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VillageController : GetTotalStudentOfClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetTotalStudenGradeOfClassByFilter")]
+        public async Task<IActionResult> GetTotalStudenGradetOfClassByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate)
+        {
+            logger.LogInformation("VillageController : GetCenterDetailByMonth : Started");
+            try
+            {
+                string GenderRatio = await _dashboardManager.GetTotalStudenGradetOfClassByFilter(districtId, vidhanSabhaId, panchaytaId, villageId, startDate, endDate);
                 ContentResult contentResult = new ContentResult();
                 contentResult.Content = GenderRatio;
                 contentResult.ContentType = "application/json";

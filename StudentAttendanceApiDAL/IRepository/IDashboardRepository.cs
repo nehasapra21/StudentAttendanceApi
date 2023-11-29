@@ -17,6 +17,15 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<string> GetCenterDetailByMonth(int centerId, int month, int year);
         Task<string> GetTotalBpl(int centerId, bool BplValue);
         Task<string> GetTotalStudentCategoryOfClass(int centerId);
-        Task<string>  GetUserByFilter(int type, int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime date);
+
+        Task<string>  GetUserByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate);
+
+        Task<string> GetTotalBplByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate);
+
+        Task<string> GetTotalGenderRatioByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate);
+
+        Task<string> GetTotalStudentCategoryOfClassByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate);
+
+        Task<string> GetTotalStudenGradetOfClassByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate);
     }
 }
