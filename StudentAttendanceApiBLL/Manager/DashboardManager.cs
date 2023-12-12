@@ -123,6 +123,14 @@ namespace StudentAttendanceApiBLL.Manager
             return data;
         }
 
+
+        public async Task<string> GetDistrictOfCenterByFilter(int districtId, int vidhanSabhaId, DateTime startDate, DateTime endDate)
+        {
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : Started");
+            string data = await _dashboardRepository.GetDistrictOfCenterByFilter(districtId, vidhanSabhaId,startDate, endDate);
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
+            return data;
+        }
         #endregion
     }
 }

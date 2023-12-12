@@ -261,5 +261,26 @@ namespace StudentAttendanceApi.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
+
+        [HttpGet("GetDistrictOfCenterByFilter")]
+        public async Task<IActionResult> GetDistrictOfCenterByFilter(int districtId, int vidhanSabhaId, DateTime startDate, DateTime endDate)
+        {
+            logger.LogInformation("VillageController : GetCenterDetailByMonth : Started");
+            try
+            {
+                string GenderRatio = await _dashboardManager.GetDistrictOfCenterByFilter(districtId, vidhanSabhaId, startDate, endDate);
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = GenderRatio;
+                contentResult.ContentType = "application/json";
+
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VillageController : GetTotalStudentOfClass ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
     }
 }

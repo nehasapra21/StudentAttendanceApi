@@ -9,6 +9,7 @@ using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Model;
 using StudentAttendanceApiDAL.Tables;
 using System.Data;
+using System.Security.Cryptography.Xml;
 using System.Text.Json.Nodes;
 using static StudentAttendanceApiDAL.Constant;
 
@@ -427,15 +428,15 @@ namespace StudentAttendanceApiDAL.Repository
             rootJsonObject.Data = new JArray() as dynamic;
             try
             {
-                   List<Student> students = await (from x in appDbContext.Student //Left Data Source
+                List<Student> students = await (from x in appDbContext.Student //Left Data Source
                                                 where x.CreatedOn.Value.Date >= startDate.Date && x.CreatedOn.Value.Date <= endDate.Date && x.DistrictId == districtId && (x.VidhanSabhaId == null || x.VidhanSabhaId == vidhanSabhaId) && (x.PanchayatId == null || x.PanchayatId == panchaytaId) && (x.VillageId == null || x.VillageId == villageId)
-                    group x by new { x.Category } into g
-                    orderby g.Key.Category
-                    select new Student
-                    {
-                       Category = g.Key.Category,
-                       TotalStudentCount = g.Count()
-                    }).ToListAsync();
+                                                group x by new { x.Category } into g
+                                                orderby g.Key.Category
+                                                select new Student
+                                                {
+                                                    Category = g.Key.Category,
+                                                    TotalStudentCount = g.Count()
+                                                }).ToListAsync();
 
                 rootJsonObject.Status = true;
                 //rootJsonObject.TotalStudents = appDbContext.Student.Where(x => x.CenterId == centerId).Count();
@@ -530,6 +531,80 @@ namespace StudentAttendanceApiDAL.Repository
             return JsonConvert.SerializeObject(rootJsonObject);
         }
 
+        public async Task<string> GetDistrictOfCenterByFilter(int districtId, int vidhanSabhaId, DateTime startDate, DateTime endDate)
+        {
+            logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : Started");
+            dynamic rootJsonObject = new JObject();
+            dynamic center = new JObject();
+            rootJsonObject.Data = new JArray() as dynamic;
+            try
+            {
+                List<Center> centers = new List<Center>();
+
+                int totalCenters = appDbContext.Center.Where(x => x.StartedDate.Value.Date >= startDate.Date && x.StartedDate.Value.Date <= endDate.Date).ToList().Count();
+
+
+                List<District> districts = appDbContext.District.ToList();
+                List<VidhanSabha> vidhanSabha = appDbContext.VidhanSabha.ToList();
+                if (districtId == 0 && vidhanSabhaId == 0)
+                {
+                    centers = await (from x in appDbContext.Center //Left Data Source
+                                     where x.StartedDate.Value.Date >= startDate.Date && x.StartedDate.Value.Date <= endDate.Date
+                                     group x by new { x.DistrictId } into g
+                                     orderby g.Key.DistrictId
+                                     select new Center
+                                     {
+                                         DistrictId = g.Key.DistrictId,
+                                         TotalCenterCount = g.Count(),
+                                     }).ToListAsync();
+
+                    foreach (var item in centers)
+                    {
+                        center = new JObject();
+                        center.DistrictId = item.DistrictId;
+                        center.DistrictName = districts.FirstOrDefault(x => x.Id == item.DistrictId).Name;
+                        center.TotalCenterCount = item.TotalCenterCount;
+                        rootJsonObject.Data.Add(center);
+                    }
+                }
+                else if (districtId != 0 && vidhanSabhaId != 0)
+                {
+                    centers = appDbContext.Center.Where(x => x.DistrictId == districtId && x.VidhanSabhaId == vidhanSabhaId && x.StartedDate.Value.Date >= startDate.Date && x.StartedDate.Value.Date <= endDate.Date).ToList();
+
+                    rootJsonObject.TotalCenterCount = centers.Count();
+                    rootJsonObject.DistrictName = districts.FirstOrDefault(x => x.Id == districtId).Name;
+                    rootJsonObject.VidhanSabhaName =districts.FirstOrDefault(x => x.Id == districtId).Name; ;
+                    rootJsonObject.DistrictId = districtId;
+                    rootJsonObject.VidhanSabhaId = vidhanSabhaId;
+
+                }
+                else if (districtId != 0)
+                {
+                    centers = appDbContext.Center.Where(x => x.DistrictId == districtId && x.StartedDate.Value.Date >= startDate.Date && x.StartedDate.Value.Date <= endDate.Date).ToList();
+
+                    foreach (var item in centers)
+                    {
+                        center = new JObject();
+                        center.DistrictName = districts.FirstOrDefault(x => x.Id == districtId).Name; ;
+                        center.DistrictId = districtId;
+                        center.TotalCenterCount = item.TotalCenterCount;
+                        rootJsonObject.Data.Add(center);
+                    }
+
+                }
+
+                rootJsonObject.Status = true;
+                rootJsonObject.TotalCenters = totalCenters;
+
+                logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"DashboardRepository : GetTotalStudentOfClass ", ex);
+            }
+
+            return JsonConvert.SerializeObject(rootJsonObject);
+        }
 
 
         private JObject AddStudentForCategory(List<Student> students, string category)
