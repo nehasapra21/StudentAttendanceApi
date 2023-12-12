@@ -13,7 +13,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StudentAttendanceApi.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CenterController : ControllerBase

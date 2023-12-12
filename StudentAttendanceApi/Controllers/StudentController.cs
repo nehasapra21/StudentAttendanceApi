@@ -12,7 +12,7 @@ using StudentAttendanceApiDAL.Tables;
 
 namespace StudentAttendanceApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase

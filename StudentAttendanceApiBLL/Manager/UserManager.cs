@@ -18,17 +18,17 @@ namespace StudentAttendanceApiBLL.Manager
 
         private readonly ILogger _logger;
         private readonly IUserRepository _userRepository;
-        private readonly ICenterRepository _centerRepository;
+       // private readonly ICenterRepository _centerRepository;
 
         #endregion
 
         #region | Controller |
 
-        public UserManager(IUserRepository userRepository, ICenterRepository centerRepository,
+        public UserManager(IUserRepository userRepository,
                                 ILogger<UserManager> logger)
         {
             _userRepository = userRepository;
-            _centerRepository = centerRepository;
+          //  _centerRepository = centerRepository;
             _logger = logger;
         }
 
@@ -36,42 +36,55 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async Task<Dictionary<int,object>> LoginUser(string name, string password)
+        //public async Task<Dictionary<int,object>> LoginUser(string name, string password)
+        //{
+        //    _logger.LogInformation($"UserManager : Bll : LoginSuperAdmin : Started");
+
+        //    //Dictionary<int, object> userData = new Dictionary<int, object>();
+        //    string message = string.Empty;
+        //    string pass = EncryptionUtility.GetHashPassword(password);
+        //    Users user = await _userRepository.LoginUser(name, pass);
+        //    if (user != null)
+        //    {
+        //        if (user.Type == 2)//teacher
+        //        {
+        //            //check center active or not
+        //            bool centerStatus = await _centerRepository.CheckCenterStatusByUserId(user.Id);
+        //            if (centerStatus)
+        //            {
+        //                //if center active 
+        //                userData.Add(1, user);//Login succesfully
+        //            }
+        //            else
+        //            {
+        //                userData.Add(2, null);//User inactive                    }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            userData.Add(1, user);
+        //        }
+        //        user.Password = null;
+        //    }
+        //    else
+        //    {
+        //        userData.Add(3, null);//"invalid credential"
+        //    }
+
+        //    return userData;
+        //}
+
+        public async Task<Users> LoginUser(string name, string password)
         {
             _logger.LogInformation($"UserManager : Bll : LoginSuperAdmin : Started");
 
-            Dictionary<int, object> userData = new Dictionary<int, object>();
-            string message = string.Empty;
             string pass = EncryptionUtility.GetHashPassword(password);
             Users user = await _userRepository.LoginUser(name, pass);
             if (user != null)
             {
-                if (user.Type == 2)//teacher
-                {
-                    //check center active or not
-                    bool centerStatus = await _centerRepository.CheckCenterStatusByUserId(user.Id);
-                    if (centerStatus)
-                    {
-                        //if center active 
-                        userData.Add(1, user);//Login succesfully
-                    }
-                    else
-                    {
-                        userData.Add(2, null);//User inactive                    }
-                    }
-                }
-                else
-                {
-                    userData.Add(1, user);
-                }
                 user.Password = null;
             }
-            else
-            {
-                userData.Add(3, null);//"invalid credential"
-            }
-            
-            return userData;
+            return user;
         }
 
         public async Task<Users> UpdateDeviceId(int userId, string deviceId)

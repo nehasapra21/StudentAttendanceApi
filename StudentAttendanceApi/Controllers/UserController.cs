@@ -32,16 +32,14 @@ namespace StudentAttendanceApi.Controllers
             logger.LogInformation("UserController : LoginUser : Started");
             try
             {
-                Dictionary<int, object> userData = await _userManager.LoginUser(loginDto.MobileNumber, loginDto.Password);
-                Dictionary<string, object> data = new Dictionary<string, object>();
-                data.Add("Key", userData.Keys.ToList());
-                data.Add("Value", userData.Values.ToList());
-                if (data!=null)
+                var masterAdmin = await _userManager.LoginUser(loginDto.MobileNumber, loginDto.Password);
+                if (masterAdmin != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,
-                        data = data,
+                        data = masterAdmin,
+                        message = "Login successfully",
                         code = StatusCodes.Status200OK
                     });
                 }
@@ -50,10 +48,32 @@ namespace StudentAttendanceApi.Controllers
                     return StatusCode(StatusCodes.Status404NotFound, new
                     {
                         status = false,
-                        error = "error",
+                        error = "invalid credential",
                         code = StatusCodes.Status404NotFound
                     });
                 }
+                //Dictionary<int, object> userData = await _userManager.LoginUser(loginDto.MobileNumber, loginDto.Password);
+                //Dictionary<string, object> data = new Dictionary<string, object>();
+                //data.Add("Key", userData.Keys.ToList());
+                //data.Add("Value", userData.Values.ToList());
+                //if (data!=null)
+                //{
+                //    return StatusCode(StatusCodes.Status200OK, new
+                //    {
+                //        status = true,
+                //        data = data,
+                //        code = StatusCodes.Status200OK
+                //    });
+                //}
+                //else
+                //{
+                //    return StatusCode(StatusCodes.Status404NotFound, new
+                //    {
+                //        status = false,
+                //        error = "error",
+                //        code = StatusCodes.Status404NotFound
+                //    });
+                //}
 
             }
             catch (Exception ex)
