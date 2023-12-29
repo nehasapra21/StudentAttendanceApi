@@ -25,7 +25,7 @@ namespace StudentAttendanceApiDAL.Repository
             this.appDbContext = appDbContext;
             this.logger = logger;
         }
-        public async Task<string> GetClassCountByMonth(int centerId, int month)
+        public async Task<string> GetClassCountByMonth(int centerId,  DateTime startDate, DateTime endDate)
         {
             logger.LogInformation($"DashboardRepository : GetTotalGenderRatioByCenterId : Started");
             dynamic rootJsonObject = new JObject();
@@ -33,11 +33,11 @@ namespace StudentAttendanceApiDAL.Repository
             dynamic student = new JObject();
             try
             {
-                List<Class> classCount = await appDbContext.Class.Where(x => x.CenterId == centerId).ToListAsync();
+                List<Class> classCount = await appDbContext.Class.Where(x => x.CenterId == centerId && x.StartedDate.Value.Date >= startDate.Date && x.EndDate.Value.Date <= endDate.Date).ToListAsync();
+     
+                List<Holidays> HolidayCount = await appDbContext.Holidays.Where(x => x.CenterId == centerId && x.StartDate.Value.Date >= startDate.Date && x.EndDate.Value.Date >= endDate.Date).ToListAsync();
 
-                List<Holidays> HolidayCount = await appDbContext.Holidays.Where(x => x.CenterId == centerId && (x.StartDate.Value.Date <= DateTime.Now.Date && x.EndDate.Value.Date >= DateTime.Now.Date)).ToListAsync();
-
-                List<ClassCancelTeacher> classCancelTeacherCount = await appDbContext.ClassCancelTeacher.AsNoTracking().Where(x => x.CenterId == centerId && (x.StartingDate.Value.Date <= DateTime.Now.Date && x.EndingDate.Value.Date >= DateTime.Now.Date)).ToListAsync();
+                List<ClassCancelTeacher> classCancelTeacherCount = await appDbContext.ClassCancelTeacher.AsNoTracking().Where(x => x.CenterId == centerId && x.StartingDate.Value.Date >= startDate.Date && x.EndingDate.Value.Date >= endDate.Date).ToListAsync();
 
                 int holidayCount = HolidayCount.Count;
                 int classCountValue = classCount.Count;
@@ -62,7 +62,7 @@ namespace StudentAttendanceApiDAL.Repository
             return JsonConvert.SerializeObject(rootJsonObject);
         }
 
-        public async Task<string> GetTotalGenderRatioByCenterId(int centerId)
+        public async Task<string> GetTotalGenderRatioByCenterId(int centerId,DateTime startDate,DateTime endDate)
         {
             logger.LogInformation($"DashboardRepository : GetClassCountByMonth : Started");
             dynamic rootJsonObject = new JObject();
@@ -70,11 +70,13 @@ namespace StudentAttendanceApiDAL.Repository
             dynamic student = new JObject();
             try
             {
-                List<Student> TotalStudents = appDbContext.Student.Where(x => x.CenterId == centerId).ToList();
+                List<Student> TotalStudents = appDbContext.Student.Where(x => x.CenterId == centerId && x.CreatedOn.Value.Date>= startDate.Date
+                && x.CreatedOn.Value.Date <= endDate.Date).ToList();
 
                 int TotalStudentCount = TotalStudents.Count();
 
-                List<Student> FeMaleStudents = appDbContext.Student.Where(x => x.CenterId == centerId && x.Gender == "FeMale").ToList();
+                List<Student> FeMaleStudents = appDbContext.Student.Where(x => x.CenterId == centerId && x.Gender == "FeMale" && x.CreatedOn.Value.Date >= startDate.Date
+                && x.CreatedOn.Value.Date <= endDate.Date).ToList();
 
                 int FeMaleCount = FeMaleStudents.ToList().Count();
                 int MaleCount = TotalStudents.Where(x => x.Gender == "Male").ToList().Count();
@@ -97,7 +99,7 @@ namespace StudentAttendanceApiDAL.Repository
             return JsonConvert.SerializeObject(rootJsonObject);
         }
 
-        public async Task<string> GetTotalStudentOfClass(int centerId)
+        public async Task<string> GetTotalStudentOfClass(int centerId, DateTime startDate, DateTime endDate)
         {
             logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : Started");
             dynamic rootJsonObject = new JObject();
@@ -107,6 +109,8 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 var students = await (from s in appDbContext.Student //Left Data Source
                                       where s.CenterId == centerId
+                                      && s.CreatedOn.Value.Date >=                               startDate.Date
+                                      && s.CreatedOn.Value.Date <= endDate.Date
                                       group s by new { s.Grade } into g
                                       orderby g.Key.Grade
                                       select new
@@ -214,7 +218,7 @@ namespace StudentAttendanceApiDAL.Repository
             }
         }
 
-        public async Task<string> GetTotalBpl(int centerId, bool BplValue)
+        public async Task<string> GetTotalBpl(int centerId,DateTime startDate,DateTime endDate)
         {
             logger.LogInformation($"DashboardRepository : GetTotalBpl : Started");
             dynamic rootJsonObject = new JObject();
@@ -223,11 +227,16 @@ namespace StudentAttendanceApiDAL.Repository
             try
             {
 
-                var students = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl.Value).ToListAsync();
+                var students = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl.Value && x.CreatedOn.Value.Date >= startDate.Date
+                                      && x.CreatedOn.Value.Date <= endDate.Date).ToListAsync();
 
-                var studentFeMale = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl.Value && x.Gender == "FeMale").ToListAsync();
+                var studentFeMale = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl.Value && x.Gender == "FeMale" 
+                && x.CreatedOn.Value.Date >= startDate.Date
+                                      && x.CreatedOn.Value.Date <= endDate.Date).ToListAsync();
 
-                var studentMale = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl == BplValue && x.Gender == "Male").ToListAsync();
+                var studentMale = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl.Value && x.Gender == "Male" 
+                && x.CreatedOn.Value.Date >= startDate.Date
+                                      && x.CreatedOn.Value.Date <= endDate.Date).ToListAsync();
 
                 int maleCount = studentMale.ToList().Count();
                 int feMaleCount = studentFeMale.ToList().Count();
@@ -251,7 +260,7 @@ namespace StudentAttendanceApiDAL.Repository
             return JsonConvert.SerializeObject(rootJsonObject);
         }
 
-        public async Task<string> GetTotalStudentCategoryOfClass(int centerId)
+        public async Task<string> GetTotalStudentCategoryOfClass(int centerId, DateTime startDate, DateTime endDate)
         {
             logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : Started");
             dynamic rootJsonObject = new JObject();
@@ -260,7 +269,9 @@ namespace StudentAttendanceApiDAL.Repository
             try
             {
                 List<Student> students = await (from s in appDbContext.Student //Left Data Source
-                                                where s.CenterId == centerId
+                                                where s.CenterId == centerId 
+                                                 && s.CreatedOn.Value.Date >= startDate.Date
+                                                 && s.CreatedOn.Value.Date <= endDate.Date
                                                 group s by new { s.Category } into g
                                                 orderby g.Key.Category
                                                 select new Student

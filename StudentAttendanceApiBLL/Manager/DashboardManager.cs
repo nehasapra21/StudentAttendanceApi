@@ -34,26 +34,26 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async Task<string> GetClassCountByMonth(int centerId, int month)
+        public async Task<string> GetClassCountByMonth(int centerId, DateTime startDate, DateTime endDate)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetClassCountByMonth : Started");
-            string village = await _dashboardRepository.GetClassCountByMonth(centerId, month);
+            string village = await _dashboardRepository.GetClassCountByMonth(centerId, startDate,endDate);
             _logger.LogInformation($"DashboardManager : Bll : GetClassCountByMonth : End");
             return village;
         }
 
-        public async Task<string> GetTotalGenderRatioByCenterId(int centerId)
+        public async Task<string> GetTotalGenderRatioByCenterId(int centerId, DateTime startDate, DateTime endDate)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetTotalGenterRatioByCenterId : Started");
-            string village = await _dashboardRepository.GetTotalGenderRatioByCenterId(centerId);
+            string village = await _dashboardRepository.GetTotalGenderRatioByCenterId(centerId,startDate,endDate);
             _logger.LogInformation($"DashboardManager : Bll : GetTotalGenterRatioByCenterId : End");
             return village;
         }
 
-        public async Task<string> GetTotalStudentOfClass(int centerId)
+        public async Task<string> GetTotalStudentOfClass(int centerId, DateTime startDate, DateTime endDate)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentOfClass : Started");
-            string village = await _dashboardRepository.GetTotalStudentOfClass(centerId);
+            string village = await _dashboardRepository.GetTotalStudentOfClass(centerId,startDate,endDate);
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentOfClass : End");
             return village;
         }
@@ -66,18 +66,18 @@ namespace StudentAttendanceApiBLL.Manager
             return data;
         }
 
-        public async Task<string> GetTotalBpl(int centerId, bool BplValue)
+        public async Task<string> GetTotalBpl(int centerId, DateTime startDate, DateTime endDate)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetCenterDetailByMonth : Started");
-            string data = await _dashboardRepository.GetTotalBpl(centerId, BplValue);
+            string data = await _dashboardRepository.GetTotalBpl(centerId, startDate,endDate);
             _logger.LogInformation($"DashboardManager : Bll : GetCenterDetailByMonth : End");
             return data;
         }
 
-        public async Task<string> GetTotalStudentCategoryOfClass(int centerId)
+        public async Task<string> GetTotalStudentCategoryOfClass(int centerId, DateTime startDate, DateTime endDate)
         {
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : Started");
-            string data = await _dashboardRepository.GetTotalStudentCategoryOfClass(centerId);
+            string data = await _dashboardRepository.GetTotalStudentCategoryOfClass(centerId,startDate,endDate);
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
             return data;
         }

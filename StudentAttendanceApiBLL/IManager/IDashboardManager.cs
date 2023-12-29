@@ -11,12 +11,12 @@ namespace StudentAttendanceApiBLL.IManager
 {
     public interface IDashboardManager
     {
-        Task<string> GetClassCountByMonth(int centerId, int month);
-        Task<string> GetTotalGenderRatioByCenterId(int centerId);
-        Task<string> GetTotalStudentOfClass(int centerId);
+        Task<string> GetClassCountByMonth(int centerId, DateTime startDate, DateTime endDate);
+        Task<string> GetTotalGenderRatioByCenterId(int centerId, DateTime startDate, DateTime endDate);
+        Task<string> GetTotalStudentOfClass(int centerId, DateTime startDate, DateTime endDate);
         Task<string> GetCenterDetailByMonth(int centerId, int month, int year);
-        Task<string> GetTotalBpl(int centerId, bool BplValue);
-        Task<string> GetTotalStudentCategoryOfClass(int centerId);
+        Task<string> GetTotalBpl(int centerId, DateTime startDate, DateTime endDate);
+        Task<string> GetTotalStudentCategoryOfClass(int centerId, DateTime startDate, DateTime endDate);
        Task<string>  GetUserByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate);
         Task<string> GetTotalBplByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate);
         Task<string> GetTotalGenderRatioByFilter(int districtId, int vidhanSabhaId, int panchaytaId, int villageId, DateTime startDate, DateTime endDate);

@@ -33,12 +33,12 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetClassCountByMonth")]
-        public async Task<IActionResult> GetClassCountByMonth(int centerId,int month)
+        public async Task<IActionResult> GetClassCountByMonth(int centerId, DateTime startDate, DateTime endDate)
         {
             logger.LogInformation("VillageController : GetAllVillage : Started");
             try
             {
-                string classCountByMonth = await _dashboardManager.GetClassCountByMonth(centerId, month);
+                string classCountByMonth = await _dashboardManager.GetClassCountByMonth(centerId, startDate,endDate );
                 ContentResult contentResult = new ContentResult();
                 contentResult.Content = classCountByMonth;
                 contentResult.ContentType = "application/json";
@@ -53,12 +53,12 @@ namespace StudentAttendanceApi.Controllers
         }
       
         [HttpGet("GetTotalGenterRatioByCenterId")]
-        public async Task<IActionResult> GetTotalGenterRatioByCenterId(int centerId)
+        public async Task<IActionResult> GetTotalGenterRatioByCenterId(int centerId, DateTime startDate, DateTime endDate)
         {
             logger.LogInformation("VillageController : GetAllVillage : Started");
             try
             {
-                string GenderRatio = await _dashboardManager.GetTotalGenderRatioByCenterId(centerId);
+                string GenderRatio = await _dashboardManager.GetTotalGenderRatioByCenterId(centerId,startDate,endDate);
                 ContentResult contentResult = new ContentResult();
                 contentResult.Content = GenderRatio;
                 contentResult.ContentType = "application/json";
@@ -74,12 +74,12 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetTotalStudentOfClass")]
-        public async Task<IActionResult> GetTotalStudentOfClass(int centerId)
+        public async Task<IActionResult> GetTotalStudentOfClass(int centerId,DateTime startDate, DateTime endDate)
         {
             logger.LogInformation("VillageController : GetTotalStudentOfClass : Started");
             try
             {
-                string GenderRatio = await _dashboardManager.GetTotalStudentOfClass(centerId);
+                string GenderRatio = await _dashboardManager.GetTotalStudentOfClass(centerId,startDate,endDate);
                 ContentResult contentResult = new ContentResult();
                 contentResult.Content = GenderRatio;
                 contentResult.ContentType = "application/json";
@@ -116,12 +116,12 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetTotalBpl")]
-        public async Task<IActionResult> GetTotalBpl(int centerId, bool BplValue)
+        public async Task<IActionResult> GetTotalBpl(int centerId, DateTime startDate, DateTime endDate)
         {
             logger.LogInformation("VillageController : GetTotalBpl : Started");
             try
             {
-                string BplData = await _dashboardManager.GetTotalBpl(centerId, BplValue);
+                string BplData = await _dashboardManager.GetTotalBpl(centerId, startDate,endDate);
                 ContentResult contentResult = new ContentResult();
                 contentResult.Content = BplData;
                 contentResult.ContentType = "BplData/json";
@@ -137,12 +137,12 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetTotalStudentCategoryOfClass")]
-        public async Task<IActionResult> GetTotalStudentCategoryOfClass(int centerId)
+        public async Task<IActionResult> GetTotalStudentCategoryOfClass(int centerId, DateTime startDate, DateTime endDate)
         {
             logger.LogInformation("VillageController : GetTotalBpl : Started");
             try
             {
-                string categoryData = await _dashboardManager.GetTotalStudentCategoryOfClass(centerId);
+                string categoryData = await _dashboardManager.GetTotalStudentCategoryOfClass(centerId,startDate,endDate);
                 ContentResult contentResult = new ContentResult();
                 contentResult.Content = categoryData;
                 contentResult.ContentType = "BplData/json";
