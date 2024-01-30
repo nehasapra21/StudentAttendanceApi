@@ -131,6 +131,15 @@ namespace StudentAttendanceApiBLL.Manager
             _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
             return data;
         }
+
+        public async Task<string> GetStudentAttendanceByPercentage()
+        {
+            _logger.LogInformation($"DashboardManager : Bll : GetStudentAttendanceByPercentage : Started");
+            string data = await _dashboardRepository.GetStudentAttendanceByPercentage();
+            _logger.LogInformation($"DashboardManager : Bll : GetTotalStudentCategoryOfClass : End");
+            return data;
+        }
+
         #endregion
     }
 }

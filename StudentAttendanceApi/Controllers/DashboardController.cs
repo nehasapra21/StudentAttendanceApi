@@ -282,5 +282,26 @@ namespace StudentAttendanceApi.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
+
+        [HttpGet("GetStudentAttendanceByPercentage")]
+        public async Task<IActionResult> GetStudentAttendanceByPercentage()
+        {
+            logger.LogInformation("VillageController : GetStudentAttendanceByPercentage : Started");
+            try
+            {
+                string GenderRatio = await _dashboardManager.GetStudentAttendanceByPercentage();
+                ContentResult contentResult = new ContentResult();
+                contentResult.Content = GenderRatio;
+                contentResult.ContentType = "application/json";
+
+                return contentResult;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"VillageController : GetStudentAttendanceByPercentage ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
     }
 }

@@ -61,7 +61,7 @@ namespace StudentAttendanceApiDAL.Repository
                             //mannual attendance
 
                             //if mannaul attendance >6
-                            if (student.ManualAttendance != null && student.ManualAttendance.Value < 6)
+                            if (student.ManualAttendance != null && student.ManualAttendance.Value < 50)
                             {
                                 UpdateScanDateAndCounter(studentAttendance, student, false);
                                 if (student.ManualAttendance == null || student.ManualAttendance == 0)

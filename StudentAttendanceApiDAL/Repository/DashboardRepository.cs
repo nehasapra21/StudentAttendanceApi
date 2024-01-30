@@ -9,6 +9,7 @@ using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Model;
 using StudentAttendanceApiDAL.Tables;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Security.Cryptography.Xml;
 using System.Text.Json.Nodes;
 using static StudentAttendanceApiDAL.Constant;
@@ -25,7 +26,7 @@ namespace StudentAttendanceApiDAL.Repository
             this.appDbContext = appDbContext;
             this.logger = logger;
         }
-        public async Task<string> GetClassCountByMonth(int centerId,  DateTime startDate, DateTime endDate)
+        public async Task<string> GetClassCountByMonth(int centerId, DateTime startDate, DateTime endDate)
         {
             logger.LogInformation($"DashboardRepository : GetTotalGenderRatioByCenterId : Started");
             dynamic rootJsonObject = new JObject();
@@ -34,7 +35,7 @@ namespace StudentAttendanceApiDAL.Repository
             try
             {
                 List<Class> classCount = await appDbContext.Class.Where(x => x.CenterId == centerId && x.StartedDate.Value.Date >= startDate.Date && x.EndDate.Value.Date <= endDate.Date).ToListAsync();
-     
+
                 List<Holidays> HolidayCount = await appDbContext.Holidays.Where(x => x.CenterId == centerId && x.StartDate.Value.Date >= startDate.Date && x.EndDate.Value.Date >= endDate.Date).ToListAsync();
 
                 List<ClassCancelTeacher> classCancelTeacherCount = await appDbContext.ClassCancelTeacher.AsNoTracking().Where(x => x.CenterId == centerId && x.StartingDate.Value.Date >= startDate.Date && x.EndingDate.Value.Date >= endDate.Date).ToListAsync();
@@ -62,7 +63,7 @@ namespace StudentAttendanceApiDAL.Repository
             return JsonConvert.SerializeObject(rootJsonObject);
         }
 
-        public async Task<string> GetTotalGenderRatioByCenterId(int centerId,DateTime startDate,DateTime endDate)
+        public async Task<string> GetTotalGenderRatioByCenterId(int centerId, DateTime startDate, DateTime endDate)
         {
             logger.LogInformation($"DashboardRepository : GetClassCountByMonth : Started");
             dynamic rootJsonObject = new JObject();
@@ -70,7 +71,7 @@ namespace StudentAttendanceApiDAL.Repository
             dynamic student = new JObject();
             try
             {
-                List<Student> TotalStudents = appDbContext.Student.Where(x => x.CenterId == centerId && x.CreatedOn.Value.Date>= startDate.Date
+                List<Student> TotalStudents = appDbContext.Student.Where(x => x.CenterId == centerId && x.CreatedOn.Value.Date >= startDate.Date
                 && x.CreatedOn.Value.Date <= endDate.Date).ToList();
 
                 int TotalStudentCount = TotalStudents.Count();
@@ -109,7 +110,7 @@ namespace StudentAttendanceApiDAL.Repository
             {
                 var students = await (from s in appDbContext.Student //Left Data Source
                                       where s.CenterId == centerId
-                                      && s.CreatedOn.Value.Date >=                               startDate.Date
+                                      && s.CreatedOn.Value.Date >= startDate.Date
                                       && s.CreatedOn.Value.Date <= endDate.Date
                                       group s by new { s.Grade } into g
                                       orderby g.Key.Grade
@@ -134,6 +135,16 @@ namespace StudentAttendanceApiDAL.Repository
                     rootJsonObject.Data.Add(student);
                 }
 
+                if(students.Count == 0)
+                {
+                    student = new JObject();
+                    student.Grade = "";
+                    student.FeMaleCount = 0;
+                    student.MaleCount = 0;
+                    student.TotalStudentCount = 0;
+                    rootJsonObject.Data.Add(student);
+                }
+
                 logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : End");
             }
             catch (Exception ex)
@@ -153,7 +164,11 @@ namespace StudentAttendanceApiDAL.Repository
             dynamic rootJsonObject = new JObject();
             rootJsonObject.Data = new JArray() as dynamic;
 
+            
+
             dynamic data = new JObject();
+            dynamic detail = new JObject();
+
             try
             {
                 var targetYear = year;
@@ -161,52 +176,123 @@ namespace StudentAttendanceApiDAL.Repository
 
                 var startDate = new DateTime(targetYear, targetMonth, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);
-
+                var i = 0;
 
                 for (var currentDate = startDate; currentDate <= endDate; currentDate = currentDate.AddDays(1))
                 {
+
                     data = new JObject();
+                    detail = new JObject();
                     data.Date = currentDate.Date;
 
-                    var classVal = appDbContext.Class.Where(x => x.CenterId == centerId && x.StartedDate.Value.Date == currentDate.Date).FirstOrDefault();
+                    //var classVal = appDbContext.Class.Where(x => x.CenterId == centerId && x.StartedDate.Value.Date == currentDate.Date).FirstOrDefault();
 
-                    var holidayDetail = appDbContext.Holidays.Where(x => x.CenterId == centerId && x.StartDate.Value.Date <= currentDate.Date && x.EndDate.Value.Date >= currentDate.Date).FirstOrDefault();
+                    //var holidayDetail = appDbContext.Holidays.Where(x => x.CenterId == centerId && x.StartDate.Value.Date <= currentDate.Date && x.EndDate.Value.Date >= currentDate.Date).FirstOrDefault();
 
-                    var classCancelByTeacher = appDbContext.ClassCancelTeacher.Where(x => x.CenterId == centerId && x.StartingDate.Value.Date <= currentDate.Date && x.EndingDate.Value.Date >= currentDate.Date).FirstOrDefault();
+                    //var classCancelByTeacher = appDbContext.ClassCancelTeacher.Where(x => x.CenterId == centerId && x.StartingDate.Value.Date <= currentDate.Date && x.EndingDate.Value.Date >= currentDate.Date).FirstOrDefault();
 
-                    if (classVal != null)
+                    //if (classVal != null)
+                    //{
+                    //    data.Class = classVal.Name;
+                    //    data.ClassTotalStudents = classVal.TotalStudents;
+                    //    data.SubStatus = classVal.SubStatus;
+                    //    data.Id = classVal.Id;
+                    //    data.StartedDate = classVal.StartedDate;
+                    //    data.EndDate = classVal.EndDate;
+                    //    data.Type = 1;
+                    //}
+                    //else if (holidayDetail != null)
+                    //{
+                    //    data.holidayName = holidayDetail.Name;
+                    //    data.StartDate = holidayDetail.StartDate;
+                    //    data.EndDate = holidayDetail.EndDate;
+                    //    data.Type = 2;
+                    //}
+                    //else if (classCancelByTeacher != null)
+                    //{
+                    //    data.classCancelByTeacher = classCancelByTeacher.Reason;
+                    //    data.StartingDate = classCancelByTeacher.StartingDate;
+                    //    data.EndingDate = classCancelByTeacher.EndingDate;
+                    //    data.Type = 3;
+                    //}
+                    //else
+                    //{
+                    //    data.CenterStatus = "Deactivate";
+                    //    data.Type = 4;
+                    //}
+
+                    if (i == 0)
                     {
-                        data.Class = classVal.Name;
-                        data.ClassTotalStudents = classVal.TotalStudents;
-                        data.SubStatus = classVal.SubStatus;
-                        data.Id = classVal.Id;
-                        data.StartedDate = classVal.StartedDate;
-                        data.EndDate = classVal.EndDate;
                         data.Type = 1;
                     }
-                    else if (holidayDetail != null)
+                    else if (i == 1)
                     {
-                        data.holidayName = holidayDetail.Name;
-                        data.StartDate = holidayDetail.StartDate;
-                        data.EndDate = holidayDetail.EndDate;
                         data.Type = 2;
                     }
-                    else if (classCancelByTeacher != null)
+                    else if (i == 2)
                     {
-                        data.classCancelByTeacher = classCancelByTeacher.Reason;
-                        data.StartingDate = classCancelByTeacher.StartingDate;
-                        data.EndingDate = classCancelByTeacher.EndingDate;
                         data.Type = 3;
+
+                    }
+                    else if (i == 3)
+                    {
+                        data.Type = 4;
                     }
                     else
                     {
-                        data.CenterStatus = "Deactivate";
-                        data.Type = 4;
+                        data.Type = 5;
+                       
                     }
 
-                    rootJsonObject.Data.Add(data);
-                }
 
+                    rootJsonObject.Data.Add(data);
+
+                    rootJsonObject.Data[i].Detail = new JArray() as dynamic;
+
+                    if (i == 0)
+                    {
+                        detail = new JObject();
+                        detail.Class = "Class1";
+                        detail.ClassId = 1;
+                        detail.StartedDate = "2023-11-20";
+                        detail.EndDate = "2023-11-20";
+                        detail.TotalStudent = 25;
+                        rootJsonObject.Data[i].Detail.Add(detail);
+                    }
+                    else if (i == 1)
+                    {
+                        detail = new JObject();
+                        detail.holidayName = "Holiday";
+                        detail.StartDate = "2023-11-20";
+                        detail.EndDate = "2023-11-20";
+                        rootJsonObject.Data[i].Detail.Add(detail);
+                    }
+                    else if (i == 2)
+                    {
+                        detail = new JObject();
+                        detail.ClassCancelBy = "Cancel by teacher";
+                        detail.Reason = "Cancel by teacher";
+                        detail.StartingDate = "2023-11-20";
+                        detail.EndingDate = "2023-11-20";
+
+                        rootJsonObject.Data[i].Detail.Add(detail);
+                    }
+                    else if (i == 3)
+                    {
+                        detail = new JObject();
+                        detail.Reason = "Center deactivate";
+                        detail.CancelBy= "Cancel by admin";
+                        rootJsonObject.Data[i].Detail.Add(detail);
+                    }
+                    else
+                    {
+                        detail = new JObject();
+                        detail.Reason = "Upcoming";
+                        rootJsonObject.Data[i].Detail.Add(detail);
+                    }
+
+                    i++;
+                }
 
                 return JsonConvert.SerializeObject(rootJsonObject);
 
@@ -218,7 +304,7 @@ namespace StudentAttendanceApiDAL.Repository
             }
         }
 
-        public async Task<string> GetTotalBpl(int centerId,DateTime startDate,DateTime endDate)
+        public async Task<string> GetTotalBpl(int centerId, DateTime startDate, DateTime endDate)
         {
             logger.LogInformation($"DashboardRepository : GetTotalBpl : Started");
             dynamic rootJsonObject = new JObject();
@@ -230,11 +316,11 @@ namespace StudentAttendanceApiDAL.Repository
                 var students = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl.Value && x.CreatedOn.Value.Date >= startDate.Date
                                       && x.CreatedOn.Value.Date <= endDate.Date).ToListAsync();
 
-                var studentFeMale = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl.Value && x.Gender == "FeMale" 
+                var studentFeMale = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl.Value && x.Gender == "FeMale"
                 && x.CreatedOn.Value.Date >= startDate.Date
                                       && x.CreatedOn.Value.Date <= endDate.Date).ToListAsync();
 
-                var studentMale = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl.Value && x.Gender == "Male" 
+                var studentMale = await appDbContext.Student.Where(x => x.CenterId == centerId && x.Bpl.Value && x.Gender == "Male"
                 && x.CreatedOn.Value.Date >= startDate.Date
                                       && x.CreatedOn.Value.Date <= endDate.Date).ToListAsync();
 
@@ -269,7 +355,7 @@ namespace StudentAttendanceApiDAL.Repository
             try
             {
                 List<Student> students = await (from s in appDbContext.Student //Left Data Source
-                                                where s.CenterId == centerId 
+                                                where s.CenterId == centerId
                                                  && s.CreatedOn.Value.Date >= startDate.Date
                                                  && s.CreatedOn.Value.Date <= endDate.Date
                                                 group s by new { s.Category } into g
@@ -584,7 +670,7 @@ namespace StudentAttendanceApiDAL.Repository
 
                     rootJsonObject.TotalCenterCount = centers.Count();
                     rootJsonObject.DistrictName = districts.FirstOrDefault(x => x.Id == districtId).Name;
-                    rootJsonObject.VidhanSabhaName =districts.FirstOrDefault(x => x.Id == districtId).Name; ;
+                    rootJsonObject.VidhanSabhaName = districts.FirstOrDefault(x => x.Id == districtId).Name; ;
                     rootJsonObject.DistrictId = districtId;
                     rootJsonObject.VidhanSabhaId = vidhanSabhaId;
 
@@ -634,6 +720,54 @@ namespace StudentAttendanceApiDAL.Repository
             }
             return student;
         }
+
+        public async Task<string> GetStudentAttendanceByPercentage()
+        {
+            logger.LogInformation($"UserRepository : SaveStudentAttendance : Started");
+
+            List<Student> students = new List<Student>();
+            DataSet ds = new DataSet();
+            dynamic rootJsonObject = new JObject();
+            rootJsonObject.Data = new JArray() as dynamic;
+
+            dynamic data = new JObject();
+            try
+            {
+                //var targetYear = year;
+                //var targetMonth = month; // August
+
+                //var startDate = new DateTime(targetYear, targetMonth, 1);
+                //var endDate = startDate.AddMonths(1).AddDays(-1);
+                var i = 0;
+
+
+                data = new JObject();
+
+                data.TenPercentage = 10;
+                data.TwentyPercentage = 20;
+                data.ThrityPercentage = 30;
+                data.FourtyPercentage = 40;
+                data.FiftyPercentage = 50;
+                data.SixtyPercentage = 60;
+                data.SeventyPercentage = 70;
+                data.EightyPercentage = 80;
+                data.NintyPercentage = 90;
+                data.HunderedPercentage = 100;
+
+                rootJsonObject.Data.Add(data);
+                rootJsonObject.TotalStudent = 100;
+              
+
+                return JsonConvert.SerializeObject(rootJsonObject);
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : SaveStudentAttendance ", ex);
+                throw ex;
+            }
+        }
+
 
     }
 }
