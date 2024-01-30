@@ -106,6 +106,22 @@ namespace StudentAttendanceApiDAL.Repository
             dynamic rootJsonObject = new JObject();
             dynamic student = new JObject();
             rootJsonObject.Data = new JArray() as dynamic;
+
+
+            List<string> listOfExistingGrade = new List<string>();
+            listOfExistingGrade.Add("UKG");
+            listOfExistingGrade.Add("LKG");
+            listOfExistingGrade.Add("Pre Nursery");
+            listOfExistingGrade.Add("1st");
+            listOfExistingGrade.Add("2nd");
+            listOfExistingGrade.Add("3rd");
+            listOfExistingGrade.Add("4th");
+            listOfExistingGrade.Add("5th");
+            listOfExistingGrade.Add("6th");
+            listOfExistingGrade.Add("7th");
+            listOfExistingGrade.Add("8th");
+            listOfExistingGrade.Add("9th");
+            listOfExistingGrade.Add("10th");
             try
             {
                 var students = await (from s in appDbContext.Student //Left Data Source
@@ -125,9 +141,14 @@ namespace StudentAttendanceApiDAL.Repository
                 rootJsonObject.Status = true;
                 rootJsonObject.TotalStudents = appDbContext.Student.Where(x => x.CenterId == centerId).Count();
 
+
+                List<string> listOfGrade = new List<string>();
                 foreach (var item in students)
                 {
-                    student = new JObject();
+                    if (!listOfGrade.Contains(item.Grade))
+                    {
+                        listOfGrade.Add(item.Grade);
+                    }
                     student.Grade = item.Grade;
                     student.FeMaleCount = item.FeMaleCount;
                     student.MaleCount = item.MaleCount;
@@ -135,14 +156,30 @@ namespace StudentAttendanceApiDAL.Repository
                     rootJsonObject.Data.Add(student);
                 }
 
-                if(students.Count == 0)
+                if(students.Count ==0)
                 {
-                    student = new JObject();
-                    student.Grade = "";
-                    student.FeMaleCount = 0;
-                    student.MaleCount = 0;
-                    student.TotalStudentCount = 0;
-                    rootJsonObject.Data.Add(student);
+                    foreach (var grade in listOfExistingGrade)
+                    {
+                        student = new JObject();
+                        student.Grade = grade;
+                        student.FeMaleCount = 0;
+                        student.MaleCount = 0;
+                        student.TotalStudentCount = 0;
+                        rootJsonObject.Data.Add(student);
+                    }
+                   
+                   
+                }
+                else
+                {
+                    List<string> listNotInDb = listOfExistingGrade.Where(p => listOfGrade.All(p2 => p2 != p)).ToList();
+                    foreach (var grade in listNotInDb)
+                    {
+                        student.Grade = grade;
+                        student.FeMaleCount = 0;
+                        student.MaleCount = 0;
+                        rootJsonObject.Data.Add(student);
+                    }
                 }
 
                 logger.LogInformation($"DashboardRepository : GetTotalStudentOfClass : End");
@@ -155,6 +192,7 @@ namespace StudentAttendanceApiDAL.Repository
             return JsonConvert.SerializeObject(rootJsonObject);
         }
 
+        
         public async Task<string> GetCenterDetailByMonth(int centerId, int month, int year)
         {
             logger.LogInformation($"UserRepository : SaveStudentAttendance : Started");
