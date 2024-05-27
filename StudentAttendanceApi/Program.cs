@@ -115,7 +115,17 @@ builder.Services.AddTransient<ISchoolManager, SchoolManager>();
 // Add services to the container.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    options.JsonSerializerOptions.WriteIndented = false;
+});
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
+
 
 //builder.Services.AddControllersWithViews(options =>
 //{
@@ -234,6 +244,8 @@ app.UseSwaggerUI(c =>
 });
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseResponseCompression(); //qhen you want to return large data
 app.UseRouting();
 app.UseAuthentication();
 

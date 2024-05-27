@@ -717,6 +717,42 @@ namespace StudentAttendanceApiDAL.Repository
             return centerLog;
         }
 
+        public async Task<List<Center>> GetAllCenterAttendance(int offset, int limit)
+        {
+            logger.LogInformation($"UserRepository : GetAllCenterAttendance : Started");
+
+            List<Center> centers = new List<Center>();
+            try
+            {
+
+                centers = await (from cen in appDbContext.Center
+                                 join c in appDbContext.Class
+                                 on cen.Id equals c.CenterId
+                                 select new Center
+                                 {
+                                     Id=cen.Id,
+                                     ClassStartDate = c.StartedDate,
+                                     ClassEndDate = c.EndDate,
+                                     CenterName = cen.CenterName,
+                                     TotalPresentStudents = c.TotalStudents,
+                                     TotalAvialableStudents = c.AvilableStudents,
+                                     RegionalAdminName= appDbContext.Users.Where(x => x.Id == cen.AssignedRegionalAdmin).FirstOrDefault().Name,
+                                     TeacherName = appDbContext.Users.Where(x => x.Id == cen.AssignedTeachers).FirstOrDefault().Name
+                                 }).AsNoTracking().Skip(offset)
+                                                                       .Take(limit).ToListAsync();
+
+
+
+                logger.LogInformation($"UserRepository : GetAllCenterAttendance : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetAllCentersById", ex);
+                throw ex;
+            }
+            return centers;
+        }
+
 
         //private async string CreateSqlQuery(int districtId, int vidhanSabhaId, int panchayatId, int villageId)
         //{

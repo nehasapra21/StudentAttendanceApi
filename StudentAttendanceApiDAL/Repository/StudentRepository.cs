@@ -160,10 +160,11 @@ namespace StudentAttendanceApiDAL.Repository
                 List<Student> students = new List<Student>();
                 List<Student> totalStudents = new List<Student>();
                 List<Student> presentStudents = new List<Student>();
-
+               
                 int? TypeValue = appDbContext.Users.FirstOrDefault(x => x.Id == userId).Type;
 
-                if (TypeValue == 1)
+               
+                if (TypeValue == 1)//superadmin
                 {
                     students = await appDbContext.Student.AsNoTracking().ToListAsync();
 
@@ -171,7 +172,7 @@ namespace StudentAttendanceApiDAL.Repository
 
                     presentStudents = students.Where(x => x.ActiveClassStatus.Value).ToList();
                 }
-                else if (TypeValue == 2)
+                else if (TypeValue == 2)//
                 {
 
                     List<int> centerIds = appDbContext.Center.Where(x => x.AssignedRegionalAdmin == userId).Select(x => x.Id).ToList();

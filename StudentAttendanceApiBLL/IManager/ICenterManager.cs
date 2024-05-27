@@ -16,6 +16,7 @@ namespace StudentAttendanceApiBLL.IManager
         Task<List<AllCenterStatusDto>> GetStudentAttendanceOfCenter(int status, int userId, int type);
         Task<CenterDetailDto> GetCenterByUserId(int userId);
         Task<CenterLog> UpdateCenterActiveOrDeactive(CenterLogDto centerLogDto);
+        Task<List<CenterAttendanceDto>> GetAllCenterAttendance(int offset, int limit);
     }
 
 }

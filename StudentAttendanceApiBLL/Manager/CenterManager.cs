@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using StudentAttendanceApiBLL.IManager;
 using StudentAttendanceApiDAL.IRepository;
 using StudentAttendanceApiDAL.Repository;
 using StudentAttendanceApiDAL.Tables;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -116,6 +118,56 @@ namespace StudentAttendanceApiBLL.Manager
             }
 
             return centerDetailDto;
+        }
+
+        public async Task<List<CenterAttendanceDto>> GetAllCenterAttendance(int offset, int limit)
+        {
+            _logger.LogInformation($"VillageManager : Bll : GetAllCenterAttendance : Started");
+            CenterAttendanceDto centerDto = new CenterAttendanceDto();
+            List<CenterAttendanceDto> list = null;
+            List<Center> centers = await _centerRepository.GetAllCenterAttendance(offset,limit);
+            if (centers != null)
+            {
+                list = new List<CenterAttendanceDto>();
+                //foreach (var item in centers)
+                //{
+                //    try
+                //    {
+                //        centerDto = new CenterAttendanceDto();
+                //        centerDto = CenterConvertor.ConvertCenterToCenterAttendanceDto(centerDto, item);
+                //        list.Add(centerDto);
+                //    }
+                //    catch(Exception ex)
+                //    {
+
+                //    }
+                //}
+                List<CenterAttendanceDto> myList = new List<CenterAttendanceDto>();
+                object lockObject = new object();
+
+                ConcurrentBag<CenterAttendanceDto> myBag = new ConcurrentBag<CenterAttendanceDto>();
+                //Parallel.ForEach(centers, record =>
+                //{
+                //    lock (lockObject)
+                //    {
+                //        centerDto = new CenterAttendanceDto();
+                //        centerDto = CenterConvertor.ConvertCenterToCenterAttendanceDto(centerDto, record);
+                //        myList.Add(centerDto);
+                //    }
+                //});
+
+                Parallel.ForEach(centers, record =>
+                {
+                    centerDto = new CenterAttendanceDto();
+                    centerDto = CenterConvertor.ConvertCenterToCenterAttendanceDto(centerDto, record);
+                    myBag.Add(centerDto);
+                });
+
+                list = myBag.ToList();
+                Console.WriteLine($"Total records added: {myList.Count}");
+            }
+
+            return list;
         }
         #endregion
     }

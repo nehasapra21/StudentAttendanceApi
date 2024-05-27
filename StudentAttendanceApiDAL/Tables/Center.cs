@@ -56,6 +56,8 @@ namespace StudentAttendanceApiDAL.Tables
         [NotMapped]
         public int? TotalPresentStudents { get; set; }
         [NotMapped]
+        public int? TotalAvialableStudents { get; set; }
+        [NotMapped]
         public DateTime? ClassStartDate { get; set; }
         [NotMapped]
         public DateTime? ClassEndDate{ get; set; }

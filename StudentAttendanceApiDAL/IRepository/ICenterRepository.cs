@@ -17,5 +17,6 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<Center> GetCenterByUserId(int userId);
         Task<CenterLog> UpdateCenterActiveOrDeactive(CenterLog centerlog);
         Task<bool> CheckCenterStatusByUserId(int userId);
+        Task<List<Center>> GetAllCenterAttendance(int offset, int limit);
     }
 }
