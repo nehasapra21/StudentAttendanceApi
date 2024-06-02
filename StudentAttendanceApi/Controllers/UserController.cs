@@ -35,6 +35,8 @@ namespace StudentAttendanceApi.Controllers
                 var masterAdmin = await _userManager.LoginUser(loginDto.MobileNumber, loginDto.Password);
                 if (masterAdmin != null)
                 {
+                    logger.LogInformation($"UserController :MAsteradmin exits");
+
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,
@@ -45,6 +47,8 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
+                    logger.LogInformation($"UserController :not masteradmin exits");
+
                     return StatusCode(StatusCodes.Status404NotFound, new
                     {
                         status = false,
@@ -78,7 +82,7 @@ namespace StudentAttendanceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"UserController : LoginUser ", ex);
+                logger.LogError(ex, $"UserController : LoginUser exception", ex);
                 return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }

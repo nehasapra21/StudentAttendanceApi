@@ -84,6 +84,8 @@ namespace StudentAttendanceApiBLL.Manager
             {
                 user.Password = null;
             }
+            _logger.LogInformation($"UserManager : Bll : LoginSuperAdmin : End");
+
             return user;
         }
 

@@ -193,12 +193,16 @@ namespace StudentAttendanceApiDAL.Repository
                 user = await appDbContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == userName && x.Password == password);
                 if (user != null)
                 {
+                    logger.LogInformation($"UserRepository : LoginUser : if condition started");
                     user.LastLoginTime = Convert.ToString(DateTime.Now);
+                    logger.LogInformation($"UserRepository : LoginUser :LastLoginTime"+ user.LastLoginTime);
                     appDbContext.Update(user);
                     await appDbContext.SaveChangesAsync();
+                    logger.LogInformation($"UserRepository : LoginUser :Login time updated");
                     ///Generate token for user
                     #region JWT
                     user.Token = CommonUtility.GenerateToken(configuration, user.Email, user.Name);
+                    logger.LogInformation($"UserRepository : LoginUser :Token generated");
                     #endregion
 
                     //save data
@@ -217,7 +221,7 @@ namespace StudentAttendanceApiDAL.Repository
                     //new ClaimsPrincipal(claimsIdentity)
 
                 }
-
+                logger.LogInformation($"UserRepository : LoginUser : End of if condition");
                 logger.LogInformation($"UserRepository : LoginUser : End");
             }
             catch (Exception ex)

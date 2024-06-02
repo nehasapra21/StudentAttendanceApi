@@ -243,6 +243,42 @@ namespace StudentAttendanceApi.Controllers
             }
         }
 
+
+        //[Authorize]
+        [HttpGet("GetAllCenterAttendance")]
+        public async Task<IActionResult> GetAllCenterAttendance(int offset, int limit)
+        {
+            logger.LogInformation("UserController : UpdateCenterActiveOrDeactive : Started");
+            try
+            {
+                var allCenters = await _centerManager.GetAllCenterAttendance(offset, limit);
+                if (allCenters != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = allCenters,
+                        message = "Centers avilable",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        message = "Centers not avilable",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : UpdateCenterActiveOrDeactive ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+            }
+        }
+
         [Authorize]
         [HttpGet("UpdateCenterActiveOrDeactive")]
         public async Task<IActionResult> UpdateCenterActiveOrDeactive(CenterLogDto centerLogDto)

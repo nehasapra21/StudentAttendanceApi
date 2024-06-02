@@ -21,6 +21,9 @@ using System.IO;
 using StudentAttendanceApi.ActivityLog;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Org.BouncyCastle.Ocsp;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,9 @@ builder.Services.Configure<AppSettings>(appsettingSection);
 var appsetting = appsettingSection.Get<AppSettings>();
 var key = Encoding.ASCII.GetBytes(appsetting.Key);
 
+
+//"MobileNumber": "1234",
+ // "Password": "admin@123"
 //builder.Services.AddDefaultIdentity<IdentityUser>(... )
 //    .AddRoles<IdentityRole>();
 
@@ -115,11 +121,13 @@ builder.Services.AddTransient<ISchoolManager, SchoolManager>();
 // Add services to the container.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-    options.JsonSerializerOptions.WriteIndented = false;
-});
+builder.Services.AddControllers();
+
+//builder.Services.AddControllers().AddJsonOptions(options =>
+//{
+//    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+//    options.JsonSerializerOptions.WriteIndented = false;
+//});
 
 builder.Services.AddResponseCompression(options =>
 {
@@ -184,18 +192,22 @@ builder.Services.Configure<FcmNotificationSetting>(appSettingsSection);
 //logging
  var path = Directory.GetCurrentDirectory();
 
-//builder.Services.AddLogging(builder =>
-//{
-//    var logFilePath = $"{path}\\Logs\\api\\Log.txt"; // Customize the path as needed
-//                                                     //  var logFilePath = hostContext.Configuration["Serilog:FilePath"];
+builder.Logging.ClearProviders(); //This clears the default logging providers.
+builder.Logging.AddConsole();//Adds console logging, which outputs logs to the console.
+builder.Logging.AddDebug();//Adds debug logging, which is useful for debugging purposes.
 
-//    Log.Logger = new LoggerConfiguration()
-//        .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day)
-//        .CreateLogger();
+builder.Services.AddLogging(builder =>
+{
+var logFilePath = $"{path}\\Logs\\api\\Log.txt"; // Customize the path as needed
+                                                 //  var logFilePath = hostContext.Configuration["Serilog:FilePath"];
 
-//    builder.AddSerilog();
-//});
-//\
+    Log.Logger = new LoggerConfiguration()
+        .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day)
+        .CreateLogger();
+  
+    builder.AddSerilog();
+});
+//
 
 //rest identity coloumn of table
 //DBCC CHECKIDENT('[tablename]', RESEED, 0);
@@ -226,8 +238,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
 app.UseCors(builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
