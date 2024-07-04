@@ -48,10 +48,14 @@ namespace StudentAttendanceApiBLL
         public static CenterAttendanceDto ConvertCenterToCenterAttendanceDto(CenterAttendanceDto centerAttendanceDto,Center centerDto)
         {
             centerAttendanceDto.Id = centerDto.Id;
+            centerAttendanceDto.Type = centerDto.Type;
             centerAttendanceDto.CenterName = centerDto.CenterName;
-            centerAttendanceDto.StartedDate = (centerDto.ClassStartDate != null) ? centerDto.ClassStartDate.Value : null; 
-            centerAttendanceDto.EndDate = (centerDto.ClassEndDate != null) ? centerDto.ClassEndDate.Value : null;
-            centerAttendanceDto.TotalStudents=centerDto.TotalPresentStudents;
+            centerAttendanceDto.ClassStartedDate = (centerDto.ClassStartDate != null) ? centerDto.ClassStartDate.Value : null; 
+            centerAttendanceDto.ClassEndDate = (centerDto.ClassEndDate != null) ? centerDto.ClassEndDate.Value : null;
+            centerAttendanceDto.StartDate = (centerDto.StartDate != null) ? centerDto.StartDate.Value : null;
+            centerAttendanceDto.EndDate = (centerDto.EndDate != null) ? centerDto.EndDate.Value : null;
+            centerAttendanceDto.Reason = centerDto.Reason;
+            centerAttendanceDto.TotalStudents=centerDto.TotalStudents;
             centerAttendanceDto.PresentStudents = centerDto.TotalAvialableStudents;
             centerAttendanceDto.RegionalAdminName = centerDto.RegionalAdminName;
             centerAttendanceDto.TeacherName = centerDto.TeacherName;

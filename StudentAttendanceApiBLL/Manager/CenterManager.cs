@@ -69,10 +69,10 @@ namespace StudentAttendanceApiBLL.Manager
         {
             _logger.LogInformation($"VillageManager : Bll : GetAllCenters : Started");
             List<AllCenterDto> list = null;
-            List<Center> centers = await _centerRepository.GetAllCenters(userId,type);
+            List<Center> centers = await _centerRepository.GetAllCenters(userId, type);
             if (centers != null && centers.Count > 0)
             {
-                list=new List<AllCenterDto>();
+                list = new List<AllCenterDto>();
                 foreach (var item in centers)
                 {
                     AllCenterDto allCenterDto = CenterConvertor.ConvertCenterToAllCenterDto(item);
@@ -86,7 +86,7 @@ namespace StudentAttendanceApiBLL.Manager
         {
             _logger.LogInformation($"VillageManager : Bll : GetStudentAttendanceOfCenter : Started");
             List<AllCenterStatusDto> list = null;
-            List<Center> centers= await _centerRepository.GetStudentAttendanceOfCenter(status,userId,type);
+            List<Center> centers = await _centerRepository.GetStudentAttendanceOfCenter(status, userId, type);
             if (centers != null && centers.Count > 0)
             {
                 list = new List<AllCenterStatusDto>();
@@ -113,48 +113,27 @@ namespace StudentAttendanceApiBLL.Manager
             Center center = await _centerRepository.GetCenterByUserId(userId);
             if (center != null)
             {
-                centerDetailDto=new CenterDetailDto();
+                centerDetailDto = new CenterDetailDto();
                 centerDetailDto = CenterConvertor.ConvertCentertoToCenterDetailDto(center);
             }
 
             return centerDetailDto;
         }
 
-        public async Task<List<CenterAttendanceDto>> GetAllCenterAttendance(int offset, int limit)
+        public async Task<List<CenterAttendanceDto>> GetAllCenterAttendance(string date, int offset, int limit)
         {
             _logger.LogInformation($"VillageManager : Bll : GetAllCenterAttendance : Started");
             CenterAttendanceDto centerDto = new CenterAttendanceDto();
             List<CenterAttendanceDto> list = null;
-            List<Center> centers = await _centerRepository.GetAllCenterAttendance(offset,limit);
+            List<Center> centers = await _centerRepository.GetAllCenterAttendance(date, offset, limit);
             if (centers != null)
             {
                 list = new List<CenterAttendanceDto>();
-                //foreach (var item in centers)
-                //{
-                //    try
-                //    {
-                //        centerDto = new CenterAttendanceDto();
-                //        centerDto = CenterConvertor.ConvertCenterToCenterAttendanceDto(centerDto, item);
-                //        list.Add(centerDto);
-                //    }
-                //    catch(Exception ex)
-                //    {
 
-                //    }
-                //}
                 List<CenterAttendanceDto> myList = new List<CenterAttendanceDto>();
                 object lockObject = new object();
 
                 ConcurrentBag<CenterAttendanceDto> myBag = new ConcurrentBag<CenterAttendanceDto>();
-                //Parallel.ForEach(centers, record =>
-                //{
-                //    lock (lockObject)
-                //    {
-                //        centerDto = new CenterAttendanceDto();
-                //        centerDto = CenterConvertor.ConvertCenterToCenterAttendanceDto(centerDto, record);
-                //        myList.Add(centerDto);
-                //    }
-                //});
 
                 Parallel.ForEach(centers, record =>
                 {
@@ -168,6 +147,36 @@ namespace StudentAttendanceApiBLL.Manager
             }
 
             return list;
+        }
+
+
+        public async Task<string> GetTotalAttendanceCountOfCenter(string date)
+        {
+            _logger.LogInformation($"VillageManager : Bll : GetAllCenterAttendance : Started");
+            CenterAttendanceDto centerDto = new CenterAttendanceDto();
+            List<CenterAttendanceDto> list = null;
+            string centers = await _centerRepository.GetTotalAttendanceCountOfCenter(date);
+            //if (centers != null)
+            //{
+            //    list = new List<CenterAttendanceDto>();
+
+            //    List<CenterAttendanceDto> myList = new List<CenterAttendanceDto>();
+            //    object lockObject = new object();
+
+            //    ConcurrentBag<CenterAttendanceDto> myBag = new ConcurrentBag<CenterAttendanceDto>();
+
+            //    Parallel.ForEach(centers, record =>
+            //    {
+            //        centerDto = new CenterAttendanceDto();
+            //        centerDto = CenterConvertor.ConvertCenterToCenterAttendanceDto(centerDto, record);
+            //        myBag.Add(centerDto);
+            //    });
+
+            //    list = myBag.ToList();
+            //    Console.WriteLine($"Total records added: {myList.Count}");
+            //}
+
+            return centers;
         }
         #endregion
     }

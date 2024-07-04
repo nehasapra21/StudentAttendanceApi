@@ -48,8 +48,8 @@ namespace StudentAttendanceApiDAL.Repository
                     foreach (var item in studentAttendance.ListOfStudentIds)
                     {
                         studentAttendance.StudentId = item;
-                        var studentAttendanceExists = appDbContext.StudentAttendance.FirstOrDefaultAsync(x => x.StudentId == item && x.ClassId == studentAttendance.ClassId
-                           && x.ScanDate.Value.Date == DateTime.Now.Date).Result;
+                        var studentAttendanceExists = appDbContext.StudentAttendance.FirstOrDefault(x => x.StudentId == item && x.ClassId == studentAttendance.ClassId
+                           && x.ScanDate.Value.Date == DateTime.Now.Date);
                         if (studentAttendanceExists != null)
                         {
                             continue;
@@ -98,7 +98,7 @@ namespace StudentAttendanceApiDAL.Repository
                     }
                     else
                     {
-                        Student student = appDbContext.Student.FirstOrDefaultAsync(x => x.Id == studentAttendance.StudentId).Result;
+                        Student student = appDbContext.Student.FirstOrDefault(x => x.Id == studentAttendance.StudentId);
 
                         //mannual attendance
 

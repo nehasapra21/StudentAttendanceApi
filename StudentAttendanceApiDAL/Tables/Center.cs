@@ -64,6 +64,24 @@ namespace StudentAttendanceApiDAL.Tables
         [NotMapped]
 
         public Users User { get; set; }
+        [NotMapped]
+        public int Type { get; set; }
+        [NotMapped]
+        public DateTime? StartDate { get; set; }
+        [NotMapped]
+        public DateTime? EndDate { get; set; }
+        [NotMapped]
+        public string Reason{ get; set; }
+        [NotMapped]
+        public int? NoAttendance { get; set; }
+        [NotMapped]
+        public int? EndDateWithAttendance { get; set; }
+        [NotMapped]
+        public int? EndDateWithNoAttendance { get; set; }
+        [NotMapped]
+        public int? Completed { get; set; }
+        [NotMapped]
+        public int? NotStarted { get; set; }
         public ICollection<ClassCancelTeacher> ClassCancelTeacher { get; set; }
     }
 

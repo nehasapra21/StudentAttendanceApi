@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using StudentAttendanceApiBLL;
 using StudentAttendanceApiBLL.IManager;
 using StudentAttendanceApiBLL.Manager;
@@ -138,18 +139,18 @@ namespace StudentAttendanceApi.Controllers
         //}
 
         [HttpGet("GetAllCenters")]
-        public async Task<IActionResult> GetAllCenters(int userId=0,int type=0)
+        public async Task<IActionResult> GetAllCenters(int userId = 0, int type = 0)
         {
             logger.LogInformation("UserController : GetAllCenters : Started");
             try
             {
-                var allCenters = await _centerManager.GetAllCenters(userId,type);
+                var allCenters = await _centerManager.GetAllCenters(userId, type);
                 if (allCenters != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = true,
-                        data= allCenters,
+                        data = allCenters,
                         message = "List of centers",
                         code = StatusCodes.Status200OK
                     });
@@ -173,7 +174,7 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetAllCentersByStatus")]
-        public async Task<IActionResult> GetAllCentersByStatus(int status,int userId=0, int type=0)
+        public async Task<IActionResult> GetAllCentersByStatus(int status, int userId = 0, int type = 0)
         {
             logger.LogInformation("UserController : GetStudentAttendanceOfCenter : Started");
             try
@@ -246,12 +247,12 @@ namespace StudentAttendanceApi.Controllers
 
         //[Authorize]
         [HttpGet("GetAllCenterAttendance")]
-        public async Task<IActionResult> GetAllCenterAttendance(int offset, int limit)
+        public async Task<IActionResult> GetAllCenterAttendance(string date, int offset, int limit)
         {
             logger.LogInformation("UserController : UpdateCenterActiveOrDeactive : Started");
             try
             {
-                var allCenters = await _centerManager.GetAllCenterAttendance(offset, limit);
+                var allCenters = await _centerManager.GetAllCenterAttendance(date, offset, limit);
                 if (allCenters != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
@@ -309,6 +310,43 @@ namespace StudentAttendanceApi.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, $"UserController : UpdateCenterActiveOrDeactive ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+            }
+        }
+
+       //[Authorize]
+        [HttpGet("GetTotalAttendanceCountOfCenter")]
+        public async Task<IActionResult> GetTotalAttendanceCountOfCenter(string date)
+        {
+            logger.LogInformation("UserController : GetTotalAttendanceCountOfCenter : Started");
+            try
+            {
+                string centerLog = await _centerManager.GetTotalAttendanceCountOfCenter(date);
+                if (centerLog != null)
+                {
+                    Content deserializedContent = JsonConvert.DeserializeObject<Content>(centerLog);
+
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        data= deserializedContent,
+                        status = true,
+                        message = "Center exists",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        message = "Center not exists",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : GetTotalAttendanceCountOfCenter ", ex);
                 return StatusCode(StatusCodes.Status501NotImplemented, "error");
             }
         }
