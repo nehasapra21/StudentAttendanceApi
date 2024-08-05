@@ -367,13 +367,14 @@ namespace StudentAttendanceApiDAL.Repository
                                       into EmployeeAddressGroup //Performing LINQ Group Join
                                       from saa in EmployeeAddressGroup.DefaultIfEmpty()
                                       where s.CenterId == centerId
-                                      group new { s, saa } by new { s.Id, s.EnrollmentId, s.FullName, s.JoiningDate } into g
+                                      group new { s, saa } by new { s.Id, s.EnrollmentId, s.FullName, s.JoiningDate , s.Status } into g
                                       select new Student
                                       {
                                           Id = g.Key.Id,
                                           FullName = g.Key.FullName,
                                           EnrollmentId = g.Key.EnrollmentId,
                                           JoiningDate = g.Key.JoiningDate,
+                                          Status = g.Key.Status.Value,
                                           AvgAttendance = 0
                                       }).Distinct().ToListAsync();
                 }
@@ -385,13 +386,14 @@ namespace StudentAttendanceApiDAL.Repository
                                       into EmployeeAddressGroup //Performing LINQ Group Join
                                       from saa in EmployeeAddressGroup.DefaultIfEmpty()
                                       where s.CenterId == centerId
-                                      group new { s, saa } by new { s.Id, s.EnrollmentId, s.FullName, s.JoiningDate } into g
+                                      group new { s, saa } by new { s.Id, s.EnrollmentId, s.FullName, s.JoiningDate, s.Status } into g
                                       select new Student
                                       {
                                           Id = g.Key.Id,
                                           FullName = g.Key.FullName,
                                           EnrollmentId = g.Key.EnrollmentId,
                                           JoiningDate = g.Key.JoiningDate,
+                                          Status = g.Key.Status.Value,
                                           AvgAttendance = Convert.ToDecimal(appDbContext.StudentAttendance.Where(x => x.StudentId == g.Key.Id).Count() * 100 / appDbContext.Class.Where(x => x.CenterId == centerId && (x.Status == 1 || x.Status == 2)).Count())
                                       }).Distinct().ToListAsync();
 
@@ -456,7 +458,7 @@ namespace StudentAttendanceApiDAL.Repository
                                   on s.Id equals sa.StudentId//Inner Join Condition
                                   into EmployeeAddressGroup //Performing LINQ Group Join
                                   from saa in EmployeeAddressGroup.DefaultIfEmpty()
-                                  where s.CenterId == centerId
+                                  where s.CenterId == centerId && s.Status.Value
                                   group new { s, saa } by new { s.Id, s.FullName, s.EnrollmentId } into g
                                   select new Student
                                   {

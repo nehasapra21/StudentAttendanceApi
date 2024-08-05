@@ -40,7 +40,7 @@ namespace StudentAttendanceApiBLL
             studentAttendance.Id = studentAttendanceDto.Id;
             studentAttendance.EnrollmentId = studentAttendanceDto.EnrollmentId;
             studentAttendance.FullName = studentAttendanceDto.FullName;
-            studentAttendance.AttendanceStatus = studentAttendanceDto.StudentStaus;
+            studentAttendance.AttendanceStatus = studentAttendanceDto.Status;
             studentAttendance.AverageAttendance = Math.Round(studentAttendanceDto.AvgAttendance, 2);
             studentAttendance.Date = studentAttendanceDto.JoiningDate;
             return studentAttendance;
