@@ -417,7 +417,7 @@ namespace StudentAttendanceApiDAL.Repository
                 //List<StudentAttendance> studentAttendance = appDbContext.StudentAttendance.Where(x => x.CenterId == centerId).ToList();
                 // List<int> studentIds = studentAttendance.Select(x => x.StudentId.Value).ToList();
 
-                students = appDbContext.Student.AsNoTracking().Where(x => x.CenterId == centerId).ToList();
+                students = appDbContext.Student.AsNoTracking().Where(x => x.CenterId == centerId && x.Status.Value).ToList();
                 List<int> studentIds = students.Select(x => x.Id).ToList();//all student ids
 
                 List<StudentAttendance> studentAttendance = await appDbContext.StudentAttendance.Where(x => x.CenterId == centerId && x.ScanDate.Value.Date==DateTime.Now.Date).ToListAsync(); //student id 
