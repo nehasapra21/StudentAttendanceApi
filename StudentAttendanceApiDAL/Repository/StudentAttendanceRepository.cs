@@ -374,7 +374,7 @@ namespace StudentAttendanceApiDAL.Repository
                                           FullName = g.Key.FullName,
                                           EnrollmentId = g.Key.EnrollmentId,
                                           JoiningDate = g.Key.JoiningDate,
-                                          Status = g.Key.Status.Value,
+                                          StudentStaus = g.Key.Status.Value ? "1" : "0",
                                           AvgAttendance = 0
                                       }).Distinct().ToListAsync();
                 }
@@ -393,7 +393,7 @@ namespace StudentAttendanceApiDAL.Repository
                                           FullName = g.Key.FullName,
                                           EnrollmentId = g.Key.EnrollmentId,
                                           JoiningDate = g.Key.JoiningDate,
-                                          Status = g.Key.Status.Value,
+                                          StudentStaus = g.Key.Status.Value ? "1" : "0",
                                           AvgAttendance = Convert.ToDecimal(appDbContext.StudentAttendance.Where(x => x.StudentId == g.Key.Id).Count() * 100 / appDbContext.Class.Where(x => x.CenterId == centerId && (x.Status == 1 || x.Status == 2)).Count())
                                       }).Distinct().ToListAsync();
 

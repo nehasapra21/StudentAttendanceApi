@@ -82,11 +82,11 @@ namespace StudentAttendanceApiBLL.Manager
             return list;
         }
 
-        public async Task<List<AllCenterStatusDto>> GetStudentAttendanceOfCenter(int status, int userId, int type)
+        public async Task<List<AllCenterStatusDto>> GetStudentAttendanceOfCenter(int status, int userId)
         {
             _logger.LogInformation($"VillageManager : Bll : GetStudentAttendanceOfCenter : Started");
             List<AllCenterStatusDto> list = null;
-            List<Center> centers = await _centerRepository.GetStudentAttendanceOfCenter(status, userId, type);
+            List<Center> centers = await _centerRepository.GetStudentAttendanceOfCenter(status, userId);
             if (centers != null && centers.Count > 0)
             {
                 list = new List<AllCenterStatusDto>();
@@ -120,12 +120,12 @@ namespace StudentAttendanceApiBLL.Manager
             return centerDetailDto;
         }
 
-        public async Task<List<CenterAttendanceDto>> GetAllCenterAttendance(string date, int offset, int limit)
+        public async Task<List<CenterAttendanceDto>> GetAllCenterAttendance(int userId, string date, int offset, int limit)
         {
             _logger.LogInformation($"VillageManager : Bll : GetAllCenterAttendance : Started");
             CenterAttendanceDto centerDto = new CenterAttendanceDto();
             List<CenterAttendanceDto> list = null;
-            List<Center> centers = await _centerRepository.GetAllCenterAttendance(date, offset, limit);
+            List<Center> centers = await _centerRepository.GetAllCenterAttendance(userId, date, offset, limit);
             if (centers != null)
             {
                 list = new List<CenterAttendanceDto>();
@@ -150,12 +150,12 @@ namespace StudentAttendanceApiBLL.Manager
         }
 
 
-        public async Task<string> GetTotalAttendanceCountOfCenter(string date)
+        public async Task<string> GetTotalAttendanceCountOfCenter(int userId, string date)
         {
             _logger.LogInformation($"VillageManager : Bll : GetAllCenterAttendance : Started");
             CenterAttendanceDto centerDto = new CenterAttendanceDto();
             List<CenterAttendanceDto> list = null;
-            string centers = await _centerRepository.GetTotalAttendanceCountOfCenter(date);
+            string centers = await _centerRepository.GetTotalAttendanceCountOfCenter(userId, date);
             //if (centers != null)
             //{
             //    list = new List<CenterAttendanceDto>();

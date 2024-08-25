@@ -19,6 +19,14 @@
             Others = 6
         }
 
+        public enum HolidayStatus
+        {
+            All = 1,
+            Upcoming = 2
+
+        }
+
+
         public enum Gender
         {
             FeMale = 1,

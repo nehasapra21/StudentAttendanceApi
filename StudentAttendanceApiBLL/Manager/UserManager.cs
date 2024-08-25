@@ -96,6 +96,14 @@ namespace StudentAttendanceApiBLL.Manager
             return await _userRepository.UpdateDeviceId(userId, deviceId);
         }
 
+        public async Task<Users> UpdatePassword(int userId, string password)
+        {
+            _logger.LogInformation($"UserManager : Bll : LoginSuperAdmin : Started");
+
+            string newPassword=await GetPasswordVal(password);
+            return await _userRepository.UpdatePassword(userId, newPassword);
+        }
+
         public async Task<List<string>> GetPassword(List<string> names)
         {
             List<string> strings = new List<string>();
@@ -109,13 +117,14 @@ namespace StudentAttendanceApiBLL.Manager
             }
             return strings;
         }
+
         public async Task<string> GetPasswordVal(string password)
         {
             List<string> strings = new List<string>();
 
             string pass = EncryptionUtility.GetHashPassword(password);
 
-            return password;
+            return pass;
         }
 
         public async Task<UserDto> SaveLogin(UserDto userDto)
@@ -270,6 +279,16 @@ namespace StudentAttendanceApiBLL.Manager
 
             return await _userRepository.CheckUserMobileNumber(mobileNumber);
         }
+
+        public async Task<Users> GetUserDetailByPhoneNumber(string phoneNumber)
+        {
+            _logger.LogInformation($"UserManager : Bll : GetUserDetailByPhoneNumber : Started");
+
+
+            return await _userRepository.GetUserDetailByPhoneNumber(phoneNumber);
+
+        }
+
         public async Task<string> GetUserDeviceByUserId(int userId)
         {
             _logger.LogInformation($"UserManager : Bll : CheckUserMobileNumber : Started");

@@ -181,6 +181,25 @@ namespace StudentAttendanceApiDAL.Repository
             return user;
         }
 
+        public async Task<Users> GetUserDetailByPhoneNumber(string phoneNumber)
+        {
+            logger.LogInformation($"UserRepository : GetUserById : Started");
+
+            Users user = new Users();
+            try
+            {
+                user = await appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
+
+                logger.LogInformation($"UserRepository : GetUserById : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : GetUserById", ex);
+                throw ex;
+            }
+            return user;
+        }
+
         public async Task<Users?> LoginUser(string userName, string password)
         {
             logger.LogInformation($"UserRepository : LoginUser : Started");
@@ -372,6 +391,31 @@ namespace StudentAttendanceApiDAL.Repository
             }
             return userVal;
         }
+
+        public async Task<Users> UpdatePassword(int userId, string newPassword)
+        {
+            logger.LogInformation($"UserRepository : SaveSuperAdmin : Started");
+            Users userVal = null;
+            try
+            {
+                userVal = appDbContext.Users.Where(x => x.Id == userId).FirstOrDefault();
+                if (userVal != null)
+                {
+                    userVal.Password = newPassword;
+                    appDbContext.Update(userVal);
+                    await appDbContext.SaveChangesAsync();
+                }
+
+                logger.LogInformation($"UserRepository : SaveSuperAdmin : Started");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : SaveSuperAdmin ", ex);
+                throw ex;
+            }
+            return userVal;
+        }
+
 
         public async Task<string> CheckUserMobileNumber(string mobileNumber)
         {

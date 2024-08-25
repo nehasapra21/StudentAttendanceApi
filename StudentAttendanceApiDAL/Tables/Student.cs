@@ -73,18 +73,6 @@ namespace StudentAttendanceApiDAL.Tables
         [NotMapped]
         public int TotalStudentCount { get; set; }
 
-
-        //[NotMapped]
-        //public string DistrictName { get; set; }
-        //[NotMapped]
-        //public string VidhanSabhaName { get; set; }
-        //[NotMapped]
-        //public string VillageName { get; set; }
-        //[NotMapped]
-        //public string PanchayatName { get; set; }
-
-
-
     }
     
 }

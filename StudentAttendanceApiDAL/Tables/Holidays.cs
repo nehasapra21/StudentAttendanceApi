@@ -24,7 +24,8 @@ namespace StudentAttendanceApiDAL.Tables
         public int? CenterId { get; set; }
         [NotMapped]
         public List<int> CenterIds { get; set; }
-
+        [NotMapped]
+        public string CenterName { get; set; }  // Add this property
     }
     
 }

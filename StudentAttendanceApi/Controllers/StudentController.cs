@@ -164,12 +164,12 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetTotalStudentPresent")]
-        public async Task<IActionResult> GetTotalStudentPresent(int userId = 0, int type = 0)
+        public async Task<IActionResult> GetTotalStudentPresent(DateTime scanDate,int userId)
         {
             logger.LogInformation("UserController : GetTotalStudentPresent : Started");
             try
             {
-                var allClasses = await _studentManager.GetTotalStudentPresent(userId, type);
+                var allClasses = await _studentManager.GetTotalStudentPresent(scanDate,userId);
 
                 if (allClasses != null)
                 {
@@ -186,9 +186,46 @@ namespace StudentAttendanceApi.Controllers
                     return StatusCode(StatusCodes.Status404NotFound, new
                     {
                         status = false,
-                        data = allClasses,
+                        data = new object[0],
                         message = "Not found",
-                        code = StatusCodes.Status404NotFound
+                        code = StatusCodes.Status200OK
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : GetAllClasses ", ex);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("GetAllStudents")]
+        public async Task<IActionResult> GetAllStudents(int userId,int  districtId = 0, int vidhanSabhaId = 0, int panchayatId = 0, int villageId = 0)
+        {
+            logger.LogInformation("UserController : GetTotalStudentPresent : Started");
+            try
+            {
+                var allStudents = await _studentManager.GetAllStudents(userId, districtId, vidhanSabhaId, panchayatId);
+
+                if (allStudents != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = allStudents,
+                        message = "Total students",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = false,
+                        data = new object[0],
+                        message = "Not found",
+                        code = StatusCodes.Status200OK
                     });
                 }
 

@@ -265,12 +265,86 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new
+                    return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = false,
-                        data = user,
+                        data = new object(),
                         message = "user not exists",
-                        code = StatusCodes.Status404NotFound
+                        code = StatusCodes.Status200OK
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("GetUserDetailByPhoneNumber")]
+        public async Task<IActionResult> GetUserDetailByPhoneNumber(string phoneNumer)
+        {
+            logger.LogInformation("UserController : GetUser : Started");
+            try
+            {
+                var user = await _userManager.GetUserDetailByPhoneNumber(phoneNumer);
+                if (user != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = user,
+                        message = "user exists",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = false,
+                        data = new object(),
+                        message = "user not exists",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
+                return StatusCode(StatusCodes.Status501NotImplemented, ex.InnerException.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("UpdatePassword")]
+        public async Task<IActionResult> UpdatePassword(int userId,string newPassword)
+        {
+            logger.LogInformation("UserController : GetUser : Started");
+            try
+            {
+                var user = await _userManager.UpdatePassword(userId, newPassword);
+                if (user != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = user,
+                        message = "password updated",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = false,
+                        data = new object(),
+                        message = "password not updated",
+                        code = StatusCodes.Status200OK
                     });
                 }
 

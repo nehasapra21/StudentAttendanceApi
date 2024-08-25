@@ -70,7 +70,7 @@ namespace StudentAttendanceApiBLL.Manager
 
 
 
-        public async Task<StudentPresentClassDto> GetTotalStudentPresent(int userId, int type)
+        public async Task<StudentPresentClassDto> GetTotalStudentPresent(DateTime scanDate,int userId)
         {
             _logger.LogInformation($"UserManager : Bll : GetTotalStudentPresent : Started");
             Dictionary<int, int> listOfStudents = null;
@@ -78,21 +78,21 @@ namespace StudentAttendanceApiBLL.Manager
             Dictionary<int, int> upcomingAndCompletedCount = null;
             int cancelClassCount = 0;
 
-            if (userId == 0 && type == 0)
-            {
-                listOfStudents = await _studentRepository.GetTotalStudentPresent();
-                listOfClasses = await _studentRepository.GetActiveClass();
-                upcomingAndCompletedCount = await _studentRepository.GetTotalUpComingAndCompletedClass(0, 0);
-                cancelClassCount = await _studentRepository.GetCancelClassCount();
-            }
-            else
-            {
-                listOfStudents = await _studentRepository.GetTotalStudentPresent(userId, type);
-                listOfClasses = await _studentRepository.GetActiveClass(userId, type);
-                upcomingAndCompletedCount = await _studentRepository.GetTotalUpComingAndCompletedClass(userId, type);
-                cancelClassCount = await _studentRepository.GetCancelClassCount(userId, type);
+            //if (userId == 0)
+            //{
+                listOfStudents = await _studentRepository.GetTotalStudentPresent(scanDate,userId);
+                listOfClasses = await _studentRepository.GetActiveClass(scanDate,userId);
+                upcomingAndCompletedCount = await _studentRepository.GetTotalUpComingAndCompletedClass(scanDate,userId);
+                cancelClassCount = await _studentRepository.GetCancelClassCount(userId);
+            //}
+            //else
+            //{
+            //    listOfStudents = await _studentRepository.GetTotalStudentPresent(scanDate,userId, type);
+            //    listOfClasses = await _studentRepository.GetActiveClass(scanDate,userId, type);
+            //    upcomingAndCompletedCount = await _studentRepository.GetTotalUpComingAndCompletedClass(scanDate,userId, type);
+            //    cancelClassCount = await _studentRepository.GetCancelClassCount(userId, type);
 
-            }
+            //}
             StudentPresentClassDto studentPresentClassDto = new StudentPresentClassDto();
             studentPresentClassDto.TotalStudents = listOfStudents.ToList()[0].Value;
             studentPresentClassDto.TotalClasses = listOfClasses.ToList()[0].Value;
@@ -104,6 +104,13 @@ namespace StudentAttendanceApiBLL.Manager
             studentPresentClassDto.CancelClassCount = cancelClassCount;
             //  studentPresentClassDto.time= TimeZoneInfo.Local;
             return studentPresentClassDto;
+        }
+
+        public async Task<List<Student>> GetAllStudents(int userId, int districtId = 0, int vidhanSabhaId = 0, int panchayatId = 0, int villageId = 0)
+        {
+            _logger.LogInformation($"UserManager : Bll : GetAllStudents : Started");
+
+            return await _studentRepository.GetAllStudents(userId, districtId, vidhanSabhaId, panchayatId, villageId);
         }
 
         #endregion

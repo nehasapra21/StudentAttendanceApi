@@ -13,11 +13,11 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<string> CheckCenterName(string name);
         Task<Center> GetCenteryId(int centerId);
         Task<List<Center>> GetAllCenters(int userId,int type);
-        Task<List<Center>> GetStudentAttendanceOfCenter(int status, int userId, int type);
+        Task<List<Center>> GetStudentAttendanceOfCenter(int status, int userId);
         Task<Center> GetCenterByUserId(int userId);
         Task<CenterLog> UpdateCenterActiveOrDeactive(CenterLog centerlog);
         Task<bool> CheckCenterStatusByUserId(int userId);
-        Task<List<Center>> GetAllCenterAttendance(string date,int offset, int limit);
-        Task<string> GetTotalAttendanceCountOfCenter(string date);
+        Task<List<Center>> GetAllCenterAttendance(int userId,string date,int offset, int limit);
+        Task<string> GetTotalAttendanceCountOfCenter(int userId,string date);
     }
 }

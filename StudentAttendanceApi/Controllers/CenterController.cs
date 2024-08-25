@@ -174,12 +174,12 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetAllCentersByStatus")]
-        public async Task<IActionResult> GetAllCentersByStatus(int status, int userId = 0, int type = 0)
+        public async Task<IActionResult> GetAllCentersByStatus(int status, int userId)
         {
             logger.LogInformation("UserController : GetStudentAttendanceOfCenter : Started");
             try
             {
-                var allCenters = await _centerManager.GetStudentAttendanceOfCenter(status, userId, type);
+                var allCenters = await _centerManager.GetStudentAttendanceOfCenter(status, userId);
                 if (allCenters != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
@@ -192,12 +192,12 @@ namespace StudentAttendanceApi.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new
+                    return StatusCode(StatusCodes.Status200OK, new
                     {
                         status = false,
-                        data = allCenters,
+                        data = new object[0],
                         message = "No class avilable",
-                        code = StatusCodes.Status404NotFound
+                        code = StatusCodes.Status200OK
                     });
                 }
             }
@@ -247,12 +247,12 @@ namespace StudentAttendanceApi.Controllers
 
         //[Authorize]
         [HttpGet("GetAllCenterAttendance")]
-        public async Task<IActionResult> GetAllCenterAttendance(string date, int offset, int limit)
+        public async Task<IActionResult> GetAllCenterAttendance(int userId,string date, int offset, int limit)
         {
             logger.LogInformation("UserController : UpdateCenterActiveOrDeactive : Started");
             try
             {
-                var allCenters = await _centerManager.GetAllCenterAttendance(date, offset, limit);
+                var allCenters = await _centerManager.GetAllCenterAttendance(userId,date, offset, limit);
                 if (allCenters != null)
                 {
                     return StatusCode(StatusCodes.Status200OK, new
@@ -316,12 +316,12 @@ namespace StudentAttendanceApi.Controllers
 
        //[Authorize]
         [HttpGet("GetTotalAttendanceCountOfCenter")]
-        public async Task<IActionResult> GetTotalAttendanceCountOfCenter(string date)
+        public async Task<IActionResult> GetTotalAttendanceCountOfCenter(int userId,string date)
         {
             logger.LogInformation("UserController : GetTotalAttendanceCountOfCenter : Started");
             try
             {
-                string centerLog = await _centerManager.GetTotalAttendanceCountOfCenter(date);
+                string centerLog = await _centerManager.GetTotalAttendanceCountOfCenter(userId,date);
                 if (centerLog != null)
                 {
                     Content deserializedContent = JsonConvert.DeserializeObject<Content>(centerLog);

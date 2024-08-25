@@ -14,7 +14,7 @@ namespace StudentAttendanceApiBLL
         public int Id { get; set; }
         public string? EnrollmentId { get; set; }
         public string? FullName { get; set; }
-        public bool? AttendanceStatus { get; set; }
+        public string? AttendanceStatus { get; set; }
         public decimal? AverageAttendance{ get; set; }
         public DateTime? Date { get; set; }
 

@@ -220,7 +220,7 @@ namespace StudentAttendanceApiDAL.Repository
                                          VillageId = village.Id,
                                          TeacherName = appDbContext.Users.Where(x => x.Id == c.AssignedTeachers).FirstOrDefault().Name,
                                          RegionalAdminName = appDbContext.Users.Where(x => x.Id == c.AssignedRegionalAdmin).FirstOrDefault().Name,
-                                         TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id).AsNoTracking().ToList().Count,
+                                         TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id && x.Status.Value).AsNoTracking().ToList().Count,
 
                                      }).OrderByDescending(x => x.Id).ToListAsync();
 
@@ -261,7 +261,7 @@ namespace StudentAttendanceApiDAL.Repository
                                          VillageId = village.Id,
                                          TeacherName = appDbContext.Users.Where(x => x.Id == c.AssignedTeachers).FirstOrDefault().Name,
                                          RegionalAdminName = appDbContext.Users.Where(x => x.Id == c.AssignedTeachers).FirstOrDefault().Name,
-                                         TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id).AsNoTracking().ToList().Count,
+                                         TotalStudents = appDbContext.Student.Where(x => x.CenterId == c.Id && x.Status.Value).AsNoTracking().ToList().Count,
 
                                      }).OrderByDescending(x => x.Id).ToListAsync();
                 }
@@ -307,7 +307,7 @@ namespace StudentAttendanceApiDAL.Repository
                 {
                     center.RegionalAdminName = appDbContext.Users.AsNoTracking().FirstOrDefault(x => x.Id == center.AssignedRegionalAdmin).Name;
 
-                    center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == center.Id).AsNoTracking().ToList().Count();
+                    center.TotalStudents = appDbContext.Student.Where(x => x.CenterId == center.Id && x.Status.Value).AsNoTracking().ToList().Count();
 
                     logger.LogInformation($"UserRepository : CheckDistrictName : End");
                 }
@@ -327,16 +327,16 @@ namespace StudentAttendanceApiDAL.Repository
         //    List<Center> centers = new List<Center>();
         //}
 
-        public async Task<List<Center>> GetStudentAttendanceOfCenter(int status, int userId, int type)
+        public async Task<List<Center>> GetStudentAttendanceOfCenter(int status, int userId)
         {
             logger.LogInformation($"UserRepository : GetAllClasses : Started");
             List<Center> allCenters = new List<Center>();
             List<Center> centers = new List<Center>();
             try
             {
-
+                int? TypeValue = appDbContext.Users.FirstOrDefault(x => x.Id == userId).Type;
                 //default case
-                if (userId == 0 && type == 0)
+                if (TypeValue == 1)
                 {
                     if (status == (int)(Constant.ClassStatus.Active) || status == (int)(Constant.ClassStatus.Completed))
                     {
@@ -520,7 +520,7 @@ namespace StudentAttendanceApiDAL.Repository
                 {
                     if (status == (int)(Constant.ClassStatus.Active) || status == (int)(Constant.ClassStatus.Completed))
                     {
-                        List<Class> classes = appDbContext.Class.AsNoTracking().Where(x => x.StartedDate.Value.Date == DateTime.Now.Date && x.Status.Value == status && x.UsersId == userId).ToList();
+                        List<Class> classes = appDbContext.Class.AsNoTracking().Where(x => x.StartedDate.Value.Date == DateTime.Now.Date && x.Status.Value == status).ToList();
                         List<int> centerIds = classes.Select(x => x.CenterId).ToList();
 
                         centers = await appDbContext.Center.AsNoTracking().Include(x => x.District)
@@ -542,7 +542,7 @@ namespace StudentAttendanceApiDAL.Repository
                                     center.ClassEndDate = classes.Where(x => x.CenterId == item.Id && x.StartedDate.Value.Date == DateTime.Now.Date).FirstOrDefault().EndDate;
                                 }
 
-                                center.TotalPresentStudents = classes.Where(x => x.StartedDate.Value.Date == DateTime.Now.Date && x.CenterId == item.Id).FirstOrDefault().TotalStudents;
+                                center.TotalPresentStudents = classes.Where(x => x.StartedDate.Value.Date == DateTime.Now.Date && x.CenterId == item.Id).FirstOrDefault().AvilableStudents;
                                 //center.TotalActiveStudents = classes.Where(x => x.StartedDate.Value.Date == DateTime.Now.Date && x.CenterId == item.Id).FirstOrDefault().AvilableStudents;
                             }
                             else
@@ -720,52 +720,27 @@ namespace StudentAttendanceApiDAL.Repository
             return centerLog;
         }
 
-        public async Task<List<Center>> GetAllCenterAttendance(string date, int offset, int limit)
+        public async Task<List<Center>> GetAllCenterAttendance(int userId, string date, int offset, int limit)
         {
             logger.LogInformation($"UserRepository : GetAllCenterAttendance : Started");
 
             List<Center> centers = new List<Center>();
             try
             {
-                //var query = from cen in appDbContext.Center
-                //            join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
-                //            from subCls in classGroup.DefaultIfEmpty()
 
-                //            select new
-                //            {
-                //                Center = cen,
-                //                Class = subCls
-                //            };
+                int? TypeValue = appDbContext.Users.FirstOrDefault(x => x.Id == userId).Type;
 
-                //centers = query.AsEnumerable()
-                //                  .GroupBy(g => g.Center.Id)
-                //                  .Select(g => new Center
-                //                  {
-                //                      Id = g.Key,
-                //                      Type = g.Any(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date)) ? 1 : 2,
-                //                      CenterName = g.First().Center.CenterName,
-                //                      ClassEndDate = g.FirstOrDefault(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date))?.Class.EndDate ?? null,
-                //                      ClassStartDate = g.FirstOrDefault(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date))?.Class.StartedDate ?? null,
-                //                      //TotalPresentStudents = g.FirstOrDefault(x => x.Class != null )?.Class.TotalStudents ?? 0,
-                //                      TotalStudents = g.FirstOrDefault(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date))?.Class.TotalStudents ?? null,
-                //                      TotalAvialableStudents = g.FirstOrDefault(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date))?.Class.AvilableStudents ?? null,
-                //                      //TotalAvialableStudents = g.Any(x => x.Class != null && x.Class.StartedDate.Value.Date ==Convert.ToDateTime(date))
-                //                      //      ? g.FirstOrDefault(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date))?.Class.AvilableStudents ?? 0
-                //                      //      : 0,
-                //                      TeacherName = appDbContext.Users.FirstOrDefault(x => x.Id == g.First().Center.AssignedTeachers)?.Name,
-                //                      RegionalAdminName = appDbContext.Users.FirstOrDefault(x => x.Id == g.First().Center.AssignedRegionalAdmin)?.Name,
-                //                  }).Skip(offset).Take(limit).ToList();
-
-
-                centers = (from cen in appDbContext.Center
-                           join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
-                           from subCls in classGroup.DefaultIfEmpty()
-                           group new { cen, subCls } by new { cen.Id } into g
-                           select new
-                           {
-                               Center = g.First().cen,
-                               Class = g.FirstOrDefault(x => x.subCls != null && x.subCls.StartedDate.HasValue && x.subCls.StartedDate.Value.Date == Convert.ToDateTime(date))
-                           }).AsEnumerable()
+                if (TypeValue == 1)
+                {
+                    centers = (from cen in appDbContext.Center
+                               join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
+                               from subCls in classGroup.DefaultIfEmpty()
+                               group new { cen, subCls } by new { cen.Id } into g
+                               select new
+                               {
+                                   Center = g.First().cen,
+                                   Class = g.FirstOrDefault(x => x.subCls != null && x.subCls.StartedDate.HasValue && x.subCls.StartedDate.Value.Date == Convert.ToDateTime(date))
+                               }).AsEnumerable()
                               .Select(g => new Center
                               {
                                   Id = g.Center.Id,
@@ -778,7 +753,32 @@ namespace StudentAttendanceApiDAL.Repository
                                   TeacherName = appDbContext.Users.FirstOrDefault(u => u.Id == g.Center.AssignedTeachers)?.Name,
                                   RegionalAdminName = appDbContext.Users.FirstOrDefault(u => u.Id == g.Center.AssignedRegionalAdmin)?.Name
                               }).Distinct().ToList();
-
+                }
+                else
+                {
+                    centers = (from cen in appDbContext.Center
+                               join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
+                               from subCls in classGroup.DefaultIfEmpty()
+                               where cen.AssignedRegionalAdmin == userId
+                               group new { cen, subCls } by new { cen.Id } into g
+                               select new
+                               {
+                                   Center = g.First().cen,
+                                   Class = g.FirstOrDefault(x => x.subCls != null && x.subCls.StartedDate.HasValue && x.subCls.StartedDate.Value.Date == Convert.ToDateTime(date))
+                               }).AsEnumerable()
+                             .Select(g => new Center
+                             {
+                                 Id = g.Center.Id,
+                                 Type = g.Class != null ? 1 : 2,
+                                 CenterName = g.Center.CenterName,
+                                 ClassStartDate = g.Class?.subCls.StartedDate,
+                                 ClassEndDate = g.Class?.subCls.EndDate,
+                                 TotalStudents = g.Class?.subCls.TotalStudents ?? 0,
+                                 TotalAvialableStudents = g.Class?.subCls.AvilableStudents ?? 0,
+                                 TeacherName = appDbContext.Users.FirstOrDefault(u => u.Id == g.Center.AssignedTeachers)?.Name,
+                                 RegionalAdminName = appDbContext.Users.FirstOrDefault(u => u.Id == g.Center.AssignedRegionalAdmin)?.Name
+                             }).Distinct().ToList();
+                }
 
                 if (centers != null)
                 {
@@ -816,172 +816,90 @@ namespace StudentAttendanceApiDAL.Repository
                 logger.LogInformation($"UserRepository : GetAllCenterAttendance : End");
             }
             catch (Exception ex)
-            {   
+            {
                 logger.LogError(ex, $"UserRepository : GetAllCentersById", ex);
                 throw ex;
             }
-           return centers;
+            return centers;
         }
 
-        public async Task<string> GetTotalAttendanceCountOfCenter(string date)
+        public async Task<string> GetTotalAttendanceCountOfCenter(int userId, string date)
         {
             logger.LogInformation($"UserRepository : GetAllCenterAttendance : Started");
-
+            List<CenterResult> centers = new List<CenterResult>();
             dynamic center = new JObject();
 
+            int? TypeValue = appDbContext.Users.FirstOrDefault(x => x.Id == userId).Type;
 
-            // //var query = from cen in appDbContext.Center
-            // //            join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
-            // //            from subCls in classGroup.DefaultIfEmpty()
+            if (TypeValue == 1)
+            {
+                centers = (from cen in appDbContext.Center
+                              join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
 
-            // //            select new
-            // //            {
-            // //                Center = cen,
-            // //                Class = subCls
-            // //            };
+                              from subCls in classGroup.DefaultIfEmpty()
+                              select new
+                              {
+                                  Center = cen,
+                                  Class = subCls,
+                                  CenterId = cen.Id,
+                                  ClassExists = subCls != null,
+                                  StartedDate = subCls != null ? subCls.StartedDate : (DateTime?)null,
+                                  EndDate = subCls != null ? subCls.EndDate : (DateTime?)null,
+                                  AvailableStudents = subCls != null ? subCls.AvilableStudents : (int?)null
+                              })
+              .AsEnumerable()
+              .GroupBy(g => g.CenterId)
+              .Select(g => new CenterResult
+              {
+                  Center = g.First().Center,
+                  Type = g.Any(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date)) ? 1 : 2,
+                  NotStarted = g.Count(x => x.ClassExists && !x.StartedDate.HasValue),
+                  EndDateWithAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents > 0 && !x.EndDate.HasValue),
+                  EndDateWithNoAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents == 0 && !x.EndDate.HasValue),
+                  CompletedWithAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents > 0 && x.EndDate.HasValue),
+                  NoAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents == 0 && x.EndDate.HasValue)
+              })
+              .ToList();
+            }
+            else
+            {
+                centers = (from cen in appDbContext.Center
+                              join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
 
-            // //centers = query.AsEnumerable()
-            // //                  .GroupBy(g => g.Center.Id)
-            // //                  .Select(g => new Center
-            // //                  {
-            // //                      Type = g.Any(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date)) ? 1 : 2,
-            // //                      NotStarted = g.Where(x => x.Class == null).Count(),
-            // //                      Completed = g.Where(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date) && x.Class.StartedDate.Value.Date != null && x.Class.EndDate.Value.Date != null
-            // //                      && x.Class.AvilableStudents > 0).Count(),
-            // //                      //EndDateWithAttendance = g.Where(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date) && x.Class.StartedDate.Value.Date != null && x.Class.EndDate.Value.Date == null
-            // //                      //                                   && x.Class.AvilableStudents > 0).ToList().Count(),
-            // //                      //EndDateWithNoAttendance = g.Where(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date) && x.Class.StartedDate.Value.Date != null && x.Class.EndDate.Value.Date == null
-            // //                      //                                   && x.Class.AvilableStudents == 0).ToList().Count(),
-            // //                      //NoAttendance = g.Where(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date)
-            // //                      //                                  && x.Class.AvilableStudents == 0).ToList().Count(),
-
-            // //                  }).ToList();
-
-
-            // //var countCentersWithoutClasses = (from cen in appDbContext.Center
-            // //                                  join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
-            // //                                  from subCls in classGroup.DefaultIfEmpty()
-            // //                                  where subCls == null
-            // //                                  select cen).Count();
-
-            // //int value = countCentersWithoutClasses;
-            // //var query = from cen in appDbContext.Center
-            // //            join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
-            // //            from subCls in classGroup.DefaultIfEmpty()
-
-            // //            select new
-            // //            {
-            // //                Center = cen,
-            // //                Class = subCls
-            // //            };
-
-            // //var centersList = query.AsEnumerable()
-            // //                  .GroupBy(g => g.Center.Id)
-            // //                  .Select(g => new Center
-            // //                  {
-            // //                      Id = g.Key,
-            // //                      Type = g.Where(x => x.Class != null).Count()
-            // //                  }).ToList();
-
-            // //int count = centersList.Count();
-
-            // var query = from cen in appDbContext.Center
-            //             join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
-            //             from subCls in classGroup.DefaultIfEmpty()
-            //             select new
-            //             {
-            //                 Center = cen,
-            //                 Class = subCls
-            //             };
-
-            // //var centers = query.AsEnumerable()
-            // //                   .GroupBy(g => g.Center.Id)
-            // //                   .Where(g => !g.Any(x => x.Class != null && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date)))
-            // //                   .Select(g => new Center
-            // //                   {
-            // //                       Id = g.Key,
-            // //                       Type = 2,
-            // //                   })
-            // //                   .ToList();
-
-            // var centers = (from cen in appDbContext.Center
-            //                join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
-            //                from subCls in classGroup.DefaultIfEmpty()
-            //                group new { Center = cen, Class = subCls } by cen.Id into g
-            //                where !g.Any(x => x.Class != null && x.Class.StartedDate.HasValue && x.Class.StartedDate.Value.Date == Convert.ToDateTime(date))
-            //                select new Center
-            //                {
-            //                    Id = g.Key,
-            //                    Type = 2
-            //                })
-            //.ToList();
-
-            // int typecount = centers.Count;
-
-            //// var counts = (from cen in appDbContext.Center
-            ////               join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
-            ////               from subCls in classGroup.DefaultIfEmpty()
-            ////               select new
-            ////               {
-            ////                   CenterId = cen.Id,
-            ////                   Type = g.Any(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == targetDate) ? 1 : 2,
-            ////                   ClassExists = subCls != null,
-            ////                   StartedDate = subCls != null ? subCls.StartedDate : (DateTime?)null,
-            ////                   EndDate = subCls != null ? subCls.EndDate : (DateTime?)null,
-            ////                   AvailableStudents = subCls != null ? subCls.AvilableStudents : (int?)null
-            ////               })
-            ////.ToList() // Execute the query and bring the data into memory
-            ////.Aggregate(new
-            ////{
-            ////    NotStarted = 0,
-            ////    EndDateWithAttendance = 0,
-            ////    EndDateWithNoAttendance = 0,
-            ////    CompletedWithAttendance = 0,
-            ////    NoAttendance = 0
-            ////}, (acc, x) => new
-            ////{
-            ////    NotStarted = acc.NotStarted + (x.ClassExists && !x.StartedDate.HasValue ? 1 : 0),
-            ////    EndDateWithAttendance = acc.EndDateWithAttendance + (x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents > 0 && !x.EndDate.HasValue ? 1 : 0),
-            ////    EndDateWithNoAttendance = acc.EndDateWithNoAttendance + (x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents == 0 && !x.EndDate.HasValue ? 1 : 0),
-            ////    CompletedWithAttendance = acc.CompletedWithAttendance + (x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents > 0 && x.EndDate.HasValue ? 1 : 0),
-            ////    NoAttendance = acc.NoAttendance + (x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents == 0 && x.EndDate.HasValue ? 1 : 0),
-            ////});
-
-
-            var result = (from cen in appDbContext.Center
-                          join cls in appDbContext.Class on cen.Id equals cls.CenterId into classGroup
-                          from subCls in classGroup.DefaultIfEmpty()
-                          select new
-                          {
-                              Center = cen,
-                              Class = subCls,
-                              CenterId = cen.Id,
-                              ClassExists = subCls != null,
-                              StartedDate = subCls != null ? subCls.StartedDate : (DateTime?)null,
-                              EndDate = subCls != null ? subCls.EndDate : (DateTime?)null,
-                              AvailableStudents = subCls != null ? subCls.AvilableStudents : (int?)null
-                          })
-          .AsEnumerable()
-          .GroupBy(g => g.CenterId)
-          .Select(g => new
-          {
-              Center = g.First().Center,
-              Type = g.Any(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date)) ? 1 : 2,
-              NotStarted = g.Count(x => x.ClassExists && !x.StartedDate.HasValue),
-              EndDateWithAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents > 0 && !x.EndDate.HasValue),
-              EndDateWithNoAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents == 0 && !x.EndDate.HasValue),
-              CompletedWithAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents > 0 && x.EndDate.HasValue),
-              NoAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents == 0 && x.EndDate.HasValue)
-          })
-          .ToList();
+                              from subCls in classGroup.DefaultIfEmpty()
+                              where cen.AssignedRegionalAdmin == userId
+                              select new
+                              {
+                                  Center = cen,
+                                  Class = subCls,
+                                  CenterId = cen.Id,
+                                  ClassExists = subCls != null,
+                                  StartedDate = subCls != null ? subCls.StartedDate : (DateTime?)null,
+                                  EndDate = subCls != null ? subCls.EndDate : (DateTime?)null,
+                                  AvailableStudents = subCls != null ? subCls.AvilableStudents : (int?)null
+                              })
+             .AsEnumerable()
+             .GroupBy(g => g.CenterId)
+             .Select(g => new CenterResult
+             {
+                 Center = g.First().Center,
+                 Type = g.Any(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date)) ? 1 : 2,
+                 NotStarted = g.Count(x => x.ClassExists && !x.StartedDate.HasValue),
+                 EndDateWithAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents > 0 && !x.EndDate.HasValue),
+                 EndDateWithNoAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents == 0 && !x.EndDate.HasValue),
+                 CompletedWithAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents > 0 && x.EndDate.HasValue),
+                 NoAttendance = g.Count(x => x.ClassExists && x.StartedDate.HasValue && x.StartedDate.Value.Date == Convert.ToDateTime(date) && x.AvailableStudents == 0 && x.EndDate.HasValue)
+             })
+             .ToList();
+            }
 
             var counts = new
             {
-                NotStarted = result.Where(x => x.Type == 2),
-                EndDateWithAttendance = result.Sum(x => x.EndDateWithAttendance),
-                EndDateWithNoAttendance = result.Sum(x => x.EndDateWithNoAttendance),
-                CompletedWithAttendance = result.Sum(x => x.CompletedWithAttendance),
-                NoAttendance = result.Sum(x => x.NoAttendance)
+                NotStarted = centers.Where(x => x.Type == 2),
+                EndDateWithAttendance = centers.Sum(x => x.EndDateWithAttendance),
+                EndDateWithNoAttendance = centers.Sum(x => x.EndDateWithNoAttendance),
+                CompletedWithAttendance = centers.Sum(x => x.CompletedWithAttendance),
+                NoAttendance = centers.Sum(x => x.NoAttendance)
 
             };
 

@@ -14,6 +14,7 @@ namespace StudentAttendanceApiDAL.IRepository
         Task<List<Holidays>> GetAllHolidaysByTeacherId(int teacherId);
         Task<List<Holidays>> GetAllHolidaysByYear(int year);
         Task<List<Holidays>> GetAllHolidaysByCenterId(int centerId);
-        Task<List<Holidays>> GetAllHolidays(int userId, int type);
+        Task<List<Holidays>> GetAllHolidays(int status,int userId=0);
+        Task<Holidays> DeleteHolidayById(int id);
     }
 }

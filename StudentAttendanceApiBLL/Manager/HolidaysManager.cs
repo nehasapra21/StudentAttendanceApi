@@ -93,12 +93,20 @@ namespace StudentAttendanceApiBLL.Manager
             return await _holidaysRepository.GetAllHolidaysByCenterId(centerId);
         }
 
-        public async Task<List<Holidays>> GetAllHolidays(int userId,int type)
+        public async Task<List<Holidays>> GetAllHolidays(int status, int userId=0)
         {
             _logger.LogInformation($"UserManager : Bll : GetAllHolidaysByCenterId : Started");
 
 
-            return await _holidaysRepository.GetAllHolidays(userId,type);
+            return await _holidaysRepository.GetAllHolidays(status,userId);
+        }
+
+        public async Task<Holidays> DeleteHolidayById(int id)
+        {
+            _logger.LogInformation($"UserManager : Bll : GetAllHolidaysByCenterId : Started");
+
+
+            return await _holidaysRepository.DeleteHolidayById(id);
         }
         #endregion
     }
