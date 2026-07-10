@@ -14,13 +14,16 @@ namespace StudentAttendanceApiDAL.Tables
     {
         [Key]
         public int Id { get; set; }
-        public int VidhanSabhaGuidId { get; set; }
+        public Guid VidhanSabhaGuidId { get; set; }
         public string? Name { get; set; }
         public bool? Status { get; set; }
 
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
         public int DistrictId { get; set; }
+        [NotMapped]
+        public string DistrictName { get; set; }
+        public Panchayat Panchayat { get; set; }
     }
 
 }

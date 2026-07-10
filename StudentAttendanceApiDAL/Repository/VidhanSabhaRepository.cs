@@ -23,19 +23,58 @@ namespace StudentAttendanceApiDAL.Repository
             this.logger = logger;
         }
 
-        public async Task<List<VidhanSabha>> GetAllVidhanSabha()
+        public async Task<List<VidhanSabha>> GetAllVidhanSabha(int offset, int limit)
         {
             logger.LogInformation($"VidhanSabhaRepository : GetAllVidhanSabha : Started");
             List<VidhanSabha> vidanSabha = new List<VidhanSabha>();
             try
             {
-                vidanSabha = await appDbContext.VidhanSabha.AsNoTracking().ToListAsync();
+                if (offset == 0 && limit == 0)
+                {
+                    vidanSabha = await (from v in appDbContext.VidhanSabha
+                                        join d in appDbContext.District
+                                     on v.DistrictId equals d.Id
+                                        select new VidhanSabha
+                                        {
+                                            Id = v.Id,
+                                            VidhanSabhaGuidId = v.VidhanSabhaGuidId,
+                                            Name = v.Name,
+                                            DistrictId = v.DistrictId,
+                                            DistrictName = d.Name,
+                                            CreatedOn = v.CreatedOn,
+                                            CreatedBy = v.CreatedBy,
+                                            Status = v.Status
+                                        }).AsNoTracking().ToListAsync();
+                }
+                else
+                {
+                    vidanSabha = await (from v in appDbContext.VidhanSabha
+                                        join d in appDbContext.District
+                                     on v.DistrictId equals d.Id
+                                        select new VidhanSabha
+                                        {
+                                            Id = v.Id,
+                                            VidhanSabhaGuidId = v.VidhanSabhaGuidId,
+                                            Name = v.Name,
+                                            DistrictId = v.DistrictId,
+                                            DistrictName = d.Name,
+                                            CreatedOn = v.CreatedOn,
+                                            CreatedBy = v.CreatedBy,
+                                            Status = v.Status
+                                        })
+                                        .AsNoTracking()
+                                        .Skip(offset)
+                                        .Take(limit)
+                                        .ToListAsync();
+                }
+               
                 logger.LogInformation($"VidhanSabhaRepository : GetAllVidhanSabha : End");
                 return vidanSabha.ToList();
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VidhanSabhaRepository : GetAllVidhanSabha ", ex);
+                throw ex;
             }
 
             return vidanSabha;
@@ -52,7 +91,9 @@ namespace StudentAttendanceApiDAL.Repository
                     appDbContext.Entry(vidhanSabha).State = EntityState.Modified;
                 }
                 else
-                {
+                {   
+                    vidhanSabha.CreatedOn = DateTime.Now;
+                    vidhanSabha.VidhanSabhaGuidId = Guid.NewGuid();
                     appDbContext.VidhanSabha.Add(vidhanSabha);
                 }
                 await appDbContext.SaveChangesAsync();
@@ -62,8 +103,39 @@ namespace StudentAttendanceApiDAL.Repository
             catch (Exception ex)
             {
                 logger.LogError(ex, $"VidhanSabhaRepository : SaveVidhanSabha ", ex);
+                throw ex;
             }
             return vidhanSabha;
+        }
+
+        public async Task<VidhanSabha> GetVidhanSabhaByDistrictId(int districtId)
+        {
+            logger.LogInformation($"VidhanSabhaRepository : GetVidhanSabhaByDistrictId : Started");
+
+            var vidhanSabha = await appDbContext.VidhanSabha.AsNoTracking().FirstOrDefaultAsync(x => x.DistrictId == districtId);
+
+            logger.LogInformation($"VidhanSabhaRepository : GetVidhanSabhaByDistrictId : End");
+
+            return vidhanSabha;
+        }
+
+        public async Task<string> CheckVidhanSabhaName(string name)
+        {
+            logger.LogInformation($"UserRepository : CheckVidhanSabhaName : Started");
+
+            VidhanSabha vidhanSabha = new VidhanSabha();
+            try
+            {
+                vidhanSabha = appDbContext.VidhanSabha.AsNoTracking().FirstOrDefaultAsync(x => x.Name == name).Result;
+
+                logger.LogInformation($"UserRepository : CheckVidhanSabhaName : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : CheckVidhanSabhaName", ex);
+                throw ex;
+            }
+            return vidhanSabha == null ? null : vidhanSabha.Name;
         }
     }
 }

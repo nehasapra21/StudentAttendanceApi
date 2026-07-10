@@ -33,10 +33,10 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async Task<List<Village>> GetAllVillage()
+        public async Task<List<Village>> GetAllVillage(int offset, int limit)
         {
             _logger.LogInformation($"VillageManager : Bll : GetAllVillage : Started");
-            var village = await _villageRepository.GetAllVillage();
+            var village = await _villageRepository.GetAllVillage(offset,limit);
             _logger.LogInformation($"VillageManager : Bll : GetAllVillage : End");
             return village;
         }
@@ -48,6 +48,19 @@ namespace StudentAttendanceApiBLL.Manager
             return await _villageRepository.SaveVillage(village);
         }
 
+        public async Task<Village> GetVillageByDistrictVidhanSabhaAndPanchId(int districtId, int vidhanSabhaId, int panchayatId)
+        {
+            _logger.LogInformation($"VillageManager : Bll : GetVillageByDistrictVidhanSabhaAndPanchId : Started");
+
+            return await _villageRepository.GetVillageByDistrictVidhanSabhaAndPanchId(districtId, vidhanSabhaId, panchayatId);
+        }
+
+        public async Task<string> CheckVillageName(string name)
+        {
+            _logger.LogInformation($"VillageManager : Bll : CheckVillageName : Started");
+
+            return await _villageRepository.CheckVillageName(name);
+        }
         #endregion
     }
 }

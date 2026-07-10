@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ using StudentAttendanceApiDAL.Tables;
 
 namespace StudentAttendanceApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DistrictController : ControllerBase
@@ -25,39 +27,110 @@ namespace StudentAttendanceApi.Controllers
         }
 
         [HttpGet("GetAllDistrict")]
-        public async Task<IActionResult> GetAllDistrict()
+        public async Task<IActionResult> GetAllDistrict(int offset = 0, int limit = 0)
         {
             logger.LogInformation("DistrictController : GetAllDistrict : Started");
             try
             {
-                return Ok(await _districtManager.GetAllDistrict());
+                List<District> allDistricts = await _districtManager.GetAllDistrict(offset, limit);
+
+                if (allDistricts != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        message = "List of district",
+                        data = allDistricts,
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        message = "List of district not found",
+                        data = allDistricts,
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"DistrictController : GetAllDistrict ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
 
+        [Authorize]
         [HttpPost("SaveDistrict")]
-        public async Task<ActionResult> SaveDistrict([FromBody] DistrictDto districtDto)
+        public async Task<ActionResult> SaveDistrict([FromForm] DistrictDto districtDto)
         {
             logger.LogInformation("DistrictController : SaveDistrict : Started");
             try
             {
                 District district = DistrictConvertor.ConvertDistrictDtoToDistrict(districtDto);
-                var iplStudentEmi = await _districtManager.SaveDistrict(district);
-                logger.LogInformation("DistrictController : SaveDistrict : End");
-                if (iplStudentEmi == null)
-                    return BadRequest(new { message = "username" });
-                return new OkObjectResult(iplStudentEmi);
-
+                var districtVal = await _districtManager.SaveDistrict(district);
+                if (districtVal != null)
+                {
+                    return StatusCode(StatusCodes.Status200OK, new
+                    {
+                        status = true,
+                        data = districtVal,
+                        message = "District save successfully",
+                        code = StatusCodes.Status200OK
+                    });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new
+                    {
+                        status = false,
+                        error = "District doesn't save",
+                        code = StatusCodes.Status404NotFound
+                    });
+                }
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"DistrictController : SaveDistrict ", ex);
-                return StatusCode(StatusCodes.Status501NotImplemented, "error");
+                return StatusCode(StatusCodes.Status400BadRequest, ex.InnerException.Message);
             }
         }
+
+        //[HttpPost("CheckDistrictName")]
+        //public async Task<IActionResult> CheckDistrictName(string name)
+        //{
+        //    logger.LogInformation("UserController : CheckUserMobileNumber : Started");
+        //    try
+        //    {
+        //        var mobileNo = await _districtManager.CheckDistrictName(name);
+        //        if (mobileNo != null)
+        //        {
+        //            return StatusCode(StatusCodes.Status200OK, new
+        //            {
+        //                status = false,
+        //                message = "District name already exists",
+        //                code = StatusCodes.Status200OK
+        //            });
+        //        }
+        //        else
+        //        {
+        //            return StatusCode(StatusCodes.Status404NotFound, new
+        //            {
+        //                status = true,
+        //                error = "District name doesn't exists",
+        //                code = StatusCodes.Status404NotFound
+        //            });
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.LogError(ex, $"UserController : SaveSuperAdmin ", ex);
+        //        return StatusCode(StatusCodes.Status501NotImplemented, "error");
+        //    }
+        //}
+
     }
 }

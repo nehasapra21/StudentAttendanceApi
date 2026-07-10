@@ -14,7 +14,7 @@ namespace StudentAttendanceApiDAL.Tables
     {
         [Key]
         public int Id { get; set; }
-        public int VillageGuidId { get; set; }
+        public Guid VillageGuidId { get; set; }
         public string? Name { get; set; }
         public bool? Status { get; set; }
 
@@ -23,6 +23,12 @@ namespace StudentAttendanceApiDAL.Tables
         public int DistrictId { get; set; }
         public int VidhanSabhaId { get; set; }
         public int PanchayatId { get; set; }
+        [NotMapped]
+        public string PanchayatName { get; set; }
+        [NotMapped]
+        public string VidhanSabhaName { get; set; }
+        [NotMapped]
+        public string DistrictName { get; set; }
     }
 
 }

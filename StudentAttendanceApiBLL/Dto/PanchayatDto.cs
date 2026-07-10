@@ -12,13 +12,16 @@ namespace StudentAttendanceApiBLL
     public class PanchayatDto
     {
         public int Id { get; set; }
-        public int PanchayatGuidId { get; set; }
+        public Guid PanchayatGuidId { get; set; }
+        [Required]
         public string? Name { get; set; }
         public bool? Status { get; set; }
 
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
+        [Required]
         public int DistrictId { get; set; }
+        [Required]
         public int VidhanSabhaId { get; set; }
     }
 

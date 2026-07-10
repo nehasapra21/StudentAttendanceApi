@@ -1,4 +1,5 @@
-﻿using StudentAttendanceApiDAL.Tables;
+﻿using Microsoft.AspNetCore.Mvc;
+using StudentAttendanceApiDAL.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,9 @@ namespace StudentAttendanceApiBLL.IManager
 {
     public interface IDistrictManager
     {
-        Task<List<DistrictDto>> GetAllDistrict();
+        Task<List<District>> GetAllDistrict(int offset, int limit);
         Task<District> SaveDistrict(District district);
+        Task<string> CheckDistrictName(string name);
     }
 
 }

@@ -23,13 +23,22 @@ namespace StudentAttendanceApiDAL.Repository
             this.logger = logger;
         }
 
-        public async Task<List<District>> GetAllDistrict()
+        public async Task<List<District>> GetAllDistrict(int offset, int limit)
         {
             logger.LogInformation($"DistrictRepository : GetAllDistrict : Started");
             List<District> district = new List<District>();
             try
             {
-                district = await appDbContext.District.AsNoTracking().ToListAsync();
+                if (offset == 0 && limit == 0)
+                {
+                    district = await appDbContext.District.AsNoTracking().ToListAsync();
+                }
+                else
+                {
+                    district = await appDbContext.District.AsNoTracking()
+                                                                       .Skip(offset)
+                                                                       .Take(limit).ToListAsync();
+                }
                 logger.LogInformation($"DistrictRepository : GetAllDistrict : End");
                 return district.ToList();
             }
@@ -53,6 +62,8 @@ namespace StudentAttendanceApiDAL.Repository
                 }
                 else
                 {
+                    district.CreatedOn = DateTime.Now;
+                    district.DistrictGuidId = Guid.NewGuid();
                     appDbContext.District.Add(district);
                 }
                 await appDbContext.SaveChangesAsync();
@@ -65,5 +76,24 @@ namespace StudentAttendanceApiDAL.Repository
             }
             return district;
         }
+
+        public async Task<string> CheckDistrictName(string name)
+        {
+            logger.LogInformation($"UserRepository : CheckDistrictName : Started");
+
+            District district = new District();
+            try
+            {
+                district = appDbContext.District.AsNoTracking().FirstOrDefaultAsync(x => x.Name == name).Result;
+
+                logger.LogInformation($"UserRepository : CheckDistrictName : End");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"UserRepository : CheckDistrictName", ex);
+            }
+            return district == null ? null : district.Name;
+        }
+
     }
 }

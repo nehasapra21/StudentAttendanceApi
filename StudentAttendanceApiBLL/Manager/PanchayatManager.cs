@@ -33,10 +33,10 @@ namespace StudentAttendanceApiBLL.Manager
 
         #region | Public Methods |
 
-        public async Task<List<Panchayat>> GetAllPanchayat()
+        public async Task<List<Panchayat>> GetAllPanchayat(int offset, int limit)
         {
             _logger.LogInformation($"PanchayatManager : Bll : GetAllPanchayat : Started");
-            var panchayat = await _panchayatRepository.GetAllPanchayat();
+            var panchayat = await _panchayatRepository.GetAllPanchayat(offset,limit);
             _logger.LogInformation($"PanchayatManager : Bll : GetAllPanchayat : End");
             return panchayat;
         }
@@ -47,6 +47,21 @@ namespace StudentAttendanceApiBLL.Manager
 
             return await _panchayatRepository.SavePanchayat(panchayat);
         }
+
+        public async Task<Panchayat> GetPanchayatByDistrictAndVidhanSabhaId(int districtId, int vidhanSabhaId)
+        {
+            _logger.LogInformation($"PanchayatManager : Bll : GetPanchayatByDistrictAndVidhanSabhaId : Started");
+
+            return await _panchayatRepository.GetPanchayatByDistrictAndVidhanSabhaId(districtId, vidhanSabhaId);
+        }
+
+        public async Task<string> CheckPanchayatName(string name)
+        {
+            _logger.LogInformation($"VillageManager : Bll : CheckPanchayatName : Started");
+
+            return await _panchayatRepository.CheckPanchayatName(name);
+        }
+
 
         #endregion
     }
